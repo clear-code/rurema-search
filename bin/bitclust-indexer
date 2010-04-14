@@ -1,0 +1,53 @@
+#!/usr/bin/env ruby
+#
+# Copyright (c) 2010 Kouhei Sutou <kou@clear-code.com>
+#
+# License: GPLv3+
+
+require 'pathname'
+
+base_dir = Pathname.new(__FILE__).dirname.parent.cleanpath.realpath
+lib_dir = base_dir + "lib"
+
+bitclust_dir = base_dir.parent + "bitclust"
+bitclust_lib_dir = bitclust_dir + "lib"
+
+$LOAD_PATH.unshift(bitclust_lib_dir.to_s)
+$LOAD_PATH.unshift(lib_dir.to_s)
+
+require 'rurema_search'
+require 'pp'
+require 'optparse'
+
+def main(database_path)
+  reset = false
+  parser = OptionParser.new
+  parser.banner += " bitclust-database1,..."
+  parser.on('-d', '--database=PATH',
+            'groonga database path.',
+            "(#{database_path})") do |path|
+    database_path = path
+  end
+  parser.on('--[no-]reset',
+            'reset groonga database before indexing.',
+            "(#{reset})") do |boolean|
+    reset = boolean
+  end
+  parser.on('--help', 'Prints this message and quit.') do
+    puts(parser)
+    exit(true)
+  end
+
+  bitclust_database_paths = parser.parse!
+  database = RuremaSearch::GroongaDatabase.new
+  database.open(database_path, "utf-8") do
+    database.purge if reset
+    bitclust_database_paths.each do |bitclust_database_path|
+      bitclust_database = BitClust::MethodDatabase.new(bitclust_database_path)
+      indexer = RuremaSearch::GroongaIndexer.new(database, bitclust_database)
+      indexer.index
+    end
+  end
+end
+
+main((base_dir + "groonga-database").to_s)
