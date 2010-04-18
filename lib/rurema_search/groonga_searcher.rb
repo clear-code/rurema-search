@@ -241,6 +241,10 @@ module RuremaSearch
           mapper.class_url(entry.name)
         when "constant", "variable", "instance-method", "singleton-method"
           mapper.method_url(entry.name)
+        when "document"
+          mapper.document_url(entry.name)
+        when "library"
+          mapper.library_url(entry.name)
         else
           "/#{entry.type.key}"
         end
@@ -258,6 +262,7 @@ module RuremaSearch
         "constant" => "定数",
         "variable" => "変数",
         "document" => "文書",
+        "library" => "ライブラリ",
       }
       def type_label(entry)
         type = entry.type.key

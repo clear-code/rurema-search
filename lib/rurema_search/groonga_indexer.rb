@@ -16,6 +16,9 @@ module RuremaSearch
       @bitclust_database.docs.each do |doc|
         index_document(doc)
       end
+      @bitclust_database.libraries.each do |library|
+        index_library(library)
+      end
     end
 
     private
@@ -61,6 +64,30 @@ module RuremaSearch
         :version => version,
       }
       @database.entries.add("#{version}:#{document.name}",
+                            attributes)
+    end
+
+    def index_library(library)
+      source = library.source
+      if source.respond_to?(:force_encoding)
+        source.force_encoding(@bitclust_database.encoding)
+      end
+      description = []
+      [library.requires, library.classes, library.methods,
+       library.sublibraries].each do |entries|
+        entries.each do |entry|
+          description << entry.name
+        end
+      end
+      description << source
+      attributes = {
+        :name => library.name,
+        :type => "library",
+        :document => source,
+        :description => description.join(" "),
+        :version => version,
+      }
+      @database.entries.add("#{version}:#{library.name}",
                             attributes)
     end
 
