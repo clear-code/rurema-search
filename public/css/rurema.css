@@ -1,9 +1,12 @@
 @charset "utf-8";
 
+html,
 body
 {
   background-color: white;
   color: black;
+  padding: 0;
+  margin: 0;
 }
 
 a
@@ -23,12 +26,58 @@ a:focus
   background-color: #4c4cc6;
 }
 
-h1
+div.header
 {
-  color: white;
-  background-color: #4c4cc6;
-  padding: 0.4em;
-  margin: 0.2em 0em 0.5em 0em;
+  position: static;
+  border-bottom: 1px solid #c1c1ec;
+}
+
+div.header h1
+{
+  padding: 0;
+  margin: 0;
+  margin-right: 0.5em;
+}
+
+div.header h1 a img
+{
+  border-style: none;
+}
+
+div.header h1 a:hover,
+div.header h1 a:focus
+{
+  background-color: transparent;
+}
+
+div.header div.search-form
+{
+  position: absolute;
+  left: 260px;
+  top: 15px;
+}
+
+div.header div.search-form form input.query
+{
+  width: 20em;
+}
+
+div.content
+{
+  clear: both;
+}
+
+div.content div.statistics
+{
+  text-align: right;
+  background-color: #e9e9f8;
+  border-bottom: 1px solid #c1c1ec;
+}
+
+div.result
+{
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 table.entries

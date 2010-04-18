@@ -9,13 +9,17 @@
   <link rel="stylesheet" href="/css/rurema.css" type="text/css" media="all" />
 </head>
 <body>
-  <h1><%= h1 %></h1>
-  <div class="search-form">
-    <form method="POST" action="./">
-      <input type="text" name="query" value="<%= h(@query) %>">
-      <input type="submit" value="検索">
-    </form>
+  <div class="header">
+    <h1><%= h1 %></h1>
+    <div class="search-form">
+      <form method="POST" action="./">
+	<input type="text" class="query" name="query" value="<%= h(@query) %>">
+	<input type="submit" value="検索">
+      </form>
+    </div>
   </div>
-  <%= search_result %>
+  <div class="content">
+    <%= search_result %>
+  </div>
 </body>
 </html>

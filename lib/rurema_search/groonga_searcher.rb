@@ -179,7 +179,11 @@ module RuremaSearch
       end
 
       def h1
-        title
+        a(tag("img",
+              :src => "/images/rurema-search-title.png",
+              :alt => "るりまサーチ",
+              :title => "るりまサーチ"),
+          "/")
       end
 
       def link_entry(entry)
