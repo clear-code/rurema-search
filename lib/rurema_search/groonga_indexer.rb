@@ -130,7 +130,7 @@ module RuremaSearch
       attributes = {
         :name => entry.spec_string,
         :local_names => entry.names,
-        :type => entry.type_label,
+        :type => normalize_type_label(entry.type_label),
         :version => version,
         :document => entry.source,
         :visibility => entry.visibility.to_s
@@ -144,6 +144,10 @@ module RuremaSearch
       end
       @database.entries.add("#{version}:#{entry.spec_string}",
                             attributes)
+    end
+
+    def normalize_type_label(label)
+      label.gsub(/ /, '-')
     end
 
     def class_key(klass)
