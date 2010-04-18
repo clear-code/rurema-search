@@ -96,13 +96,17 @@ div.content div.version-select ul li
 
 div.content div.version-select ul li.version-select-current
 {
-  color: white;
   background-color: #4c4cc6;
 }
 
 div.content div.version-select ul li a
 {
   text-decoration: none;
+}
+
+div.content div.version-select ul li.version-select-current a
+{
+  color: white;
 }
 
 div.content div.statistics

@@ -102,7 +102,7 @@ module RuremaSearch
       private
       def parse_parameters(parameters)
         @available_paths = []
-        @query = ''
+        @query = nil
         @version = nil
         @type = nil
         parameters.each do |parameter|
@@ -112,7 +112,11 @@ module RuremaSearch
           # TODO: raise unless unescaped_value.valid_encoding?
           case key
           when "query"
-            @query = unescaped_value
+            if @query.nil?
+              @query = unescaped_value
+            else
+              @query << " #{unescaped_value}"
+            end
           when "version"
             @version = unescaped_value
           when "type"
@@ -127,7 +131,7 @@ module RuremaSearch
 
       def create_conditions
         conditions = []
-        unless @query.empty?
+        if @query
           conditions << Proc.new do |record|
             (record["name"] =~ @query) |
               (record["signature"] =~ @query) |
@@ -213,7 +217,7 @@ module RuremaSearch
           paths = @no_version_paths + [["version", version]]
         end
         paths.collect do |key, value|
-          "#{key}:#{value}"
+          "#{key}:#{u(value)}"
         end.join("/")
       end
 
@@ -289,7 +293,11 @@ module RuremaSearch
 
       def auto_spec_link(text)
         @database.specs.tag_keys(text) do |record, word|
-          a(word, "./query:#{u(word)}/")
+          if word == @query
+            word
+          else
+            a(word, "./query:#{u(word)}/")
+          end
         end
       end
 
