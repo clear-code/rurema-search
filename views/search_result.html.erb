@@ -4,9 +4,11 @@
 </div>
 
 <div class="result">
+<%= paginate %>
   <ol class="entries">
 <%  @entries.each do |entry| %>
     <li class="entry"><%= link_entry(entry) %> (<%= h(entry.score) %>)</li>
 <%  end %>
   </ol>
+<%= paginate %>
 </div>

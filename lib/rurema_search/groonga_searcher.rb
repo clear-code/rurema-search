@@ -62,6 +62,7 @@ module RuremaSearch
         @request = request
         @response = response
         @url_mappers = {}
+        @n_entries_per_page = 100
       end
 
       def process
@@ -90,7 +91,10 @@ module RuremaSearch
           @n_entries = result.size
           @drilldown_result = drilldown_items(result)
         end
-          @entries = result.sort([["_score", :descending]], :limit => 10)
+        @page = ensure_page
+        @entries = result.sort([["_score", :descending]],
+                               :offset => @n_entries_per_page * @page - 1,
+                               :limit => @n_entries_per_page)
         @elapsed_time = Time.now.to_f - start.to_f
         @response.write(layout)
       end
@@ -112,6 +116,21 @@ module RuremaSearch
             :n_records => record.n_sub_records
           }
         end
+      end
+
+      def ensure_page
+        page = @request["page"]
+        return 1 if page.nil? or page.empty?
+
+        begin
+          page = Integer(page)
+        rescue ArgumentError
+          return 1
+        end
+        return 1 if page < 0
+        p [page * @n_entries_per_page, @n_entries]
+        return 1 if page * @n_entries_per_page > @n_entries
+        page
       end
 
       def title
@@ -172,6 +191,50 @@ module RuremaSearch
       def create_url_mapper(version)
         RuremaSearch::URLMapper.new(:base_url => "/",
                                     :version => version)
+      end
+
+      def paginate
+        return if @entries.size >= @n_entries
+        _paginate = ['']
+
+        if @page == 1
+          _paginate << h("<<")
+        else
+          _paginate << a(h("<<"), "./")
+          _paginate << a(h("<"), "?page=#{@page - 1}")
+        end
+        last_page = @n_entries / @n_entries_per_page
+        paginate_content_middle(_paginate, last_page)
+        if @page == last_page
+          _paginate << h(">>")
+        else
+          _paginate << a(h(">"), "?page=#{@page + 1}")
+          _paginate << a(h(">>"), "?page=#{last_page}")
+        end
+
+        _paginate << ""
+        tag("div", {"class" => "paginate"}, _paginate.join("\n"))
+      end
+
+      def paginate_content_middle(_paginate, last_page)
+        abbreved = false
+        last_page.times do |page|
+          page += 1
+          if page == @page
+            _paginate << h(page)
+          elsif (@page - page).abs < 3
+            if abbreved
+              _paginate << "..."
+              abbreved = false
+            end
+            _paginate << a(h(page), "?page=#{page}")
+          else
+            abbreved = true
+          end
+        end
+        if abbreved
+          _paginate << "..."
+        end
       end
     end
   end
