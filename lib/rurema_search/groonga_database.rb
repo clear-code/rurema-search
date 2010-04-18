@@ -62,6 +62,10 @@ module RuremaSearch
       @entries ||= Groonga["Entries"]
     end
 
+    def specs
+      @specs ||= Groonga["Specs"]
+    end
+
     def classes
       @classes ||= Groonga["Classes"]
     end
@@ -259,6 +263,11 @@ module RuremaSearch
             table.reference("version", "Versions")
             table.reference("visibility", "Visibilities")
           end
+        end
+
+        schema.create_table("Specs",
+                            :type => :patricia_trie,
+                            :key_type => "ShortText") do |table|
         end
 
         schema.create_table("Terms",

@@ -77,7 +77,7 @@ module RuremaSearch
           @expression = result.expression
           result = result.select("_score = rand()", :syntax => :script)
         else
-          result = @database.entries.select do |record|
+          result = entries.select do |record|
             conditions.inject(nil) do |expression, condition|
               if expression
                 expression & condition.call(record)
@@ -265,21 +265,32 @@ module RuremaSearch
                                          :normalize => true,
                                          :width => 140)
         description = remove_markup(entry.description)
+        snippet_description = nil
         if @snippet and description
-          snippets = @snippet.execute(description)
+          snippets = @snippet.execute(h(description))
           unless snippets.empty?
             separator = tag("span", {:class => "separator"}, "...")
+            snippets = snippets.collect do |snippet|
+              auto_spec_link(snippet)
+            end
             snippets << ""
             snippets.unshift("")
-            description = snippets.join(separator)
+            snippet_description = snippets.join(separator)
           end
         end
-        tag("div", {:class => "snippet"}, description.to_s)
+        snippet_description ||= auto_spec_link(h(description))
+        tag("div", {:class => "snippet"}, snippet_description)
       end
 
       def remove_markup(source)
         return nil if source.nil?
         source.gsub(/\[\[.+?:(.+?)\]\]/, '\1')
+      end
+
+      def auto_spec_link(text)
+        @database.specs.tag_keys(text) do |record, word|
+          a(word, "./query:#{u(word)}/")
+        end
       end
 
       def a(label, href, attributes={})

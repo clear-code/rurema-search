@@ -40,6 +40,7 @@ module RuremaSearch
           add_special_variable(entry)
         end
         add_entry(klass, entry)
+        add_spec(klass, entry)
       end
     end
 
@@ -154,6 +155,10 @@ module RuremaSearch
                                 attributes)
         end
       end
+    end
+
+    def add_spec(klass, entry)
+      @database.specs.add(entry.spec_string)
     end
 
     def normalize_type_label(label)
