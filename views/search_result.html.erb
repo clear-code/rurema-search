@@ -20,7 +20,7 @@
         <td><%= link_entry(entry) %></td>
         <td><%= link_type(entry) %></td>
         <td><%= link_version(entry) %></td>
-        <td><%= h(entry.description) %></td>
+        <td><%= format_description(entry) %></td>
       </tr>
 <%  end %>
     </tbody>

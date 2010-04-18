@@ -73,7 +73,9 @@ module RuremaSearch
         if conditions.empty?
           @n_entries = entries.size
           @drilldown_result = drilldown_items(entries)
-          result = entries.select.select("_score = rand()", :syntax => :script)
+          result = entries.select
+          @expression = result.expression
+          result = result.select("_score = rand()", :syntax => :script)
         else
           result = @database.entries.select do |record|
             conditions.inject(nil) do |expression, condition|
@@ -84,6 +86,7 @@ module RuremaSearch
               end
             end
           end
+          @expression = result.expression
           @n_entries = result.size
           @drilldown_result = drilldown_items(result)
         end
@@ -103,11 +106,13 @@ module RuremaSearch
         parameters.each do |parameter|
           key, value = parameter.split(/:/, 2)
           unescaped_value = URI.unescape(value)
+          unescaped_value.force_encoding("UTF-8")
+          # raise unless unescaped_value.valid_encoding?
           case key
           when "query"
             @query = unescaped_value
           when "version"
-            @version = value
+            @version = unescaped_value
           when "type"
             @type = unescaped_value
           end
@@ -119,7 +124,9 @@ module RuremaSearch
         conditions = []
         unless @query.empty?
           conditions << Proc.new do |record|
-            (record["name"] =~ @query) | (record["document"] =~ @query)
+            (record["name"] =~ @query) |
+              (record["signature"] =~ @query) |
+              (record["description"] =~ @query)
           end
         end
         if @version
@@ -215,6 +222,26 @@ module RuremaSearch
 
       def link_version(entry)
         a(h(entry.version.key), "./version:#{u(entry.version.key)}/")
+      end
+
+      def format_description(entry)
+        @snippet ||= @expression.snippet(["<span class=\"keyword\">",
+                                          "</span>"],
+                                         :normalize => true,
+                                         :width => 140)
+        description = entry.description
+        if description
+          snippets = @snippet.execute(remove_markup(description))
+          unless snippets.empty?
+            separator = tag("span", {:class => "separator"}, "...")
+            description = snippets.join(separator)
+          end
+        end
+        tag("div", {:class => "snippet"}, description.to_s)
+      end
+
+      def remove_markup(source)
+        source.gsub(/\[\[.+?:(.+?)\]\]/, '\1')
       end
 
       def a(label, href, attributes={})
