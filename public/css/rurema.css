@@ -196,6 +196,11 @@ div.paginate span.paginate-current
   background-color: #4c4cc6;
 }
 
+div.no-result
+{
+  padding-left: 1em;
+}
+
 div.footer
 {
   border-top: 1px solid #c1c1ec;

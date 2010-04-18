@@ -107,7 +107,7 @@ module RuremaSearch
         @type = nil
         parameters.each do |parameter|
           key, value = parameter.split(/:/, 2)
-          unescaped_value = URI.unescape(value)
+          unescaped_value = URI.unescape(value).gsub(/\+/, ' ').strip
           unescaped_value.force_encoding("UTF-8")
           # TODO: raise unless unescaped_value.valid_encoding?
           case key
@@ -116,6 +116,8 @@ module RuremaSearch
               @query = unescaped_value
             else
               @query << " #{unescaped_value}"
+              @available_paths.assoc(key)[1] = unescaped_value
+              next
             end
           when "version"
             @version = unescaped_value
@@ -124,6 +126,7 @@ module RuremaSearch
           else
             next
           end
+          next if @available_paths.assoc(key)
           @available_paths << [key, unescaped_value]
         end
         create_conditions
@@ -133,9 +136,8 @@ module RuremaSearch
         conditions = []
         if @query
           conditions << Proc.new do |record|
-            (record["name"] =~ @query) |
-              (record["signature"] =~ @query) |
-              (record["description"] =~ @query)
+            target = (record["name"] | record["signature"] | record["description"])
+            target.match(@query, :allow_update => false)
           end
         end
         if @version
