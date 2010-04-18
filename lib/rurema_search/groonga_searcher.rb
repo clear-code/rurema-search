@@ -181,7 +181,7 @@ module RuremaSearch
         if signature
           label = label.sub(/(\.?#).+\z/, '\1') + signature
         end
-        a(h(label).gsub(/(::|\.|\.?#|\(\|\)|,)/, "<wbr />\\1<wbr />"),
+        a(h(label).gsub(/(::|\.|\.?#|\(\|\)|,|_)/, "<wbr />\\1<wbr />"),
           entry_href(entry))
       end
 
@@ -211,6 +211,10 @@ module RuremaSearch
       def type_label(entry)
         type = entry.type.key
         TYPE_LABEL[type] || type
+      end
+
+      def link_version(entry)
+        a(h(entry.version.key), "./version:#{u(entry.version.key)}/")
       end
 
       def a(label, href, attributes={})
