@@ -68,38 +68,73 @@ module RuremaSearch
       def process
         start = Time.now.to_i
         _, *parameters = @request.path_info.split(/\//)
-        @query = ''
-        @version = nil
-        parameters.each do |parameter|
-          key, value = parameter.split(/:/, 2)
-          case key
-          when "query"
-            @query = URI.unescape(value)
-          when "version"
-            @version = value
-          end
-        end
+	conditions = parse_parameters(parameters)
         entries = @database.entries
-        if @query.empty?
+        if conditions.empty?
           @n_entries = entries.size
           @drilldown_result = drilldown_items(entries)
           result = entries.select.select("_score = rand()", :syntax => :script)
         else
           result = @database.entries.select do |record|
-            (record["name"] =~ @query) | (record["document"] =~ @query)
+            conditions.inject(nil) do |expression, condition|
+              if expression
+                expression & condition.call(record)
+              else
+                condition.call(record)
+              end
+            end
           end
           @n_entries = result.size
           @drilldown_result = drilldown_items(result)
         end
         @page = ensure_page
         @entries = result.sort([["_score", :descending]],
-                               :offset => @n_entries_per_page * @page - 1,
+                               :offset => @n_entries_per_page * (@page - 1),
                                :limit => @n_entries_per_page)
         @elapsed_time = Time.now.to_f - start.to_f
         @response.write(layout)
       end
 
       private
+      def parse_parameters(parameters)
+        @query = ''
+        @version = nil
+        @type = nil
+        parameters.each do |parameter|
+          key, value = parameter.split(/:/, 2)
+          unescaped_value = URI.unescape(value)
+          case key
+          when "query"
+            @query = unescaped_value
+          when "version"
+            @version = value
+          when "type"
+            @type = unescaped_value
+          end
+        end
+        create_conditions
+      end
+
+      def create_conditions
+        conditions = []
+        unless @query.empty?
+          conditions << Proc.new do |record|
+            (record["name"] =~ @query) | (record["document"] =~ @query)
+          end
+        end
+        if @version
+          conditions << Proc.new do |record|
+            record["version"] == @version
+          end
+        end
+        if @type
+          conditions << Proc.new do |record|
+            record["type"] == @type
+          end
+        end
+        conditions
+      end
+
       def drilldown_items(entries)
         result = []
         result << [:version, drilldown_item(entries, "version", "_key")]
@@ -128,7 +163,6 @@ module RuremaSearch
           return 1
         end
         return 1 if page < 0
-        p [page * @n_entries_per_page, @n_entries]
         return 1 if page * @n_entries_per_page > @n_entries
         page
       end
@@ -142,7 +176,7 @@ module RuremaSearch
       end
 
       def link_entry(entry)
-        a(h("#{entry.name}: (#{entry.version.key})"),
+        a(h(entry.name).gsub(/(::|\.|\.?#)/, "<wbr />\\1<wbr />"),
           entry_href(entry))
       end
 
@@ -156,6 +190,19 @@ module RuremaSearch
         else
           "/#{entry.type.key}"
         end
+      end
+
+      def link_type(entry)
+        a(h(type_label(entry)), "./type:#{u(entry.type.key)}/")
+      end
+
+      TYPE_LABEL = {
+        "class" => "クラス",
+        "instance method" => "インスタンスメソッド",
+      }
+      def type_label(entry)
+        type = entry.type.key
+        TYPE_LABEL[type] || type
       end
 
       def a(label, href, attributes={})

@@ -5,10 +5,25 @@
 
 <div class="result">
 <%= paginate %>
-  <ol class="entries">
+  <table class="entries">
+    <thead>
+      <tr>
+        <th>名前</th>
+        <th>種類</th>
+        <th>バージョン</th>
+        <th>内容</th>
+      </tr>
+    </thead>
+    <tbody>
 <%  @entries.each do |entry| %>
-    <li class="entry"><%= link_entry(entry) %> (<%= h(entry.score) %>)</li>
+      <tr>
+        <td><%= link_entry(entry) %></td>
+        <td><%= link_type(entry) %></td>
+        <td><%= h(entry.version.key) %></td>
+        <td><%= h(entry.document) %></td>
+      </tr>
 <%  end %>
-  </ol>
+    </tbody>
+  </table>
 <%= paginate %>
 </div>
