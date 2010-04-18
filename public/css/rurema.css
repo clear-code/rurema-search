@@ -72,20 +72,23 @@ div.content div.statistics
   text-align: right;
   background-color: #e9e9f8;
   border-bottom: 1px solid #c1c1ec;
+  margin-bottom: 1em;
 }
 
 div.result
 {
   padding-left: 1em;
   padding-right: 1em;
+  margin-bottom: 1em;
 }
 
 table.entries
 {
   border-collapse: separate;
   border-spacing: 0;
-  padding-top: 1em;
   border-bottom: 1px solid #c1c1ec;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 table.entries th
@@ -148,4 +151,19 @@ div.paginate span.paginate-current
 {
   color: white;
   background-color: #4c4cc6;
+}
+
+div.footer
+{
+  border-top: 1px solid #c1c1ec;
+  padding-top: 0.5em;
+  font-size: smaller;
+  color: #aaa;
+}
+
+div.footer p
+{
+  padding: 0;
+  margin: 0;
+  text-align: center;
 }
