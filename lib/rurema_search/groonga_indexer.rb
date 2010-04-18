@@ -13,6 +13,9 @@ module RuremaSearch
       @bitclust_database.classes.each do |klass|
         index_class(klass)
       end
+      @bitclust_database.docs.each do |doc|
+        index_document(doc)
+      end
     end
 
     private
@@ -42,6 +45,23 @@ module RuremaSearch
         add_entry(klass, entry)
         add_spec(klass, entry)
       end
+    end
+
+    def index_document(document)
+      source = document.source
+      if source.respond_to?(:force_encoding)
+        source.force_encoding(@bitclust_database.encoding)
+      end
+      attributes = {
+        :name => document.title,
+        :local_names => [document.name],
+        :type => "document",
+        :document => source,
+        :description => "#{document.title} #{source}",
+        :version => version,
+      }
+      @database.entries.add("#{version}:#{document.name}",
+                            attributes)
     end
 
     def add_class(klass)

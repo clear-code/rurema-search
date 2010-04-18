@@ -257,6 +257,7 @@ module RuremaSearch
         "module-function" => "モジュールファンクション",
         "constant" => "定数",
         "variable" => "変数",
+        "document" => "文書",
       }
       def type_label(entry)
         type = entry.type.key
@@ -286,7 +287,7 @@ module RuremaSearch
             snippet_description = snippets.join(separator)
           end
         end
-        snippet_description ||= auto_spec_link(h(description))
+        snippet_description ||= auto_spec_link(h(description[0, 300] + "..."))
         tag("div", {:class => "snippet"}, snippet_description)
       end
 
