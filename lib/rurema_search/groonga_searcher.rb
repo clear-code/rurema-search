@@ -31,7 +31,7 @@ module RuremaSearch
       else
         context = SearchContext.new(@database, request, response)
         context.extend(@view)
-        context.handle
+        context.process
       end
       response.to_a
     end
@@ -63,7 +63,7 @@ module RuremaSearch
         @response = response
       end
 
-      def handle
+      def process
         start = Time.now.to_i
         _, *parameters = @request.path_info.split(/\//)
         @query = ''
