@@ -1,3 +1,16 @@
+<div class="version-select">
+  <ul>
+    <li class="version-select<%= @version.nil? ? '-current' : '' %>">
+      <%= link_version_select(:all) %>
+    </li>
+<% @versions.each do |version| %>
+    <li class="version-select<%= @version == version.key ? '-current' : '' %>">
+      <%= link_version_select(version.key) %>
+    </li>
+<% end %>
+  </ul>
+</div>
+
 <div class="statistics">
   <span class="total"><%= h("#{@n_entries}件ヒット") %></span>
   <span class="elapsed-time"><%= h("（%.3f秒）" % @elapsed_time) %></span>

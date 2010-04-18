@@ -94,6 +94,10 @@ module RuremaSearch
       @special_variables ||= Groonga["SpecialVariables"]
     end
 
+    def versions
+      @versions ||= Groonga["Versions"]
+    end
+
     private
     def check_availability
       begin

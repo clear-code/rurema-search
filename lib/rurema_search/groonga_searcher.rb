@@ -94,12 +94,14 @@ module RuremaSearch
         @entries = result.sort([["_score", :descending]],
                                :offset => @n_entries_per_page * (@page - 1),
                                :limit => @n_entries_per_page)
+        @versions = @database.versions
         @elapsed_time = Time.now.to_f - start.to_f
         @response.write(layout)
       end
 
       private
       def parse_parameters(parameters)
+        @available_paths = []
         @query = ''
         @version = nil
         @type = nil
@@ -107,7 +109,7 @@ module RuremaSearch
           key, value = parameter.split(/:/, 2)
           unescaped_value = URI.unescape(value)
           unescaped_value.force_encoding("UTF-8")
-          # raise unless unescaped_value.valid_encoding?
+          # TODO: raise unless unescaped_value.valid_encoding?
           case key
           when "query"
             @query = unescaped_value
@@ -115,7 +117,10 @@ module RuremaSearch
             @version = unescaped_value
           when "type"
             @type = unescaped_value
+          else
+            next
           end
+          @available_paths << [key, unescaped_value]
         end
         create_conditions
       end
@@ -186,6 +191,32 @@ module RuremaSearch
           "/")
       end
 
+      def link_version_select(version)
+        href = version_select_href(version)
+        if href.empty?
+          href = "/"
+        else
+          href = "/#{href}/"
+        end
+        a(h(version == :all ? "すべて" : version), href)
+      end
+
+      def version_select_href(version)
+        @no_version_paths ||= @available_paths.reject do |key, value|
+          key == "version"
+        end
+        paths = []
+        case version
+        when :all
+          paths = @no_version_paths
+        else
+          paths = @no_version_paths + [["version", version]]
+        end
+        paths.collect do |key, value|
+          "#{key}:#{value}"
+        end.join("/")
+      end
+
       def link_entry(entry)
         label = entry.name
         signature = entry.signature
@@ -233,9 +264,9 @@ module RuremaSearch
                                           "</span>"],
                                          :normalize => true,
                                          :width => 140)
-        description = entry.description
-        if description
-          snippets = @snippet.execute(remove_markup(description))
+        description = remove_markup(entry.description)
+        if @snippet and description
+          snippets = @snippet.execute(description)
           unless snippets.empty?
             separator = tag("span", {:class => "separator"}, "...")
             snippets << ""
@@ -247,6 +278,7 @@ module RuremaSearch
       end
 
       def remove_markup(source)
+        return nil if source.nil?
         source.gsub(/\[\[.+?:(.+?)\]\]/, '\1')
       end
 

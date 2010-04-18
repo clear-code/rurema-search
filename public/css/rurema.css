@@ -29,7 +29,6 @@ a:focus
 div.header
 {
   position: static;
-  border-bottom: 1px solid #c1c1ec;
 }
 
 div.header h1
@@ -67,6 +66,45 @@ div.content
   clear: both;
 }
 
+div.content div.version-select
+{
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid #c1c1ec;
+}
+
+div.content div.version-select ul,
+div.content div.version-select ul li
+{
+  margin: 0;
+  padding: 0;
+}
+
+div.content div.version-select ul
+{
+  padding-left: 1em;
+}
+
+div.content div.version-select ul li
+{
+  display: inline;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+  border: 1px solid #c1c1ec;
+  border-bottom-color: #e9e9f8;
+}
+
+div.content div.version-select ul li.version-select-current
+{
+  color: white;
+  background-color: #4c4cc6;
+}
+
+div.content div.version-select ul li a
+{
+  text-decoration: none;
+}
+
 div.content div.statistics
 {
   text-align: right;
@@ -77,6 +115,7 @@ div.content div.statistics
 
 div.result
 {
+  clear: both;
   padding-left: 1em;
   padding-right: 1em;
   margin-bottom: 1em;
