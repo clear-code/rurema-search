@@ -127,23 +127,33 @@ module RuremaSearch
 
     def add_entry(klass, entry)
       return if @database.use_view?
-      attributes = {
-        :name => entry.spec_string,
-        :local_names => entry.names,
-        :type => normalize_type_label(entry.type_label),
-        :version => version,
-        :document => entry.source,
-        :visibility => entry.visibility.to_s
-      }
-      if klass.class?
-        attributes[:class] = class_key(klass)
-      elsif klass.module?
-        attributes[:module] = module_key(klass)
-      else
-        attributes[:object] = object_key(klass)
+      source = entry.source
+      if source.respond_to?(:force_encoding)
+        source.force_encoding(@bitclust_database.encoding)
       end
-      @database.entries.add("#{version}:#{entry.spec_string}",
-                            attributes)
+      foreach_method_chunk(source) do |signatures, description|
+        signatures.each do |signature|
+          attributes = {
+            :name => entry.spec_string,
+            :local_names => entry.names,
+            :type => normalize_type_label(entry.type_label),
+            :version => version,
+            :document => source,
+            :signature => signature.to_s,
+            :description => description,
+            :visibility => entry.visibility.to_s
+          }
+          if klass.class?
+            attributes[:class] = class_key(klass)
+          elsif klass.module?
+            attributes[:module] = module_key(klass)
+          else
+            attributes[:object] = object_key(klass)
+          end
+          @database.entries.add("#{version}:#{entry.spec_string}:#{signature}",
+                                attributes)
+        end
+      end
     end
 
     def normalize_type_label(label)
@@ -160,6 +170,11 @@ module RuremaSearch
 
     def object_key(klass)
       "#{version}:#{klass.name}"
+    end
+
+    def foreach_method_chunk(source, &block)
+      @screen ||= BitClust::TemplateScreen.new(:database => @bitclust_database)
+      @screen.send(:foreach_method_chunk, source, &block)
     end
   end
 end

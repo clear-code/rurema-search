@@ -246,6 +246,8 @@ module RuremaSearch
             table.short_text("name")
             table.short_text("local_names", :type => :vector)
             table.text("document")
+            table.text("signature")
+            table.text("description")
             table.reference("type", "Types")
             table.reference("class", "Entries")
             table.reference("module", "Entries")
@@ -279,6 +281,8 @@ module RuremaSearch
           unless use_view?
             table.index("Entries.name")
             table.index("Entries.document")
+            table.index("Entries.signature")
+            table.index("Entries.description")
           end
         end
       end

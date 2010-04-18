@@ -176,7 +176,12 @@ module RuremaSearch
       end
 
       def link_entry(entry)
-        a(h(entry.name).gsub(/(::|\.|\.?#)/, "<wbr />\\1<wbr />"),
+        label = entry.name
+        signature = entry.signature
+        if signature
+          label = label.sub(/(\.?#).+\z/, '\1') + signature
+        end
+        a(h(label).gsub(/(::|\.|\.?#|\(\|\)|,)/, "<wbr />\\1<wbr />"),
           entry_href(entry))
       end
 
@@ -198,7 +203,10 @@ module RuremaSearch
 
       TYPE_LABEL = {
         "class" => "クラス",
-        "instance method" => "インスタンスメソッド",
+        "instance-method" => "インスタンスメソッド",
+        "singleton-method" => "シングルトンメソッド",
+        "module-function" => "モジュールファンクション",
+        "constant" => "定数",
       }
       def type_label(entry)
         type = entry.type.key
