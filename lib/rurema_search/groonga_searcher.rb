@@ -22,10 +22,9 @@ module RuremaSearch
 
       if request.post?
         query = request['query'] || ''
-        if query.empty?
-          request.path_info = "/"
-        else
-          request.path_info = "/query:#{escape(query)}/"
+        unless query.empty?
+          path_info = request.path_info.gsub(/\/query:.+?\//, '/')
+          request.path_info = "#{path_info}query:#{escape(query)}/"
         end
         response.redirect(request.url.split(/\?/, 2)[0])
       else
@@ -136,7 +135,9 @@ module RuremaSearch
         conditions = []
         if @query
           conditions << Proc.new do |record|
-            target = (record["name"] | record["signature"] | record["description"])
+            target = (record["name"] |
+                      record["signature"] |
+                      record["description"])
             target.match(@query, :allow_update => false)
           end
         end
@@ -238,7 +239,7 @@ module RuremaSearch
         case entry.type.key
         when "class"
           mapper.class_url(entry.name)
-        when "constant", "variable", "instance method", "singleton method"
+        when "constant", "variable", "instance-method", "singleton-method"
           mapper.method_url(entry.name)
         else
           "/#{entry.type.key}"
