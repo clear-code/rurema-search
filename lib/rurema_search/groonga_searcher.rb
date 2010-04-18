@@ -228,9 +228,9 @@ module RuremaSearch
         label = entry.name
         signature = entry.signature
         if signature
-          label = label.sub(/(\.?#).+\z/, '\1') + signature
+          label = label.sub(/(?:(\.?#)|\$).+\z/, '\1') + signature
         end
-        a(h(label).gsub(/(::|\.|\.?#|\(\|\)|,|_)/, "<wbr />\\1<wbr />"),
+        a(h(label).gsub(/(::|\.|\.?#|\(\|\)|,|_|\$)/, "<wbr />\\1<wbr />"),
           entry_href(entry))
       end
 
@@ -256,6 +256,7 @@ module RuremaSearch
         "singleton-method" => "シングルトンメソッド",
         "module-function" => "モジュールファンクション",
         "constant" => "定数",
+        "variable" => "変数",
       }
       def type_label(entry)
         type = entry.type.key
