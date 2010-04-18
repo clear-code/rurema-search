@@ -5,10 +5,17 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <meta name="robot" content="noindex,nofollow" />
-  <title>Rubyリファレンスマニュアル</title>
+  <title><%= title %></title>
   <link rel="stylesheet" href="/css/rurema.css" type="text/css" media="all" />
 </head>
 <body>
-  <h1>Rubyリファレンスマニュアル</h1>
+  <h1><%= h1 %></h1>
+  <div class="search-form">
+    <form method="POST" action="./">
+      <input type="text" name="query" value="<%= h(@query) %>">
+      <input type="submit" value="検索">
+    </form>
+  </div>
+  <%= search_result %>
 </body>
 </html>

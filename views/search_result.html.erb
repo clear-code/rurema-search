@@ -1,0 +1,12 @@
+<div class="statistics">
+  <span class="total"><%= h("#{@n_entries}件ヒット") %></span>
+  <span class="elapsed-time"><%= h("（%.3f秒）" % @elapsed_time) %></span>
+</div>
+
+<div class="result">
+  <ol class="entries">
+<%  @entries.each do |entry| %>
+    <li class="entry"><%=h entry.name %></li>
+<%  end %>
+  </ol>
+</div>
