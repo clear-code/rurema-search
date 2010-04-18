@@ -3,5 +3,6 @@
 # License: LGPLv3+
 
 require 'bitclust'
+require 'rurema_search/url_mapper'
 require 'rurema_search/groonga_database'
 require 'rurema_search/groonga_indexer'

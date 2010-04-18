@@ -61,6 +61,7 @@ module RuremaSearch
         @database = database
         @request = request
         @response = response
+        @url_mappers = {}
       end
 
       def process
@@ -81,15 +82,15 @@ module RuremaSearch
         if @query.empty?
           @n_entries = entries.size
           @drilldown_result = drilldown_items(entries)
-          @entries = entries.sort(["name"], :limit => 10)
+          result = entries.select.select("_score = rand()", :syntax => :script)
         else
           result = @database.entries.select do |record|
             (record["name"] =~ @query) | (record["document"] =~ @query)
           end
           @n_entries = result.size
           @drilldown_result = drilldown_items(result)
-          @entries = result.sort(["_nsubrecs"], :limit => 10)
         end
+          @entries = result.sort([["_score", :descending]], :limit => 10)
         @elapsed_time = Time.now.to_f - start.to_f
         @response.write(layout)
       end
@@ -119,6 +120,58 @@ module RuremaSearch
 
       def h1
         title
+      end
+
+      def link_entry(entry)
+        a(h("#{entry.name}: (#{entry.version.key})"),
+          entry_href(entry))
+      end
+
+      def entry_href(entry)
+        mapper = url_mapper(entry.version.key)
+        case entry.type.key
+        when "class"
+          mapper.class_url(entry.name)
+        when "constant", "variable", "instance method", "singleton method"
+          mapper.method_url(entry.name)
+        else
+          "/#{entry.type.key}"
+        end
+      end
+
+      def a(label, href, attributes={})
+        tag("a", attributes.merge(:href => href), label)
+      end
+
+      def tag(name, attributes={}, content=nil)
+        _tag = "<#{name}"
+        attributes.each do |key, value|
+          _tag << " #{h(key)}=\"#{h(value)}\""
+        end
+        if content
+          _tag << ">#{content}</#{name}>"
+        else
+          if no_content_tag_name?(name)
+            _tag << " />"
+          else
+            _tag << "></#{name}>"
+          end
+        end
+        _tag
+      end
+
+      NO_CONTENT_TAG_NAMES = ["meta", "img"]
+      def no_content_tag_name?(name)
+        NO_CONTENT_TAG_NAMES.include?(name)
+      end
+
+      def url_mapper(version)
+        @url_mappers[version] ||= create_url_mapper(version)
+      end
+
+      def create_url_mapper(version)
+        RuremaSearch::URLMapper.new(:base_url => "/",
+                                    :version => version)
       end
     end
   end
