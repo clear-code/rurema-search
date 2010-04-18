@@ -15,12 +15,12 @@
       </tr>
     </thead>
     <tbody>
-<%  @entries.each do |entry| %>
-      <tr>
-        <td><%= link_entry(entry) %></td>
-        <td><%= link_type(entry) %></td>
-        <td><%= link_version(entry) %></td>
-        <td><%= format_description(entry) %></td>
+<%  @entries.each_with_index do |entry, i| %>
+      <tr class="entry-<%= i.odd? ? 'odd' : 'even' %>">
+        <td class="entry-name"><%= link_entry(entry) %></td>
+        <td class="entry-type"><%= link_type(entry) %></td>
+        <td class="entry-version"><%= link_version(entry) %></td>
+        <td class="entry-description"><%= format_description(entry) %></td>
       </tr>
 <%  end %>
     </tbody>

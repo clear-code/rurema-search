@@ -234,6 +234,8 @@ module RuremaSearch
           snippets = @snippet.execute(remove_markup(description))
           unless snippets.empty?
             separator = tag("span", {:class => "separator"}, "...")
+            snippets << ""
+            snippets.unshift("")
             description = snippets.join(separator)
           end
         end
@@ -299,6 +301,18 @@ module RuremaSearch
         end
 
         _paginate << ""
+        _paginate = _paginate.collect do |link|
+          case link
+          when ""
+            link
+          when @page.to_s
+            tag("span", {"class" => "paginate-current"}, link)
+          when /\A<a/
+            tag("span", {"class" => "paginate-link"}, link)
+          else
+            tag("span", {"class" => "paginate-text"}, link)
+          end
+        end
         tag("div", {"class" => "paginate"}, _paginate.join("\n"))
       end
 

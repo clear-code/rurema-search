@@ -1,5 +1,64 @@
 @charset "utf-8";
 
+body
+{
+  background-color: white;
+  color: black;
+}
+
+a
+{
+  color: #4c4cc6;
+}
+
+a:visited
+{
+  color: #c1c1ec;
+}
+
+a:hover,
+a:focus
+{
+  color: white;
+  background-color: #4c4cc6;
+}
+
+h1
+{
+  color: white;
+  background-color: #4c4cc6;
+  padding: 0.4em;
+  margin: 0.2em 0em 0.5em 0em;
+}
+
+table.entries
+{
+  border-collapse: separate;
+  border-spacing: 0;
+  padding-top: 1em;
+  border-bottom: 1px solid #c1c1ec;
+}
+
+table.entries th
+{
+  border: 1px solid #c1c1ec;
+}
+
+table.entries tr.entry-even
+{
+  background-color: #e9e9f8;
+}
+
+table.entries td
+{
+  padding: 0.25em;
+}
+
+table.entries td.entry-description
+{
+  padding: 0.5em;
+}
+
 span.keyword
 {
   font-weight: bold;
@@ -8,4 +67,36 @@ span.keyword
 div.snippet span.separator
 {
   font-weight: bold;
+}
+
+div.paginate
+{
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+div.paginate a
+{
+  text-decoration: none;
+}
+
+div.paginate span.paginate-link,
+div.paginate span.paginate-text,
+div.paginate span.paginate-current
+{
+  border: 1px solid #c1c1ec;
+  vertical-align: middle;
+  padding: 0.2em 0.4em;
+}
+
+div.paginate span.paginate-text
+{
+  color: #aaa;
+}
+
+div.paginate span.paginate-current
+{
+  color: white;
+  background-color: #4c4cc6;
 }
