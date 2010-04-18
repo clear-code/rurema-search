@@ -56,8 +56,8 @@ module RuremaSearch
         source.force_encoding(@bitclust_database.encoding)
       end
       attributes = {
-        :name => document.title,
-        :local_names => [document.name],
+        :name => document.name,
+        :label => document.title,
         :type => "document",
         :document => source,
         :description => "#{document.title} #{source}",
@@ -82,6 +82,7 @@ module RuremaSearch
       description << source
       attributes = {
         :name => library.name,
+        :label => library.name,
         :type => "library",
         :document => source,
         :description => description.join(" "),
@@ -111,9 +112,11 @@ module RuremaSearch
       unless @database.use_view?
         @database.entries.add(class_key(klass),
                               :name => klass.name,
+                              :label => klass.name,
                               :type => klass.type.to_s,
                               :version => version,
-                              :document => klass.source)
+                              :document => klass.source,
+                              :description => klass.source)
       end
     end
 
@@ -183,6 +186,7 @@ module RuremaSearch
         signatures.each do |signature|
           attributes = {
             :name => entry.spec_string,
+            :label => "#{klass.name}#{entry.typemark}#{signature}",
             :local_names => entry.names,
             :type => normalize_type_label(entry.type_label),
             :version => version,

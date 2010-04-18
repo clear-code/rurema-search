@@ -105,9 +105,9 @@ module RuremaSearch
         @version = nil
         @type = nil
         parameters.each do |parameter|
+          parameter = parameter.force_encoding("UTF-8")
           key, value = parameter.split(/:/, 2)
           unescaped_value = URI.unescape(value).gsub(/\+/, ' ').strip
-          unescaped_value.force_encoding("UTF-8")
           # TODO: raise unless unescaped_value.valid_encoding?
           case key
           when "query"
@@ -225,11 +225,7 @@ module RuremaSearch
       end
 
       def link_entry(entry)
-        label = entry.name
-        signature = entry.signature
-        if signature
-          label = label.sub(/(?:(\.?#)|\$).+\z/, '\1') + signature
-        end
+        label = entry.label || entry.name
         a(h(label).gsub(/(::|\.|\.?#|\(\|\)|,|_|\$)/, "<wbr />\\1<wbr />"),
           entry_href(entry))
       end
@@ -256,6 +252,7 @@ module RuremaSearch
 
       TYPE_LABEL = {
         "class" => "クラス",
+        "module" => "モジュール",
         "instance-method" => "インスタンスメソッド",
         "singleton-method" => "シングルトンメソッド",
         "module-function" => "モジュールファンクション",
@@ -292,7 +289,10 @@ module RuremaSearch
             snippet_description = snippets.join(separator)
           end
         end
-        snippet_description ||= auto_spec_link(h(description[0, 300] + "..."))
+        unless description.nil?
+          # snippet_description ||= auto_spec_link(h(description[0, 300] + "..."))
+          snippet_description ||= h(description[0, 300] + "...")
+        end
         tag("div", {:class => "snippet"}, snippet_description)
       end
 

@@ -252,6 +252,7 @@ module RuremaSearch
                               :type => :hash,
                               :key_type => "ShortText") do |table|
             table.short_text("name")
+            table.short_text("label")
             table.short_text("local_names", :type => :vector)
             table.text("document")
             table.text("signature")
@@ -293,6 +294,7 @@ module RuremaSearch
           table.index("SpecialVariables.document")
           unless use_view?
             table.index("Entries.name")
+            table.index("Entries.label")
             table.index("Entries.document")
             table.index("Entries.signature")
             table.index("Entries.description")
