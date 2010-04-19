@@ -83,6 +83,7 @@ module RuremaSearch
                             :version => version,
                             :document => source,
                             :description => source)
+      @database.specs(klass.name, :type => klass.type.to_s)
     end
 
     def add_entry(klass, entry)

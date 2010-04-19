@@ -16,6 +16,10 @@
   <span class="elapsed-time"><%= h("（%.3f秒）" % @elapsed_time) %></span>
 </div>
 
+<div class="topic-paths">
+  <%= topic_path %>
+</div>
+
 <% if @n_entries.zero? %>
 <div class="no-result">
   <p>見つかりませんでした。検索条件を変えてみませんか？</p>

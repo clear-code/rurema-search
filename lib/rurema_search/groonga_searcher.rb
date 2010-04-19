@@ -211,6 +211,26 @@ module RuremaSearch
           "/")
       end
 
+      def topic_path
+        paths = []
+        n_paths = @available_paths.size
+        @available_paths.each_with_index do |(key, value), i|
+          href = "./" + "../" * (n_paths - i - 1)
+          label = h("#{key}:#{value}")
+          if i == n_paths - 1
+            paths << label
+          else
+            paths << a(label, href)
+          end
+        end
+        return "" if paths.empty?
+
+        paths.unshift(a(h("全件表示"), "/"))
+        paths.collect do |path|
+          tag("span", {:class => "topic-path"}, path)
+        end.join(h(" > "))
+      end
+
       def link_version_select(version)
         href = version_select_href(version)
         if href.empty?

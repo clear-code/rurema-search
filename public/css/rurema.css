@@ -117,6 +117,11 @@ div.content div.statistics
   margin-bottom: 1em;
 }
 
+div.topic-paths
+{
+  margin-left: 1em;
+}
+
 div.result
 {
   clear: both;
@@ -137,7 +142,7 @@ dl.entries
 dl.entries dt
 {
   border-top: 1px solid #c1c1ec;
-  padding-top: 0.25em;
+  padding-top: 0.15em;
   padding-bottom: 0.25em;
   background-color: #e9e9f8;
 }
