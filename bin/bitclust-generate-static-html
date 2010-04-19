@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+#
+# Copyright (c) 2010 Kouhei Sutou <kou@clear-code.com>
+#
+# License: GPLv3+
+
+bc_tohtmlpackage_rb = ARGV.shift
+bc_tohtmlpackage_rb_content = File.read(bc_tohtmlpackage_rb).gsub(/^main$/, '')
+eval(bc_tohtmlpackage_rb_content, binding, bc_tohtmlpackage_rb)
+
+class BitClust::TemplateScreen
+  undef search_form
+  def search_form
+    <<-EOF
+    <form method="GET" action="/version:#{h(@target_version)}"
+          name="top_search" id="top_search">
+      <input value="" name="query" size="15">
+      <input value="#{h(_('Search'))}" type="submit">
+    </form>
+    EOF
+  end
+end
+
+main
