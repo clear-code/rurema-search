@@ -16,7 +16,7 @@ a
 
 a:visited
 {
-  color: #c1c1ec;
+  color: #9191ec;
 }
 
 a:hover,
@@ -146,6 +146,17 @@ dl.entries dd
 {
   margin-top: 0.5em;
   margin-bottom: 1em;
+}
+
+dl.entries dd ul.entry-metadata
+{
+  margin: 0;
+  padding: 0;
+}
+
+dl.entries dd ul.entry-metadata li
+{
+  display: inline;
 }
 
 span.keyword

@@ -102,9 +102,8 @@ module RuremaSearch
       private
       def parse_parameters(parameters)
         @available_paths = []
-        @query = nil
-        @version = nil
-        @type = nil
+        @query = @version = @type = @module = @class = @object = nil
+        @instance_method = nil
         parameters.each do |parameter|
           parameter = parameter.force_encoding("UTF-8")
           key, value = parameter.split(/:/, 2)
@@ -123,6 +122,14 @@ module RuremaSearch
             @version = unescaped_value
           when "type"
             @type = unescaped_value
+          when "module"
+            @module = unescaped_value
+          when "class"
+            @class = unescaped_value
+          when "object"
+            @object = unescaped_value
+          when "instance-method"
+            @instance_method = unescaped_value
           else
             next
           end
@@ -142,23 +149,28 @@ module RuremaSearch
             target.match(@query, :allow_update => false)
           end
         end
-        if @version
-          conditions << Proc.new do |record|
-            record["version"] == @version
-          end
-        end
-        if @type
-          conditions << Proc.new do |record|
-            record["type"] == @type
-          end
+        {
+          "version" => @version,
+          "type" => @type,
+          "module" => @module,
+          "class" => @class,
+          "name" => @instance_method,
+        }.each do |column, value|
+          conditions << equal_condition(column, value) if value
         end
         conditions
+      end
+
+      def equal_condition(column, value)
+        Proc.new do |record|
+          record[column] == value
+        end
       end
 
       def drilldown_items(entries)
         result = []
         result << [:version, drilldown_item(entries, "version", "_key")]
-        result << [:class, drilldown_item(entries, "class", "name")]
+        result << [:class, drilldown_item(entries, "class", "_key")]
         result
       end
 
@@ -272,14 +284,11 @@ module RuremaSearch
       end
 
       def format_description(entry)
-        @snippet ||= @expression.snippet(["<span class=\"keyword\">",
-                                          "</span>"],
-                                         :normalize => true,
-                                         :width => 140)
+        @snippet ||= create_snippet
         description = remove_markup(entry.description)
         snippet_description = nil
         if @snippet and description
-          snippets = @snippet.execute(h(description))
+          snippets = @snippet.execute(description)
           unless snippets.empty?
             separator = tag("span", {:class => "separator"}, "...")
             snippets << ""
@@ -297,9 +306,59 @@ module RuremaSearch
         tag("div", {:class => "snippet"}, snippet_description)
       end
 
+      def create_snippet
+        open_tag = "<span class=\"keyword\">"
+        close_tag = "</span>"
+        options = {
+          :normalize => true,
+          :width => 140,
+          :html_escape => true,
+        }
+        snippet = @expression.snippet([open_tag, close_tag], options)
+        snippet ||= Groonga::Snippet.new(options)
+        [@version, @class, @module, @object, @instance_method].each do |value|
+          next if value.nil?
+          snippet.add_keyword(value,
+                              :open_tag => open_tag,
+                              :close_tag => close_tag)
+        end
+        snippet
+      end
+
       def remove_markup(source)
         return nil if source.nil?
         source.gsub(/\[\[.+?:(.+?)\]\]/, '\1')
+      end
+
+      def related_entries(entry)
+        entries = []
+        add_related_entry(entries, entry["class"], @class)
+        add_related_entry(entries, entry["module"], @module)
+        add_related_entry(entries, entry["object"], @object)
+        description = entry.description
+        if description
+          @database.specs.scan(description) do |record, word, start, length|
+            entries << record
+          end
+        end
+        entries.compact
+      end
+
+      def add_related_entry(entries, related_entry, current_value)
+        return if related_entry.nil?
+        return if related_entry.key == current_value
+        entries << related_entry
+      end
+
+      def link_related_entry(related_entry)
+        if related_entry.have_column?("label")
+          key = related_entry.name
+          label = related_entry.label
+        else
+          key = related_entry.key
+          label = related_entry.key
+        end
+        a(label, "./#{related_entry.type.key}:#{u(key)}/")
       end
 
       def a(label, href, attributes={})

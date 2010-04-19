@@ -8,16 +8,11 @@ module RuremaSearch
   class GroongaDatabase
     def initialize
       @database = nil
-      @use_view = false
       check_availability
     end
 
     def available?
       @available
-    end
-
-    def use_view?
-      @use_view
     end
 
     def open(base_path, encoding)
@@ -124,8 +119,13 @@ module RuremaSearch
 
     def populate_schema
       Groonga::Schema.define do |schema|
-        schema.create_table("Versions",
+        schema.create_table("Types",
                             :type => :hash,
+                            :key_type => "ShortText") do |table|
+        end
+
+        schema.create_table("Versions",
+                            :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
         end
 
@@ -135,48 +135,58 @@ module RuremaSearch
         end
 
         schema.create_table("Classes",
-                            :type => :hash,
+                            :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
-          table.short_text("name")
-          table.text("document")
-          table.reference("version", "Versions")
+          table.reference("type", "Types")
         end
 
         schema.create_table("Modules",
-                            :type => :hash,
+                            :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
-          table.short_text("name")
-          table.text("document")
-          table.reference("version", "Versions")
+          table.reference("type", "Types")
         end
 
         schema.create_table("Objects",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
-          table.short_text("name")
-          table.text("document")
-          table.reference("version", "Versions")
+          table.reference("type", "Types")
         end
 
         schema.create_table("SingletonMethods",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
-          table.short_text("name")
-          table.short_text("local_names", :type => :vector)
-          table.text("document")
-          table.reference("class", "Classes")
-          table.reference("module", "Modules")
-          table.reference("object", "Objects")
-          table.reference("version", "Versions")
-          table.reference("visibility", "Visibilities")
         end
 
         schema.create_table("InstanceMethods",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
+        end
+
+        schema.create_table("ModuleFunctions",
+                            :type => :hash,
+                            :key_type => "ShortText") do |table|
+        end
+
+        schema.create_table("Constants",
+                            :type => :hash,
+                            :key_type => "ShortText") do |table|
+        end
+
+        schema.create_table("SpecialVariables",
+                            :type => :hash,
+                            :key_type => "ShortText") do |table|
+        end
+
+        schema.create_table("Entries",
+                            :type => :hash,
+                            :key_type => "ShortText") do |table|
           table.short_text("name")
+          table.short_text("label")
           table.short_text("local_names", :type => :vector)
           table.text("document")
+          table.text("signature")
+          table.text("description")
+          table.reference("type", "Types")
           table.reference("class", "Classes")
           table.reference("module", "Modules")
           table.reference("object", "Objects")
@@ -184,91 +194,10 @@ module RuremaSearch
           table.reference("visibility", "Visibilities")
         end
 
-        schema.create_table("ModuleFunctions",
-                            :type => :hash,
-                            :key_type => "ShortText") do |table|
-          table.short_text("name")
-          table.short_text("local_names", :type => :vector)
-          table.text("document")
-          table.reference("module", "Modules")
-          table.reference("version", "Versions")
-          table.reference("visibility", "Visibilities")
-        end
-
-        schema.create_table("Constants",
-                            :type => :hash,
-                            :key_type => "ShortText") do |table|
-          table.short_text("name")
-          table.short_text("local_names", :type => :vector)
-          table.text("document")
-          table.reference("class", "Classes")
-          table.reference("module", "Modules")
-          table.reference("version", "Versions")
-          table.reference("visibility", "Visibilities")
-        end
-
-        schema.create_table("SpecialVariables",
-                            :type => :hash,
-                            :key_type => "ShortText") do |table|
-          table.short_text("name")
-          table.short_text("local_names", :type => :vector)
-          table.text("document")
-          table.reference("version", "Versions")
-        end
-
-        schema.change_table("Classes") do |table|
-          table.index("SingletonMethods", "_key")
-          table.index("InstanceMethods", "_key")
-          table.index("Constants", "_key")
-        end
-
-        schema.change_table("Modules") do |table|
-          table.index("SingletonMethods", "_key")
-          table.index("InstanceMethods", "_key")
-          table.index("Constants", "_key")
-        end
-
-        schema.change_table("Objects") do |table|
-          table.index("SingletonMethods", "_key")
-        end
-
-        if use_view?
-          schema.create_view("Entries") do |view|
-            view.add("Classes")
-            view.add("Modules")
-            view.add("SingletonMethods")
-            view.add("InstanceMethods")
-            view.add("ModuleFunctions")
-            view.add("Constants")
-            view.add("SpecialVariables")
-          end
-        else
-          schema.create_table("Types",
-                              :type => :hash,
-                              :key_type => "ShortText") do |table|
-          end
-
-          schema.create_table("Entries",
-                              :type => :hash,
-                              :key_type => "ShortText") do |table|
-            table.short_text("name")
-            table.short_text("label")
-            table.short_text("local_names", :type => :vector)
-            table.text("document")
-            table.text("signature")
-            table.text("description")
-            table.reference("type", "Types")
-            table.reference("class", "Entries")
-            table.reference("module", "Entries")
-            table.reference("object", "Entries")
-            table.reference("version", "Versions")
-            table.reference("visibility", "Visibilities")
-          end
-        end
-
         schema.create_table("Specs",
                             :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
+          table.reference("type", "Types")
         end
 
         schema.create_table("Terms",
@@ -276,29 +205,11 @@ module RuremaSearch
                             :key_type => "ShortText",
                             :default_tokenizer => "TokenBigram",
                             :key_normalize => true) do |table|
-          table.index("Classes.name")
-          table.index("Classes.document")
-          table.index("Modules.name")
-          table.index("Modules.document")
-          table.index("Objects.name")
-          table.index("Objects.document")
-          table.index("SingletonMethods.name")
-          table.index("SingletonMethods.document")
-          table.index("InstanceMethods.name")
-          table.index("InstanceMethods.document")
-          table.index("ModuleFunctions.name")
-          table.index("ModuleFunctions.document")
-          table.index("Constants.name")
-          table.index("Constants.document")
-          table.index("SpecialVariables.name")
-          table.index("SpecialVariables.document")
-          unless use_view?
-            table.index("Entries.name")
-            table.index("Entries.label")
-            table.index("Entries.document")
-            table.index("Entries.signature")
-            table.index("Entries.description")
-          end
+          table.index("Entries.name")
+          table.index("Entries.label")
+          table.index("Entries.document")
+          table.index("Entries.signature")
+          table.index("Entries.description")
         end
       end
     end

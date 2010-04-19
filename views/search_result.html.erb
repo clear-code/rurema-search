@@ -29,8 +29,11 @@
     <dd>
       <div class="entry-description"><%= format_description(entry) %></div>
       <ul class="entry-metadata">
-        <li class="entry-type"><%= link_type(entry) %></li>
         <li class="entry-version"><%= link_version(entry) %></li>
+        <li class="entry-type"><%= link_type(entry) %></li>
+<%    related_entries(entry).each do |related_entry| %>
+        <li class="entry-related"><%= link_related_entry(related_entry) %></li>
+<%    end %>
       </ul>
     </dd>
 <%  end %>
