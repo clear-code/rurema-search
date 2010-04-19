@@ -212,22 +212,22 @@ module RuremaSearch
       end
 
       def topic_path
-        paths = []
-        n_paths = @available_paths.size
+        elements = []
+        n_elements = @available_paths.size
         @available_paths.each_with_index do |(key, value), i|
-          href = "./" + "../" * (n_paths - i - 1)
+          href = "./" + "../" * (n_elements - i - 1)
           label = h("#{key}:#{value}")
-          if i == n_paths - 1
-            paths << label
+          if i == n_elements - 1
+            elements << label
           else
-            paths << a(label, href)
+            elements << a(label, href)
           end
         end
-        return "" if paths.empty?
+        return "" if elements.empty?
 
-        paths.unshift(a(h("全件表示"), "/"))
-        paths.collect do |path|
-          tag("span", {:class => "topic-path"}, path)
+        elements.unshift(a(h("全件表示"), "/"))
+        elements.collect do |element|
+          tag("span", {:class => "topic-element"}, element)
         end.join(h(" > "))
       end
 
