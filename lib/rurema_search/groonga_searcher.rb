@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#
 # Copyright (c) 2010 Kouhei Sutou <kou@clear-code.com>
 #
 # License: LGPLv3+
@@ -281,17 +282,17 @@ module RuremaSearch
           snippets = @snippet.execute(h(description))
           unless snippets.empty?
             separator = tag("span", {:class => "separator"}, "...")
-            snippets = snippets.collect do |snippet|
-              auto_spec_link(snippet)
-            end
             snippets << ""
             snippets.unshift("")
             snippet_description = snippets.join(separator)
           end
         end
-        unless description.nil?
-          # snippet_description ||= auto_spec_link(h(description[0, 300] + "..."))
-          snippet_description ||= h(description[0, 300] + "...")
+        if snippet_description.nil? and description and !description.empty?
+          if description.size > 140
+            snippet_description = h(description[0, 140] + "...")
+          else
+            snippet_description = h(description)
+          end
         end
         tag("div", {:class => "snippet"}, snippet_description)
       end
@@ -299,16 +300,6 @@ module RuremaSearch
       def remove_markup(source)
         return nil if source.nil?
         source.gsub(/\[\[.+?:(.+?)\]\]/, '\1')
-      end
-
-      def auto_spec_link(text)
-        @database.specs.tag_keys(text) do |record, word|
-          if word == @query
-            word
-          else
-            a(word, "./query:#{u(word)}/")
-          end
-        end
       end
 
       def a(label, href, attributes={})

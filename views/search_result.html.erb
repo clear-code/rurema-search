@@ -23,26 +23,19 @@
 <% else %>
 <div class="result">
 <%= paginate %>
-  <table class="entries">
-    <thead>
-      <tr>
-        <th>名前</th>
-        <th>種類</th>
-        <th>バージョン</th>
-        <th>内容</th>
-      </tr>
-    </thead>
-    <tbody>
+  <dl class="entries">
 <%  @entries.each_with_index do |entry, i| %>
-      <tr class="entry-<%= i.odd? ? 'odd' : 'even' %>">
-        <td class="entry-name"><%= link_entry(entry) %></td>
-        <td class="entry-type"><%= link_type(entry) %></td>
-        <td class="entry-version"><%= link_version(entry) %></td>
-        <td class="entry-description"><%= format_description(entry) %></td>
-      </tr>
+    <dt class="entry-name"><%= link_entry(entry) %></dt>
+    <dd>
+      <div class="entry-description"><%= format_description(entry) %></div>
+      <ul class="entry-metadata">
+        <li class="entry-type"><%= link_type(entry) %></li>
+        <li class="entry-version"><%= link_version(entry) %></li>
+      </ul>
+    </dd>
 <%  end %>
     </tbody>
-  </table>
+  </dl>
 <%= paginate %>
 </div>
 <% end %>

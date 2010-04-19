@@ -125,7 +125,7 @@ div.result
   margin-bottom: 1em;
 }
 
-table.entries
+dl.entries
 {
   border-collapse: separate;
   border-spacing: 0;
@@ -134,24 +134,18 @@ table.entries
   margin-bottom: 1em;
 }
 
-table.entries th
+dl.entries dt
 {
-  border: 1px solid #c1c1ec;
-}
-
-table.entries tr.entry-even
-{
+  border-top: 1px solid #c1c1ec;
+  padding-top: 0.25em;
+  padding-bottom: 0.25em;
   background-color: #e9e9f8;
 }
 
-table.entries td
+dl.entries dd
 {
-  padding: 0.25em;
-}
-
-table.entries td.entry-description
-{
-  padding: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 1em;
 }
 
 span.keyword
