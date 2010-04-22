@@ -269,9 +269,10 @@ module RuremaSearch
       def entry_href(entry)
         mapper = url_mapper(entry.version.key)
         case entry.type.key
-        when "class"
+        when "class", "module", "object"
           mapper.class_url(entry.name)
-        when "constant", "variable", "instance-method", "singleton-method"
+        when "constant", "variable", "instance-method", "module-function",
+               "singleton-method"
           mapper.method_url(entry.name)
         when "document"
           mapper.document_url(entry.name)
