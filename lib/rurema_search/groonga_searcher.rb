@@ -283,7 +283,7 @@ module RuremaSearch
       end
 
       def link_type(entry)
-        link_type_raw(entry.key.key)
+        link_type_raw(entry.type.key)
       end
 
       def link_type_raw(type)
