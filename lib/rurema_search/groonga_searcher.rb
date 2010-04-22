@@ -75,7 +75,7 @@ module RuremaSearch
         entries = @database.entries
         if conditions.empty?
           @n_entries = entries.size
-          @drilldown_result = drilldown_items(entries)
+          @drilldown_items = drilldown_items(entries)
           result = entries.select
           @expression = result.expression
           result = result.select("_score = rand()", :syntax => :script)
@@ -91,7 +91,7 @@ module RuremaSearch
           end
           @expression = result.expression
           @n_entries = result.size
-          @drilldown_result = drilldown_items(result)
+          @drilldown_items = drilldown_items(result)
         end
         @page = ensure_page
         @entries = result.sort([["_score", :descending]],
@@ -172,8 +172,8 @@ module RuremaSearch
 
       def drilldown_items(entries)
         result = []
-        result << [:version, drilldown_item(entries, "version", "_key")]
-        result << [:class, drilldown_item(entries, "class", "_key")]
+        item = drilldown_item(entries, "type", "_key")
+        result << [:type, "種類", item] if item.size > 1
         result
       end
 
@@ -283,12 +283,17 @@ module RuremaSearch
       end
 
       def link_type(entry)
-        a(h(type_label(entry)), "./type:#{u(entry.type.key)}/")
+        link_type_raw(entry.key.key)
+      end
+
+      def link_type_raw(type)
+        a(h(type_label(type)), "./type:#{u(type)}/")
       end
 
       TYPE_LABEL = {
         "class" => "クラス",
         "module" => "モジュール",
+        "object" => "オブジェクト",
         "instance-method" => "インスタンスメソッド",
         "singleton-method" => "シングルトンメソッド",
         "module-function" => "モジュールファンクション",
@@ -297,8 +302,7 @@ module RuremaSearch
         "document" => "文書",
         "library" => "ライブラリ",
       }
-      def type_label(entry)
-        type = entry.type.key
+      def type_label(type)
         TYPE_LABEL[type] || type
       end
 

@@ -26,6 +26,20 @@
 </div>
 <% else %>
 <div class="result">
+  <div class="drilldowns">
+<% @drilldown_items.each do |type, label, item| %>
+    <div class="drilldown">
+      <h2><%= h(label) %></h2>
+  <% item.each do |record| %>
+      <span class="drilldown-item">
+        <%= link_type_raw(record[:label]) %>
+        (<%= h(record[:n_records]) %>)
+      </span>
+  <% end %>
+    </div>
+<% end %>
+  </div>
+
 <%= paginate %>
   <dl class="entries">
 <%  @entries.each_with_index do |entry, i| %>
