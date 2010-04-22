@@ -5,6 +5,7 @@
 # License: LGPLv3+
 
 require 'erb'
+require 'rack'
 
 module RuremaSearch
   class GroongaSearcher
@@ -39,8 +40,9 @@ module RuremaSearch
     private
     def setup_view
       @view = Module.new
-      ["layout", "search_result"].each do |template_name|
+      ["layout", "search_result", "analystics"].each do |template_name|
         template = create_template(template_name)
+        next if template.nil?
         @view.send(:define_method, template_name) do
           template.result(binding)
         end
@@ -49,6 +51,7 @@ module RuremaSearch
 
     def create_template(name)
       template_file = File.join(@base_dir, "views", "#{name}.html.erb")
+      return nil unless File.exist?(template_file)
       erb = ERB.new(File.read(template_file), 0, "%<>")
       erb.filename = template_file
       erb
@@ -57,7 +60,7 @@ module RuremaSearch
     class SearchContext
       include ERB::Util
 
-      def initialize(database, request, response)
+      def initialize(database, base_dir, request, response)
         @database = database
         @request = request
         @response = response
@@ -469,6 +472,18 @@ module RuremaSearch
         end
         if abbreved
           _paginate << "..."
+        end
+      end
+
+      def production?
+        ENV["RACK_ENV"] == "production"
+      end
+
+      def analyze
+        if production? and respond_to?(:analystics)
+          analystics
+        else
+          ""
         end
       end
     end
