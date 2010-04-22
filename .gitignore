@@ -1,3 +1,5 @@
 /db-*
 /groonga-database
 /public/1.*
+/test-unit
+/webrat.log
