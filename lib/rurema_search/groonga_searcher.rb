@@ -368,7 +368,13 @@ module RuremaSearch
             entries << record
           end
         end
-        entries.compact
+        uniq_entries = {}
+        entries.each do |entry|
+          uniq_entries[entry.key] = entry
+        end
+        uniq_entries.values.sort_by do |entry|
+          entry.key
+        end
       end
 
       def add_related_entry(entries, related_entry, current_value)
