@@ -4,6 +4,8 @@ base_dir=$(dirname $0)
 bitclust_dir=${base_dir}/../bitclust
 rubydoc_dir=${base_dir}/../rubydoc
 
+svn up ${rubydoc_dir}
+
 for version in 1.8.7 1.8.8 1.9.1 1.9.2; do
     ruby \
     	-I ${bitclust_dir}/lib \
