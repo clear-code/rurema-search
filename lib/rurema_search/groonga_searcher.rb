@@ -60,7 +60,7 @@ module RuremaSearch
     class SearchContext
       include ERB::Util
 
-      def initialize(database, base_dir, request, response)
+      def initialize(database, request, response)
         @database = database
         @request = request
         @response = response
