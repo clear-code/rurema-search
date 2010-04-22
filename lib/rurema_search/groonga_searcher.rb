@@ -311,6 +311,10 @@ module RuremaSearch
         a(h(entry.version.key), "./version:#{u(entry.version.key)}/")
       end
 
+      def snippet_width
+        300
+      end
+
       def format_description(entry)
         @snippet ||= create_snippet
         description = remove_markup(entry.description)
@@ -325,8 +329,8 @@ module RuremaSearch
           end
         end
         if snippet_description.nil? and description and !description.empty?
-          if description.size > 140
-            snippet_description = h(description[0, 140] + "...")
+          if description.size > snippet_width
+            snippet_description = h(description[0, snippet_width] + "...")
           else
             snippet_description = h(description)
           end
@@ -339,7 +343,7 @@ module RuremaSearch
         close_tag = "</span>"
         options = {
           :normalize => true,
-          :width => 140,
+          :width => snippet_width,
           :html_escape => true,
         }
         snippet = @expression.snippet([open_tag, close_tag], options)
