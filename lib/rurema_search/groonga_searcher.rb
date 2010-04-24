@@ -158,12 +158,13 @@ module RuremaSearch
           case key
           when "query"
             conditions << Proc.new do |record|
-              record.match(value, :allow_update => false) do |match_record|
+              target = record.match_target do |match_record|
                 (match_record["local_name"] * 1000) |
                   (match_record["name"] * 100) |
                   (match_record["signature"] * 10) |
                   (match_record["description"])
               end
+              target =~ value
             end
           when "instance-method", "singleton-method", "module-function",
             "constant"
