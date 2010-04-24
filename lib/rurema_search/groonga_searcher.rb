@@ -689,7 +689,7 @@ EOH
 EOB
         request = Rack::Request.new(@env)
         max_key_size = (@env.keys.collect(&:size) +
-                        request.params.keys.collect(&:size)).max + 2
+                        request.params.keys.collect(&:size)).max
         body << <<-EOE
 --
 Environments:
