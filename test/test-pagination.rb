@@ -25,11 +25,45 @@ class PaginateTest < Test::Unit::TestCase
   end
 
   def app
-    RuremaSearch::GroongaSearcher.new(database, @base_dir)
+    RuremaSearch::GroongaSearcher.new(database, base_dir)
   end
 
   def test_get
     visit "/"
-    assert_response("Method Not Allowed")
+    assert_paginate([["paginate-text", nil, "<<"],
+                     ["paginate-current", nil, "1"],
+                     ["paginate-link", "?page=2", "2"],
+                     ["paginate-link", "?page=3", "3"],
+                     ["paginate-text", nil, "..."],
+                     ["paginate-link", "?page=2", ">"],
+                     ["paginate-link", "?page=7", ">>"]])
+  end
+
+  def test_no_paginate
+    visit "/type:class/"
+    assert_paginate(nil)
+  end
+
+  def test_two_pages
+    visit "/type:singleton-method/"
+    assert_paginate([["paginate-text", nil, "<<"],
+                     ["paginate-current", nil, "1"],
+                     ["paginate-link", "?page=2", "2"],
+                     ["paginate-link", "?page=2", ">"],
+                     ["paginate-link", "?page=2", ">>"]])
+  end
+
+  private
+  def assert_paginate(expected)
+    paginate = current_dom.xpath("//div[@class='paginate']")[0]
+    if paginate
+      actual = paginate.xpath("span").collect do |node|
+        a = node.xpath("a")[0]
+        [node["class"], a ? a["href"] : nil, node.text]
+      end
+    else
+      actual = nil
+    end
+    assert_equal(expected, actual)
   end
 end

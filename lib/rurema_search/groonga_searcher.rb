@@ -200,7 +200,7 @@ module RuremaSearch
           return 1
         end
         return 1 if page < 0
-        return 1 if page * @n_entries_per_page > @n_entries
+        return 1 if (page - 1) * @n_entries_per_page > @n_entries
         page
       end
 
@@ -446,7 +446,7 @@ module RuremaSearch
           _paginate << a(h("<<"), "./")
           _paginate << a(h("<"), "?page=#{@page - 1}")
         end
-        last_page = @n_entries / @n_entries_per_page
+        last_page = @n_entries / @n_entries_per_page + 1
         paginate_content_middle(_paginate, last_page)
         if @page == last_page
           _paginate << h(">>")

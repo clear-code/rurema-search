@@ -107,14 +107,14 @@ module RuremaSearch
           klass_name = klass.name
           klass_type = normalize_type_label(klass.type.to_s)
           if klass.class?
-            attributes[:class] = klass.name
-            @database.classes.add(klass.name, :type => klass_type)
+            attributes[:class] = klass_name
+            @database.classes.add(klass_name, :type => klass_type)
           elsif klass.module?
-            attributes[:module] = klass.name
-            @database.modules.add(klass.name, :type => klass_type)
+            attributes[:module] = klass_name
+            @database.modules.add(klass_name, :type => klass_type)
           else
-            attributes[:object] = klass.name
-            @database.objects.add(klass.name, :type => klass_type)
+            attributes[:object] = klass_name
+            @database.objects.add(klass_name, :type => klass_type)
           end
           @database.entries.add("#{version}:#{entry.spec_string}:#{signature}",
                                 attributes)

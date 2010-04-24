@@ -3,3 +3,5 @@
 /public/1.*
 /test-unit
 /webrat.log
+/test/groonga-database
+/test/.test-result

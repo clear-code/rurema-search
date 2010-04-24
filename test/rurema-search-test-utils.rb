@@ -49,11 +49,12 @@ module RuremaSearchTestUtils
         database_dir.mkpath
         command = "groonga -n #{database_file} < #{dump_file}"
         result = `#{command} 2>&1`
-        unless $?.success?
-          FileUtils.rm_rf(database_dir.to_s)
-          raise "failed to create test database: " +
-                  "<#{command}>: <#{$?.to_i}>: <#{result}>"
-        end
+        # groonga not returns success status on success exit for now.
+        # unless $?.success?
+        #   FileUtils.rm_rf(database_dir.to_s)
+        #   raise "failed to create test database: " +
+        #           "<#{command}>: <#{$?.to_i}>: <#{result}>"
+        # end
       end
       _database = RuremaSearch::GroongaDatabase.new
       _database.open(database_dir.to_s, "utf-8")
@@ -62,6 +63,10 @@ module RuremaSearchTestUtils
   end
 
   private
+  def current_dom
+    webrat.current_dom
+  end
+
   def assert_response(code)
     assert_equal(resolve_status(code), resolve_status(webrat.response_code))
   end
