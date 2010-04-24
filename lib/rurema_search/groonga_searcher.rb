@@ -104,7 +104,7 @@ module RuremaSearch
 
       private
       def parse_parameters(parameters)
-        @available_paths = []
+        @parameters = []
         @query = @version = @type = @module = @class = @object = nil
         @instance_method = nil
         parameters.each do |parameter|
@@ -112,34 +112,50 @@ module RuremaSearch
           key, value = parameter.split(/:/, 2)
           unescaped_value = URI.unescape(value).gsub(/\+/, ' ').strip
           # TODO: raise unless unescaped_value.valid_encoding?
-          case key
-          when "query"
-            if @query.nil?
-              @query = unescaped_value
-            else
-              @query << " #{unescaped_value}"
-              @available_paths.assoc(key)[1] = unescaped_value
-              next
-            end
-          when "version"
-            @version = unescaped_value
-          when "type"
-            @type = unescaped_value
-          when "module"
-            @module = unescaped_value
-          when "class"
-            @class = unescaped_value
-          when "object"
-            @object = unescaped_value
-          when "instance-method"
-            @instance_method = unescaped_value
-          else
-            next
-          end
-          next if @available_paths.assoc(key)
-          @available_paths << [key, unescaped_value]
+          next unless parse_parameter(key, unescaped_value)
+          next if @parameters.assoc(key)
+          @parameters << [key, unescaped_value]
         end
         create_conditions
+      end
+
+      def parse_parameter(key, value)
+        case key
+        when "query"
+          if @query.nil?
+            @query = value
+          else
+            @query << " #{value}"
+          end
+        when "version"
+          @version = value
+        when "type"
+          @type = value
+        when "module"
+          @module = value
+        when "class"
+          @class = value
+        when "object"
+          @object = value
+        when "instance-method"
+          @instance_method = value
+        else
+          return false
+        end
+        true
+      end
+
+      PARAMETER_LABELS = {
+        "query" => "クエリ",
+        "version" => "バージョン",
+        "type" => "種類",
+        "module" => "モジュール",
+        "class" => "クラス",
+        "object" => "オブジェクト",
+        "instance-method" => "インスタンスメソッド",
+      }
+      def parameter_label(key)
+	PARAMETER_LABELS[key] || key
       end
 
       def create_conditions
@@ -218,16 +234,16 @@ module RuremaSearch
 
       def topic_path
         elements = []
-        n_elements = @available_paths.size
-        @available_paths.each_with_index do |(key, value), i|
+        n_elements = @parameters.size
+        @parameters.each_with_index do |(key, value), i|
           href = "./" + "../" * (n_elements - i - 1)
-          label = h("#{key}:#{value}")
+          label = h("#{parameter_label(key)}:#{value}")
           if i == n_elements - 1
             element = label
           else
             element = a(label, href)
           end
-          remove_href = topic_path_condition_remove_href(@available_paths, i)
+          remove_href = topic_path_condition_remove_href(i)
           element << a("[x]", remove_href)
           elements << element
         end
@@ -239,11 +255,11 @@ module RuremaSearch
         end.join(h(" > "))
       end
 
-      def topic_path_condition_remove_href(paths, i)
-        after_paths = paths[(i + 1)..-1]
-        excluded_path = "../" * (after_paths.size + 1)
-        after_paths.each do |_key, _value|
-          excluded_path << "#{_key}:#{u(_value)}/"
+      def topic_path_condition_remove_href(i)
+        after_parameters = @parameters[(i + 1)..-1]
+        excluded_path = "../" * (after_parameters.size + 1)
+        after_parameters.each do |key, value|
+          excluded_path << "#{key}:#{u(value)}/"
         end
         excluded_path
       end
@@ -259,17 +275,17 @@ module RuremaSearch
       end
 
       def version_select_href(version)
-        @no_version_paths ||= @available_paths.reject do |key, value|
+        @no_version_parameters ||= @parameters.reject do |key, value|
           key == "version"
         end
-        paths = []
+        parameters = []
         case version
         when :all
-          paths = @no_version_paths
+          parameters = @no_version_parameters
         else
-          paths = @no_version_paths + [["version", version]]
+          parameters = @no_version_parameters + [["version", version]]
         end
-        paths.collect do |key, value|
+        parameters.collect do |key, value|
           "#{key}:#{u(value)}"
         end.join("/")
       end
