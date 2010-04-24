@@ -24,8 +24,13 @@ lib_dir = base_dir + "lib"
 
 bitclust_dir = base_dir.parent + "bitclust"
 bitclust_lib_dir = bitclust_dir + "lib"
+rroonga_dir = base_dir.parent + "rroonga.19"
+rroonga_lib_dir = rroonga_dir + "lib"
+rroonga_ext_dir = rroonga_dir + "ext" + "groonga"
 
 $LOAD_PATH.unshift(bitclust_lib_dir.to_s)
+$LOAD_PATH.unshift(rroonga_ext_dir.to_s)
+$LOAD_PATH.unshift(rroonga_lib_dir.to_s)
 $LOAD_PATH.unshift(lib_dir.to_s)
 
 require 'rurema_search'
