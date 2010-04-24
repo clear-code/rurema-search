@@ -167,13 +167,9 @@ module RuremaSearch
           result = result.select("_score = rand()", :syntax => :script)
         else
           result = entries.select do |record|
-            conditions.inject(nil) do |expression, condition|
-              if expression
-                expression & condition.call(record)
-              else
-                condition.call(record)
-              end
-            end
+            conditions.collect do |condition|
+              condition.call(record)
+            end.flatten
           end
           @expression = result.expression
           @n_entries = result.size
@@ -254,7 +250,9 @@ module RuremaSearch
                   (match_record["signature"] * 10) |
                   (match_record["description"])
               end
-              target =~ value
+              value.split.collect do |word|
+                target =~ word
+              end
             end
           when "instance-method", "singleton-method", "module-function",
             "constant"
