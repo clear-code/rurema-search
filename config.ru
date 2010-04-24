@@ -41,6 +41,8 @@ database.open((base_dir + "groonga-database").to_s, "utf-8")
 
 environment = ENV["RACK_ENV"] || "development"
 
+searcher_options = {}
+
 use Rack::CommonLogger
 use Rack::Runtime
 case environment
@@ -65,7 +67,12 @@ when "development"
 
   use Rack::ShowExceptions
 when "production"
+  smtp_configuration_file = base_dir + "smtp.yaml"
+  if smtp_configuration_file.exist?
+    require 'yaml'
+    searcher_options[:smtp] = YAML.load(smtp_configuration_file.read)
+  end
 end
 
 use Rack::Lint
-run RuremaSearch::GroongaSearcher.new(database, base_dir.to_s)
+run RuremaSearch::GroongaSearcher.new(database, base_dir.to_s, searcher_options)
