@@ -23,6 +23,15 @@
 <% if @n_entries.zero? %>
 <div class="no-result">
   <p>見つかりませんでした。検索条件を変えてみませんか？</p>
+  <ul>
+<% @ordered_parameters.each do |key, value| %>
+    <li>
+      <a href="/<%= parameter_link_href(key, value) %>">
+          「<%= h(parameter_link_label(key, value)) %>」だけで検索
+      </a>
+    </li>
+<% end %>
+  </ul>
 </div>
 <% else %>
 <div class="result">

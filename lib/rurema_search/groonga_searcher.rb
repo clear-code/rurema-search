@@ -226,17 +226,25 @@ module RuremaSearch
           "/")
       end
 
+      def parameter_link_label(key, value)
+        if key == "type"
+          value_label = type_label(value)
+        else
+          value_label = value
+        end
+        "#{parameter_label(key)}:#{value_label}"
+      end
+
+      def parameter_link_href(key, value)
+        "#{key}:#{u(value)}/"
+      end
+
       def topic_path
         elements = []
         n_elements = @ordered_parameters.size
         @ordered_parameters.each_with_index do |(key, value), i|
           href = "./" + "../" * (n_elements - i - 1)
-          if key == "type"
-            value_label = type_label(value)
-          else
-            value_label = value
-          end
-          label = h("#{parameter_label(key)}:#{value_label}")
+          label = h(parameter_link_label(key, value))
           if i == n_elements - 1
             element = label
           else
@@ -258,7 +266,7 @@ module RuremaSearch
         after_parameters = @ordered_parameters[(i + 1)..-1]
         excluded_path = "../" * (after_parameters.size + 1)
         after_parameters.each do |key, value|
-          excluded_path << "#{key}:#{u(value)}/"
+          excluded_path << parameter_link_href(key, value)
         end
         excluded_path
       end

@@ -122,7 +122,8 @@ div.topic-path
   margin-left: 1em;
 }
 
-div.result
+div.result,
+div.no-result
 {
   clear: both;
   padding-left: 1em;
