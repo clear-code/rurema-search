@@ -687,23 +687,23 @@ EOH
 --
 #{@exception.backtrace.join("\n")}
 EOB
-        request = Rack::Request.new(@env)
+        params = Rack::Request.new(@env).params
         max_key_size = (@env.keys.collect(&:size) +
-                        request.params.keys.collect(&:size)).max
+                        params.keys.collect(&:size)).max
         body << <<-EOE
 --
 Environments:
 EOE
         @env.sort_by {|key, value| key}.each do |key, value|
-          body << "  %#{max_key_size}s: <%s>\n" % [key, value]
+          body << "  %*s: <%s>\n" % [max_key_size, key, value]
         end
 
-        unless request.params.empty?
+        unless params.empty?
           body << <<-EOE
 --
 Parameters:
 EOE
-          request.params.sort_by {|key, value| key}.each do |key, value|
+          params.sort_by {|key, value| key}.each do |key, value|
             body << "  %#{max_key_size}s: <%s>\n" % [key, value]
           end
         end
