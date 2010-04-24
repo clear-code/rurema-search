@@ -189,12 +189,13 @@ module RuremaSearch
           [["class", "クラス"],
            ["module", "モジュール"],
            ["object", "オブジェクト"]].each do |column, label|
+            next if @parameters[column]
             item = drilldown_item(entries, column, "_key")
-            result << [label, item] unless item.empty?
+            result << [column, label, item] unless item.empty?
           end
         else
           item = drilldown_item(entries, "type", "_key")
-          result << ["種類", item] if item.size > 1
+          result << ["type", "種類", item] if item.size > 1
         end
         result
       end
@@ -295,7 +296,7 @@ module RuremaSearch
         if href.empty?
           href = "/"
         else
-          href = "/#{href}/"
+          href = "/#{href}"
         end
         a(h(version == :all ? "すべて" : version), href)
       end
@@ -312,8 +313,8 @@ module RuremaSearch
           parameters = @no_version_parameters + [["version", version]]
         end
         parameters.collect do |key, value|
-          "#{key}:#{u(value)}"
-        end.join("/")
+          parameter_link_href(key, value)
+        end.join
       end
 
       def link_entry(entry)
@@ -339,12 +340,20 @@ module RuremaSearch
         end
       end
 
+      def link_drilldown_item(key, record)
+        if key == "type"
+          link_type_raw(record[:label])
+        else
+          a(h(record[:label]), "./#{parameter_link_href(key, record[:label])}")
+        end
+      end
+
       def link_type(entry)
         link_type_raw(entry.type.key)
       end
 
       def link_type_raw(type)
-        a(h(type_label(type)), "./type:#{u(type)}/")
+        a(h(type_label(type)), "./#{parameter_link_href('type', type)}")
       end
 
       TYPE_LABELS = {
