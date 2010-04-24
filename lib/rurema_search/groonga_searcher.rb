@@ -352,9 +352,11 @@ module RuremaSearch
           snippets = @snippet.execute(description)
           unless snippets.empty?
             separator = tag("span", {:class => "separator"}, "...")
-            snippets << ""
-            snippets.unshift("")
-            snippet_description = snippets.join(separator)
+            snippets = snippets.collect do |snippet|
+              tag("div", {:class => "snippet"},
+                  "#{separator}#{snippet}#{separator}")
+            end
+            snippet_description = snippets.join("")
           end
         end
         if snippet_description.nil? and description and !description.empty?
@@ -364,7 +366,7 @@ module RuremaSearch
             snippet_description = h(description)
           end
         end
-        tag("div", {:class => "snippet"}, snippet_description)
+        tag("div", {:class => "snippets"}, snippet_description)
       end
 
       def create_snippet

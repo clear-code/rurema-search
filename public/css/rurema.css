@@ -166,6 +166,8 @@ dl.entries dd
 {
   margin-top: 0.5em;
   margin-bottom: 1em;
+  margin-left: 3em;
+  padding-left: 0;
 }
 
 dl.entries dd ul.entry-metadata
@@ -182,6 +184,16 @@ dl.entries dd ul.entry-metadata li
 span.keyword
 {
   font-weight: bold;
+}
+
+div.snippets
+{
+  margin-right: 3em;
+}
+
+div.snippet
+{
+  margin-bottom: 0.5em;
 }
 
 div.snippet span.separator
