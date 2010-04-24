@@ -45,8 +45,6 @@ use Rack::CommonLogger
 use Rack::Runtime
 case environment
 when "development"
-  use Rack::ShowExceptions
-
   class DirectoryIndex
     def initialize(app, options={})
       @app = app
@@ -64,6 +62,8 @@ when "development"
   urls = ["/favicon.", "/css/", "/images/", "/js/", "/1.8.", "/1.9."]
   use DirectoryIndex, :urls => urls
   use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
+
+  use Rack::ShowExceptions
 when "production"
 end
 
