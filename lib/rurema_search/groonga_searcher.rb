@@ -543,8 +543,8 @@ module RuremaSearch
       end
 
       def analyze
-        if production? and respond_to?(:analystics)
-          analystics
+        if production? and respond_to?(:analytics)
+          analytics
         else
           ""
         end
