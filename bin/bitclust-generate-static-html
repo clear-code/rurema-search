@@ -12,12 +12,18 @@ class BitClust::TemplateScreen
   undef search_form
   def search_form
     <<-EOF
-    <form method="GET" action="/version:#{h(@target_version)}"
+    <form method="POST" action="/version:#{h(@target_version)}/"
           name="top_search" id="top_search">
       <input value="" name="query" size="15">
       <input value="#{h(_('Search'))}" type="submit">
     </form>
     EOF
+  end
+
+  undef manual_home_link
+  def manual_home_link
+    label = _('Ruby %s Reference Manual', ruby_version)
+    "<a href=\"/version:#{@target_version}/\">#{label}</a>"
   end
 end
 
