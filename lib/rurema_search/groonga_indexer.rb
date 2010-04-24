@@ -42,7 +42,7 @@ module RuremaSearch
       source = entry_source(document)
       attributes = {
         :name => document.name,
-        :local_name => document.name,
+        :local_name => document.title,
         :label => document.title,
         :type => "document",
         :document => source,
