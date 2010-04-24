@@ -36,7 +36,7 @@
 <% else %>
 <div class="result">
   <div class="drilldowns">
-<% @drilldown_items.each do |type, label, item| %>
+<% @drilldown_items.each do |label, item| %>
     <div class="drilldown">
       <h2><%= h(label) %></h2>
   <% item.each do |record| %>

@@ -184,8 +184,17 @@ module RuremaSearch
 
       def drilldown_items(entries)
         result = []
-        item = drilldown_item(entries, "type", "_key")
-        result << [:type, "種類", item] if item.size > 1
+        if @parameters["type"]
+          [["class", "クラス"],
+           ["module", "モジュール"],
+           ["object", "オブジェクト"]].each do |column, label|
+            item = drilldown_item(entries, column, "_key")
+            result << [label, item] unless item.empty?
+          end
+        else
+          item = drilldown_item(entries, "type", "_key")
+          result << ["種類", item] if item.size > 1
+        end
         result
       end
 
