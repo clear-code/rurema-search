@@ -104,8 +104,8 @@ module RuremaSearch
 
       private
       def parse_parameters(parameters)
-        @parameters = []
-        @query = @version = @type = @module = @class = @object = nil
+        @parameters = {}
+        @ordered_parameters = []
         @instance_method = nil
         parameters.each do |parameter|
           parameter = parameter.force_encoding("UTF-8")
@@ -113,36 +113,21 @@ module RuremaSearch
           unescaped_value = URI.unescape(value).gsub(/\+/, ' ').strip
           # TODO: raise unless unescaped_value.valid_encoding?
           next unless parse_parameter(key, unescaped_value)
-          next if @parameters.assoc(key)
-          @parameters << [key, unescaped_value]
+          @ordered_parameters << [key, unescaped_value]
         end
         create_conditions
       end
 
       def parse_parameter(key, value)
-        case key
-        when "query"
-          if @query.nil?
-            @query = value
-          else
-            @query << " #{value}"
-          end
-        when "version"
-          @version = value
-        when "type"
-          @type = value
-        when "module"
-          @module = value
-        when "class"
-          @class = value
-        when "object"
-          @object = value
-        when "instance-method"
-          @instance_method = value
+        label = parameter_label(key)
+        return false if key == label
+        if @parameters.has_key?(key)
+          @parameters[key] << " #{value}" if key == "query"
+          false
         else
-          return false
+          @parameters[key] = value
+          true
         end
-        true
       end
 
       PARAMETER_LABELS = {
@@ -151,33 +136,42 @@ module RuremaSearch
         "type" => "種類",
         "module" => "モジュール",
         "class" => "クラス",
+        "module" => "モジュール",
         "object" => "オブジェクト",
         "instance-method" => "インスタンスメソッド",
+        "singleton-method" => "シングルトンメソッド",
+        "module-function" => "モジュールファンクション",
+        "constant" => "定数",
+        "variable" => "変数",
       }
       def parameter_label(key)
 	PARAMETER_LABELS[key] || key
       end
 
+      def query
+        @parameters["query"]
+      end
+
       def create_conditions
         conditions = []
-        if @query
-          conditions << Proc.new do |record|
-            record.match(@query, :allow_update => false) do |match_record|
-              (match_record["local_name"] * 1000) |
-                (match_record["name"] * 100) |
-                (match_record["signature"] * 10) |
-                (match_record["description"])
+        @parameters.each do |key, value|
+          case key
+          when "query"
+            conditions << Proc.new do |record|
+              record.match(value, :allow_update => false) do |match_record|
+                (match_record["local_name"] * 1000) |
+                  (match_record["name"] * 100) |
+                  (match_record["signature"] * 10) |
+                  (match_record["description"])
+              end
             end
+          when "instance-method", "singleton-method", "module-function",
+            "constant"
+            conditions << equal_condition("name", value)
+            conditions << equal_condition("type", key)
+          else
+            conditions << equal_condition(key, value)
           end
-        end
-        {
-          "version" => @version,
-          "type" => @type,
-          "module" => @module,
-          "class" => @class,
-          "name" => @instance_method,
-        }.each do |column, value|
-          conditions << equal_condition(column, value) if value
         end
         conditions
       end
@@ -234,10 +228,15 @@ module RuremaSearch
 
       def topic_path
         elements = []
-        n_elements = @parameters.size
-        @parameters.each_with_index do |(key, value), i|
+        n_elements = @ordered_parameters.size
+        @ordered_parameters.each_with_index do |(key, value), i|
           href = "./" + "../" * (n_elements - i - 1)
-          label = h("#{parameter_label(key)}:#{value}")
+          if key == "type"
+            value_label = type_label(value)
+          else
+            value_label = value
+          end
+          label = h("#{parameter_label(key)}:#{value_label}")
           if i == n_elements - 1
             element = label
           else
@@ -256,7 +255,7 @@ module RuremaSearch
       end
 
       def topic_path_condition_remove_href(i)
-        after_parameters = @parameters[(i + 1)..-1]
+        after_parameters = @ordered_parameters[(i + 1)..-1]
         excluded_path = "../" * (after_parameters.size + 1)
         after_parameters.each do |key, value|
           excluded_path << "#{key}:#{u(value)}/"
@@ -275,7 +274,7 @@ module RuremaSearch
       end
 
       def version_select_href(version)
-        @no_version_parameters ||= @parameters.reject do |key, value|
+        @no_version_parameters ||= @ordered_parameters.reject do |key, value|
           key == "version"
         end
         parameters = []
@@ -321,7 +320,7 @@ module RuremaSearch
         a(h(type_label(type)), "./type:#{u(type)}/")
       end
 
-      TYPE_LABEL = {
+      TYPE_LABELS = {
         "class" => "クラス",
         "module" => "モジュール",
         "object" => "オブジェクト",
@@ -334,7 +333,7 @@ module RuremaSearch
         "library" => "ライブラリ",
       }
       def type_label(type)
-        TYPE_LABEL[type] || type
+        TYPE_LABELS[type] || type
       end
 
       def link_version(entry)
