@@ -225,7 +225,16 @@ module RuremaSearch
       end
 
       def title
-        "Rubyリファレンスマニュアル"
+        site_title = "るりまサーチ"
+        parameters = []
+        @ordered_parameters.each do |key, value|
+          parameters << parameter_link_label(key, value)
+        end
+        if parameters.empty?
+          site_title
+        else
+          "#{parameters.join(' > ')} | #{site_title}"
+        end
       end
 
       def h1
