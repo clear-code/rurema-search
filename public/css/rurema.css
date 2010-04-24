@@ -182,6 +182,11 @@ dl.entries dd ul.entry-metadata li
   display: inline;
 }
 
+span.score
+{
+  color: #ccc;
+}
+
 span.keyword
 {
   font-weight: bold;

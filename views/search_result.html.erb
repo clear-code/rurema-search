@@ -58,7 +58,7 @@
 <%  @entries.each_with_index do |entry, i| %>
     <dt class="entry-name">
       <%= link_entry(entry) %>
-      <span class="socre">(<%= h(entry.score) %>)</span>
+      <span class="score">(<%= h(entry.score) %>)</span>
     </dt>
     <dd>
       <div class="entry-description"><%= format_description(entry) %></div>
