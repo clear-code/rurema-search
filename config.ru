@@ -61,7 +61,7 @@ when "development"
     end
   end
 
-  urls = ["/favicon.ico", "/css/", "/images/", "/js/", "/1.8.", "/1.9"]
+  urls = ["/favicon.", "/css/", "/images/", "/js/", "/1.8.", "/1.9."]
   use DirectoryIndex, :urls => urls
   use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
 when "production"
