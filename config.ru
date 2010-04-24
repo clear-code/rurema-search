@@ -42,10 +42,11 @@ database.open((base_dir + "groonga-database").to_s, "utf-8")
 environment = ENV["RACK_ENV"] || "development"
 
 use Rack::CommonLogger
-use Rack::ShowExceptions
 use Rack::Runtime
 case environment
 when "development"
+  use Rack::ShowExceptions
+
   class DirectoryIndex
     def initialize(app, options={})
       @app = app
