@@ -666,7 +666,10 @@ module RuremaSearch
       def format
         mail = "#{format_header}\n#{format_body}"
         mail.force_encoding("UTF-8")
-        mail = mail.encode('iso-2022-jp')
+        begin
+          mail = mail.encode('iso-2022-jp')
+        rescue EncodingError
+        end
         mail.force_encoding("ASCII-8BIT")
       end
 
