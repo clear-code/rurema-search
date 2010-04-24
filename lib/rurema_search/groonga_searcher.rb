@@ -5,11 +5,19 @@
 # License: LGPLv3+
 
 require 'erb'
+require 'net/smtp'
 require 'rack'
 
 module RuremaSearch
   class GroongaSearcher
+    module Utils
+      def production?
+        ENV["RACK_ENV"] == "production"
+      end
+    end
+
     include Rack::Utils
+    include Utils
 
     def initialize(database, base_dir)
       @database = database
@@ -18,6 +26,17 @@ module RuremaSearch
     end
 
     def call(env)
+      process(env)
+    rescue Exception
+      raise unless production?
+      # notify_exception($!, env)
+      page = ErrorPage.new($!)
+      page.extend(@view)
+      page.process
+    end
+
+    private
+    def process(env)
       request = Rack::Request.new(env)
       response = Rack::Response.new
       response["Content-Type"] = "text/html; charset=UTF-8"
@@ -30,17 +49,16 @@ module RuremaSearch
         end
         response.redirect(request.url.split(/\?/, 2)[0])
       else
-        context = SearchContext.new(@database, request, response)
-        context.extend(@view)
-        context.process
+        page = SearchPage.new(@database, request, response)
+        page.extend(@view)
+        page.process
       end
       response.to_a
     end
 
-    private
     def setup_view
       @view = Module.new
-      ["layout", "search_result", "analytics"].each do |template_name|
+      ["layout", "search_result", "error", "analytics"].each do |template_name|
         template = create_template(template_name)
         next if template.nil?
         @view.send(:define_method, template_name) do
@@ -57,8 +75,59 @@ module RuremaSearch
       erb
     end
 
-    class SearchContext
+    module PageUtils
       include ERB::Util
+      include Utils
+
+      def site_title
+        "るりまサーチ"
+      end
+
+      def h1
+        a(tag("img",
+              :src => "/images/rurema-search-title.png",
+              :alt => site_title,
+              :title => site_title),
+          "/")
+      end
+
+      def a(label, href, attributes={})
+        tag("a", attributes.merge(:href => href), label)
+      end
+
+      def tag(name, attributes={}, content=nil)
+        _tag = "<#{name}"
+        attributes.each do |key, value|
+          _tag << " #{h(key)}=\"#{h(value)}\""
+        end
+        if content
+          _tag << ">#{content}</#{name}>"
+        else
+          if no_content_tag_name?(name)
+            _tag << " />"
+          else
+            _tag << "></#{name}>"
+          end
+        end
+        _tag
+      end
+
+      NO_CONTENT_TAG_NAMES = ["meta", "img"]
+      def no_content_tag_name?(name)
+        NO_CONTENT_TAG_NAMES.include?(name)
+      end
+
+      def analyze
+        if production? and respond_to?(:analytics)
+          analytics
+        else
+          ""
+        end
+      end
+    end
+
+    class SearchPage
+      include PageUtils
 
       def initialize(database, request, response)
         @database = database
@@ -103,6 +172,10 @@ module RuremaSearch
       end
 
       private
+      def body
+        search_result
+      end
+
       def parse_parameters(parameters)
         @parameters = {}
         @ordered_parameters = []
@@ -226,7 +299,6 @@ module RuremaSearch
       end
 
       def title
-        site_title = "るりまサーチ"
         parameters = []
         @ordered_parameters.each do |key, value|
           parameters << parameter_link_label(key, value)
@@ -236,14 +308,6 @@ module RuremaSearch
         else
           "#{parameters.join(' > ')} | #{site_title}"
         end
-      end
-
-      def h1
-        a(tag("img",
-              :src => "/images/rurema-search-title.png",
-              :alt => "るりまサーチ",
-              :title => "るりまサーチ"),
-          "/")
       end
 
       def parameter_link_label(key, value)
@@ -466,32 +530,6 @@ module RuremaSearch
         a(label, "./#{related_entry.type.key}:#{u(key)}/")
       end
 
-      def a(label, href, attributes={})
-        tag("a", attributes.merge(:href => href), label)
-      end
-
-      def tag(name, attributes={}, content=nil)
-        _tag = "<#{name}"
-        attributes.each do |key, value|
-          _tag << " #{h(key)}=\"#{h(value)}\""
-        end
-        if content
-          _tag << ">#{content}</#{name}>"
-        else
-          if no_content_tag_name?(name)
-            _tag << " />"
-          else
-            _tag << "></#{name}>"
-          end
-        end
-        _tag
-      end
-
-      NO_CONTENT_TAG_NAMES = ["meta", "img"]
-      def no_content_tag_name?(name)
-        NO_CONTENT_TAG_NAMES.include?(name)
-      end
-
       def url_mapper(version)
         @url_mappers[version] ||= create_url_mapper(version)
       end
@@ -556,17 +594,35 @@ module RuremaSearch
           _paginate << "..."
         end
       end
+    end
 
-      def production?
-        ENV["RACK_ENV"] == "production"
+    class ErrorPage
+      include PageUtils
+
+      def initialize(env)
+        @env = env
+        @request = Rack::Request.new(env)
+        @response = Rack::Response.new
+        @response["Content-Type"] = "text/html; charset=UTF-8"
+        @response.status = 500
       end
 
-      def analyze
-        if production? and respond_to?(:analytics)
-          analytics
-        else
-          ""
-        end
+      def process
+        @response.write(layout)
+        @response.to_a
+      end
+
+      private
+      def title
+        "エラー | #{site_title}"
+      end
+
+      def query
+        ""
+      end
+
+      def body
+        error
       end
     end
   end

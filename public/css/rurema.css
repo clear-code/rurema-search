@@ -244,6 +244,13 @@ div.no-result
   padding-left: 1em;
 }
 
+div.message
+{
+  border-top: 1px solid #c1c1ec;
+  margin: 0;
+  padding: 5em;
+}
+
 div.footer
 {
   border-top: 1px solid #c1c1ec;
