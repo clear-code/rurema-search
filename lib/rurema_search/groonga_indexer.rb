@@ -42,6 +42,7 @@ module RuremaSearch
       source = entry_source(document)
       attributes = {
         :name => document.name,
+        :local_name => document.name,
         :label => document.title,
         :type => "document",
         :document => source,
@@ -64,6 +65,7 @@ module RuremaSearch
       description << source
       attributes = {
         :name => library.name,
+        :local_name => library.name,
         :label => library.name,
         :type => "library",
         :document => source,
@@ -78,6 +80,7 @@ module RuremaSearch
       source = entry_source(klass)
       @database.entries.add("#{version}:#{klass.name}",
                             :name => klass.name,
+                            :local_name => klass.name.split(/::/).last,
                             :label => klass.name,
                             :type => klass.type.to_s,
                             :version => version,
@@ -93,7 +96,7 @@ module RuremaSearch
           attributes = {
             :name => entry.spec_string,
             :label => "#{klass.name}#{entry.typemark}#{signature}",
-            :local_names => entry.names,
+            :local_name => signature.name,
             :type => normalize_type_label(entry.type_label),
             :version => version,
             :document => source,

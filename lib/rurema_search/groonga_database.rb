@@ -181,8 +181,8 @@ module RuremaSearch
                             :type => :hash,
                             :key_type => "ShortText") do |table|
           table.short_text("name")
+          table.short_text("local_name")
           table.short_text("label")
-          table.short_text("local_names", :type => :vector)
           table.text("document")
           table.text("signature")
           table.text("description")
@@ -206,6 +206,7 @@ module RuremaSearch
                             :default_tokenizer => "TokenBigram",
                             :key_normalize => true) do |table|
           table.index("Entries.name")
+          table.index("Entries.local_name")
           table.index("Entries.label")
           table.index("Entries.document")
           table.index("Entries.signature")

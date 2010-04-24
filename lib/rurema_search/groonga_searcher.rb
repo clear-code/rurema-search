@@ -146,10 +146,12 @@ module RuremaSearch
         conditions = []
         if @query
           conditions << Proc.new do |record|
-            target = (record["name"] |
-                      record["signature"] |
-                      record["description"])
-            target.match(@query, :allow_update => false)
+            record.match(@query, :allow_update => false) do |match_record|
+              (match_record["local_name"] * 1000) |
+                (match_record["name"] * 100) |
+                (match_record["signature"] * 10) |
+                (match_record["description"])
+            end
           end
         end
         {
