@@ -40,7 +40,7 @@ module RuremaSearch
     private
     def setup_view
       @view = Module.new
-      ["layout", "search_result", "analystics"].each do |template_name|
+      ["layout", "search_result", "analytics"].each do |template_name|
         template = create_template(template_name)
         next if template.nil?
         @view.send(:define_method, template_name) do
