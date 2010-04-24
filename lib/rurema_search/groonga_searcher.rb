@@ -223,10 +223,13 @@ module RuremaSearch
           href = "./" + "../" * (n_elements - i - 1)
           label = h("#{key}:#{value}")
           if i == n_elements - 1
-            elements << label
+            element = label
           else
-            elements << a(label, href)
+            element = a(label, href)
           end
+          remove_href = topic_path_condition_remove_href(@available_paths, i)
+          element << a("[x]", remove_href)
+          elements << element
         end
         return "" if elements.empty?
 
@@ -234,6 +237,15 @@ module RuremaSearch
         elements.collect do |element|
           tag("span", {:class => "topic-element"}, element)
         end.join(h(" > "))
+      end
+
+      def topic_path_condition_remove_href(paths, i)
+        after_paths = paths[(i + 1)..-1]
+        excluded_path = "../" * (after_paths.size + 1)
+        after_paths.each do |_key, _value|
+          excluded_path << "#{_key}:#{u(_value)}/"
+        end
+        excluded_path
       end
 
       def link_version_select(version)
