@@ -494,7 +494,8 @@ module RuremaSearch
         }
         snippet = @expression.snippet([open_tag, close_tag], options)
         snippet ||= Groonga::Snippet.new(options)
-        [@version, @class, @module, @object, @instance_method].each do |value|
+        @parameters.each do |key, value|
+          next if key == "query"
           next if value.nil?
           snippet.add_keyword(value,
                               :open_tag => open_tag,
@@ -510,9 +511,9 @@ module RuremaSearch
 
       def related_entries(entry)
         entries = []
-        add_related_entry(entries, entry["class"], @class)
-        add_related_entry(entries, entry["module"], @module)
-        add_related_entry(entries, entry["object"], @object)
+        ["class", "module", "object"].each do |type|
+          add_related_entry(entries, entry[type], @parameters[type])
+        end
         description = entry.description
         if description
           @database.specs.scan(description) do |record, word, start, length|
