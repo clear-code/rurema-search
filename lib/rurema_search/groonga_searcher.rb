@@ -545,7 +545,18 @@ module RuremaSearch
           key = related_entry.key
           label = related_entry.key
         end
-        a(label, "./#{related_entry.type.key}:#{u(key)}/")
+        type = related_entry.type.key
+        if @parameters[type]
+          href = "/"
+          @ordered_parameters.each do |_key, _value|
+            next if _key == type
+            href << parameter_link_href(_key, _value)
+          end
+          href << parameter_link_href(type, key)
+          a(label, href)
+        else
+          a(label, "./#{parameter_link_href(type, key)}")
+        end
       end
 
       def url_mapper(version)

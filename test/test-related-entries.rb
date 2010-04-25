@@ -21,6 +21,13 @@ class RelatedEnetriesTest < Test::Unit::TestCase
     assert_equal([], related_entry_links("/class:File/"))
   end
 
+  def test_remove_same_type_drilldown
+    get "/singleton-method:File.ftype/"
+    links = related_entry_links("/singleton-method:File.lstat/")
+    assert_equal(["File.lstat"],
+                 links.collect {|link| link.text})
+  end
+
   private
   def related_entry_links(href=nil)
     xpath = "//li[@class='entry-related']/a"
