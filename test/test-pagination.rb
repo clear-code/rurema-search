@@ -16,18 +16,6 @@
 class PaginateTest < Test::Unit::TestCase
   include RuremaSearchTestUtils
 
-  def setup
-    FileUtils.mkdir_p(tmp_dir.to_s)
-  end
-
-  def teardown
-    FileUtils.rm_rf(tmp_dir.to_s)
-  end
-
-  def app
-    RuremaSearch::GroongaSearcher.new(database, base_dir)
-  end
-
   def test_get
     visit "/"
     assert_paginate([["paginate-text", nil, "<<"],

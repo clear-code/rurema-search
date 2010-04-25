@@ -35,6 +35,13 @@ module RuremaSearchTestUtils
   include Webrat::Matchers
 
   class << self
+    def included(base)
+      base.class_eval do
+        setup :setup_tmp_dir
+        teardown :teardown_tmp_dir
+      end
+    end
+
     def database
       @database ||= ensure_database
     end
@@ -60,6 +67,18 @@ module RuremaSearchTestUtils
       _database.open(database_dir.to_s, "utf-8")
       _database
     end
+  end
+
+  def setup_tmp_dir
+    FileUtils.mkdir_p(tmp_dir.to_s)
+  end
+
+  def teardown_tmp_dir
+    FileUtils.rm_rf(tmp_dir.to_s)
+  end
+
+  def app
+    RuremaSearch::GroongaSearcher.new(database, base_dir)
   end
 
   private
