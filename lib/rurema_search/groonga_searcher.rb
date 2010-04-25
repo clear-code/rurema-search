@@ -517,6 +517,8 @@ module RuremaSearch
         description = entry.description
         if description
           @database.specs.scan(description) do |record, word, start, length|
+            current_value = @parameters[record.type.key]
+            next if record.key == current_value
             entries << record
           end
         end
