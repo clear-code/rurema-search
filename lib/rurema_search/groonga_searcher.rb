@@ -155,7 +155,7 @@ module RuremaSearch
       end
 
       def process
-        start = Time.now.to_i
+        start = Time.now.to_f
         _, *parameters = @request.path_info.split(/\//)
 	conditions = parse_parameters(parameters)
         entries = @database.entries
@@ -180,7 +180,7 @@ module RuremaSearch
                                :offset => @n_entries_per_page * (@page - 1),
                                :limit => @n_entries_per_page)
         @versions = @database.versions
-        @elapsed_time = Time.now.to_f - start.to_f
+        @elapsed_time = Time.now.to_f - start
         @response.write(layout)
       end
 
