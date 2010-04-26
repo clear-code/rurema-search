@@ -243,6 +243,10 @@ module RuremaSearch
         @parameters["query"]
       end
 
+      def version
+        @parameters["version"]
+      end
+
       def create_conditions
         conditions = []
         @parameters.each do |key, value|

@@ -1,11 +1,11 @@
 <div class="version-select">
   <ul>
-    <li class="version-select<%= @version.nil? ? '-current' : '' %>">
+    <li class="version-select<%= version.nil? ? '-current' : '' %>">
       <%= link_version_select(:all) %>
     </li>
-<% @versions.each do |version| %>
-    <li class="version-select<%= @version == version.key ? '-current' : '' %>">
-      <%= link_version_select(version.key) %>
+<% @versions.each do |_version| %>
+    <li class="version-select<%= version == _version.key ? '-current' : '' %>">
+      <%= link_version_select(_version.key) %>
     </li>
 <% end %>
   </ul>
@@ -55,7 +55,7 @@
 
 <%= paginate %>
   <dl class="entries">
-<%  @entries.each_with_index do |entry, i| %>
+<%  @entries.each do |entry| %>
     <dt class="entry-name">
       <%= link_entry(entry) %>
       <span class="score">(<%= h(entry.score) %>)</span>
