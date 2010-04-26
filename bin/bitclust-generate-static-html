@@ -15,6 +15,7 @@ class BitClust::TemplateScreen
     <form method="POST" action="/version:#{h(@target_version)}/"
           name="top_search" id="top_search">
       <input value="" name="query" size="15">
+      <input value="#{h(encoding)}" name="encoding" type="hidden">
       <input value="#{h(_('Search'))}" type="submit">
     </form>
     EOF

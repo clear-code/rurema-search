@@ -39,6 +39,8 @@ module RuremaSearchTestUtils
       base.class_eval do
         setup :setup_tmp_dir
         teardown :teardown_tmp_dir
+
+        setup :setup_host
       end
     end
 
@@ -77,6 +79,10 @@ module RuremaSearchTestUtils
     FileUtils.rm_rf(tmp_dir.to_s)
   end
 
+  def setup_host
+    header("Host", host)
+  end
+
   def app
     RuremaSearch::GroongaSearcher.new(database, base_dir)
   end
@@ -104,6 +110,10 @@ module RuremaSearchTestUtils
 
   def database
     RuremaSearchTestUtils.database
+  end
+
+  def host
+    Rack::Test::DEFAULT_HOST
   end
 
   module_function

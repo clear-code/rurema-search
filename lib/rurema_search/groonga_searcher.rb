@@ -57,6 +57,11 @@ module RuremaSearch
         query = request['query'] || ''
         unless query.empty?
           path_info = request.path_info.gsub(/\/query:.+?\//, '/')
+          encoding = request['encoding']
+          if encoding
+            query.force_encoding(encoding)
+            query = query.encode("utf-8")
+          end
           request.path_info = "#{path_info}query:#{escape(query)}/"
         end
         response.redirect(request.url.split(/\?/, 2)[0])
