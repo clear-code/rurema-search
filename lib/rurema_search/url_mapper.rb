@@ -75,7 +75,7 @@ module RuremaSearch
     end
 
     def document_url(name)
-      "#{base_url}doc/#{encodename_url(name)}.html"
+      "#{base_url}doc/#{encodename_fs(name)}.html"
     end
   end
 end
