@@ -19,6 +19,76 @@ module RuremaSearch
       end
     end
 
+    module PageUtils
+      include ERB::Util
+      include Utils
+
+      module_function
+      def site_title
+        "るりまサーチ"
+      end
+
+      def site_description
+        "Rubyのリファレンスマニュアルを検索"
+      end
+
+      def open_search_description_path
+        "/open_search_description.xml"
+      end
+
+      def open_search_description_mime_type
+        "application/opensearchdescription+xml"
+      end
+
+      def base_url
+        script_name = @request.script_name
+        script_name = "/" if script_name.empty?
+        (URI(@request.url) + script_name).to_s
+      end
+
+      def h1
+        a(tag("img",
+              :src => "/images/rurema-search-title.png",
+              :alt => site_title,
+              :title => site_title),
+          "/")
+      end
+
+      def a(label, href, attributes={})
+        tag("a", attributes.merge(:href => href), label)
+      end
+
+      def tag(name, attributes={}, content=nil)
+        _tag = "<#{name}"
+        attributes.each do |key, value|
+          _tag << " #{h(key)}=\"#{h(value)}\""
+        end
+        if content
+          _tag << ">#{content}</#{name}>"
+        else
+          if no_content_tag_name?(name)
+            _tag << " />"
+          else
+            _tag << "></#{name}>"
+          end
+        end
+        _tag
+      end
+
+      NO_CONTENT_TAG_NAMES = ["meta", "img"]
+      def no_content_tag_name?(name)
+        NO_CONTENT_TAG_NAMES.include?(name)
+      end
+
+      def analyze
+        if production? and respond_to?(:analytics)
+          analytics
+        else
+          ""
+        end
+      end
+    end
+
     include Rack::Utils
     include Utils
 
@@ -66,17 +136,27 @@ module RuremaSearch
         end
         response.redirect(request.url.split(/\?/, 2)[0])
       else
-        page = SearchPage.new(@database, request, response)
-        page.extend(@view)
-        page.process
+        dispatch(request, response)
       end
       response.to_a
     end
 
+    def dispatch(request, response)
+      case request.path_info
+      when PageUtils.open_search_description_path
+        page = OpenSearchDescriptionPage.new(request, response)
+      else
+        page = SearchPage.new(@database, request, response)
+      end
+      page.extend(@view)
+      page.process
+    end
+
     def setup_view
       @view = Module.new
-      ["layout", "search_result", "error", "analytics"].each do |template_name|
-        template = create_template(template_name)
+      ["layout", "search_result", "error", "analytics",
+       ["open_search_description", "xml"]].each do |template_name, extension|
+        template = create_template(template_name, extension)
         next if template.nil?
         @view.send(:define_method, template_name) do
           template.result(binding)
@@ -84,8 +164,9 @@ module RuremaSearch
       end
     end
 
-    def create_template(name)
-      template_file = File.join(@base_dir, "views", "#{name}.html.erb")
+    def create_template(name, extension=nil)
+      extension ||= "html"
+      template_file = File.join(@base_dir, "views", "#{name}.#{extension}.erb")
       return nil unless File.exist?(template_file)
       erb = ERB.new(File.read(template_file), 0, "%<>")
       erb.filename = template_file
@@ -95,57 +176,6 @@ module RuremaSearch
     def notify_exception(exception, env)
       notifier = ExceptionMailNotifier.new(exception, env, @options[:smtp])
       notifier.notify
-    end
-
-    module PageUtils
-      include ERB::Util
-      include Utils
-
-      def site_title
-        "るりまサーチ"
-      end
-
-      def h1
-        a(tag("img",
-              :src => "/images/rurema-search-title.png",
-              :alt => site_title,
-              :title => site_title),
-          "/")
-      end
-
-      def a(label, href, attributes={})
-        tag("a", attributes.merge(:href => href), label)
-      end
-
-      def tag(name, attributes={}, content=nil)
-        _tag = "<#{name}"
-        attributes.each do |key, value|
-          _tag << " #{h(key)}=\"#{h(value)}\""
-        end
-        if content
-          _tag << ">#{content}</#{name}>"
-        else
-          if no_content_tag_name?(name)
-            _tag << " />"
-          else
-            _tag << "></#{name}>"
-          end
-        end
-        _tag
-      end
-
-      NO_CONTENT_TAG_NAMES = ["meta", "img"]
-      def no_content_tag_name?(name)
-        NO_CONTENT_TAG_NAMES.include?(name)
-      end
-
-      def analyze
-        if production? and respond_to?(:analytics)
-          analytics
-        else
-          ""
-        end
-      end
     end
 
     class SearchPage
@@ -631,6 +661,20 @@ module RuremaSearch
         if abbreved
           _paginate << "..."
         end
+      end
+    end
+
+    class OpenSearchDescriptionPage
+      include PageUtils
+
+      def initialize(request, response)
+        @request = request
+        @response = response
+      end
+
+      def process
+        @response["Content-Type"] = open_search_description_mime_type
+        @response.write(open_search_description)
       end
     end
 
