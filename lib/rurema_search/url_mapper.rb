@@ -63,11 +63,11 @@ module RuremaSearch
     end
 
     def opensearchdescription_url
-      "#{base_url}opensearchdescription"
+      "#{base_url}open_search_description.xml"
     end
 
     def search_url
-      "#{@base_url}search"
+      "#{base_url}search"
     end
 
     def spec_url(name)
