@@ -186,7 +186,6 @@ module RuremaSearch
         @request = request
         @response = response
         @url_mappers = {}
-        @n_entries_per_page = 100
       end
 
       def process
@@ -212,8 +211,8 @@ module RuremaSearch
         end
         @page = ensure_page
         @entries = result.sort([["_score", :descending]],
-                               :offset => @n_entries_per_page * (@page - 1),
-                               :limit => @n_entries_per_page)
+                               :offset => n_entries_per_page * (@page - 1),
+                               :limit => n_entries_per_page)
         @versions = @database.versions
         @elapsed_time = Time.now.to_f - start
         @response.write(layout)
@@ -266,6 +265,23 @@ module RuremaSearch
       }
       def parameter_label(key)
 	PARAMETER_LABELS[key] || key
+      end
+
+      def n_entries_per_page
+        @n_entries_per_page ||= compute_n_entries_per_page
+      end
+
+      def compute_n_entries_per_page
+        default_n_entries = 100
+        n_entries = @request["n_entries"] || 100
+        if n_entries
+          begin
+            n_entries = Integer(n_entries)
+          rescue ArgumentError
+            n_entries = 100
+          end
+        end
+        [10, [n_entries, 100].min].max
       end
 
       def query
@@ -347,7 +363,7 @@ module RuremaSearch
           return 1
         end
         return 1 if page < 0
-        return 1 if (page - 1) * @n_entries_per_page > @n_entries
+        return 1 if (page - 1) * n_entries_per_page > @n_entries
         page
       end
 
@@ -644,7 +660,8 @@ module RuremaSearch
           _paginate << a(h("<<"), "./")
           _paginate << a(h("<"), "?page=#{@page - 1}")
         end
-        last_page = @n_entries / @n_entries_per_page + 1
+        last_page = @n_entries / n_entries_per_page
+        last_page += 1 unless (@n_entries % n_entries_per_page).zero?
         paginate_content_middle(_paginate, last_page)
         if @page == last_page
           _paginate << h(">>")

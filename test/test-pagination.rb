@@ -41,6 +41,17 @@ class PaginateTest < Test::Unit::TestCase
                      ["paginate-link", "?page=2", ">>"]])
   end
 
+  def test_border_hits
+    visit "/version:1.9.2/type:singleton-method/?n_entries=10"
+    assert_paginate([["paginate-text", nil, "<<"],
+                     ["paginate-current", nil, "1"],
+                     ["paginate-link", "?page=2", "2"],
+                     ["paginate-link", "?page=3", "3"],
+                     ["paginate-text", nil, "..."],
+                     ["paginate-link", "?page=2", ">"],
+                     ["paginate-link", "?page=6", ">>"]])
+  end
+
   private
   def assert_paginate(expected)
     paginate = current_dom.xpath("//div[@class='paginate']")[0]
