@@ -45,6 +45,9 @@ searcher_options = {}
 
 use Rack::CommonLogger
 use Rack::Runtime
+
+urls = ["/favicon.", "/css/", "/images/", "/js/", "/1.8.", "/1.9."]
+
 case environment
 when "development"
   class DirectoryIndex
@@ -61,9 +64,7 @@ when "development"
     end
   end
 
-  urls = ["/favicon.", "/css/", "/images/", "/js/", "/1.8.", "/1.9."]
   use DirectoryIndex, :urls => urls
-  use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
 
   use Rack::ShowExceptions
 when "production"
@@ -73,6 +74,8 @@ when "production"
     searcher_options[:smtp] = YAML.load(smtp_configuration_file.read)
   end
 end
+
+use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
 
 use Rack::Lint
 run RuremaSearch::GroongaSearcher.new(database, base_dir.to_s, searcher_options)
