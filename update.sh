@@ -24,6 +24,7 @@ for version in 1.8.7 1.8.8 1.9.1 1.9.2; do
 	${base_dir}/bin/bitclust-generate-static-html \
 	${bitclust_dir}/tools/bc-tohtmlpackage.rb \
 	--quiet \
+	--fs-casesensitive \
 	--database ${base_dir}/db-${version} \
 	--outputdir ${base_dir}/public/${version}.new
     mv ${base_dir}/public/${version}{,.old}

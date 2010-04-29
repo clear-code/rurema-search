@@ -41,17 +41,17 @@ module RuremaSearch
       if name == "/"
         library_index_url
       else
-        "#{base_url}library/#{encodename_fs(name)}.html"
+        "#{base_url}library/#{encodename_url(name)}.html"
       end
     end
 
     def class_url(name)
-      "#{base_url}class/#{encodename_fs(name)}.html"
+      "#{base_url}class/#{encodename_url(name)}.html"
     end
 
     def method_url(spec)
       cname, tmark, mname = *split_method_spec(spec)
-      "#{base_url}method/#{encodename_fs(cname)}/#{typemark2char(tmark)}/#{encodename_fs(mname)}.html"
+      "#{base_url}method/#{encodename_url(cname)}/#{typemark2char(tmark)}/#{encodename_url(mname)}.html"
     end
 
     def function_index_url
@@ -75,7 +75,7 @@ module RuremaSearch
     end
 
     def document_url(name)
-      "#{base_url}doc/#{encodename_fs(name)}.html"
+      "#{base_url}doc/#{encodename_url(name)}.html"
     end
   end
 end
