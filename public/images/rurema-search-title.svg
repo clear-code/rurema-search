@@ -296,6 +296,18 @@
        inkscape:vp_y="0 : 1000 : 0"
        inkscape:vp_x="0 : 24 : 1"
        sodipodi:type="inkscape:persp3d" />
+    <filter
+       inkscape:collect="always"
+       id="filter3663"
+       x="-0.020706094"
+       width="1.0414122"
+       y="-0.13772978"
+       height="1.2754596">
+      <feGaussianBlur
+         inkscape:collect="always"
+         stdDeviation="0.71022656"
+         id="feGaussianBlur3665" />
+    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -304,9 +316,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.979899"
-     inkscape:cx="90.754602"
-     inkscape:cy="17.581152"
+     inkscape:zoom="3.959798"
+     inkscape:cx="78.619097"
+     inkscape:cy="14.898273"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -332,6 +344,17 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-104.88694,-283.86325)">
+    <text
+       sodipodi:linespacing="100%"
+       id="text2879"
+       y="302.54074"
+       x="129.21428"
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#646464;fill-opacity:1;stroke:none;filter:url(#filter3663);font-family:'美咲ゴシック';-inkscape-font-specification:'美咲ゴシック'"
+       xml:space="preserve"><tspan
+         y="302.54074"
+         x="129.21428"
+         id="tspan2881"
+         sodipodi:role="line">るりまサーチ</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:'美咲ゴシック';-inkscape-font-specification:'美咲ゴシック'"

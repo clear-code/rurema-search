@@ -26,6 +26,12 @@ a:focus
   background-color: #4c4cc6;
 }
 
+div.content div.statistics,
+div.content div.result h2
+{
+  text-shadow: 0.1em 0.1em 0.1em rgb(100, 100, 100);
+}
+
 div.header
 {
   position: static;
@@ -92,6 +98,9 @@ div.content div.version-select ul li
   padding-right: 0.5em;
   border: 1px solid #c1c1ec;
   border-bottom-color: #e9e9f8;
+  -moz-border-radius: 5px 5px 0 0;
+  -webkit-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
 }
 
 div.content div.version-select ul li.version-select-current
@@ -115,6 +124,9 @@ div.content div.statistics
   background-color: #e9e9f8;
   border-bottom: 1px solid #c1c1ec;
   margin-bottom: 1em;
+  -moz-box-shadow: 0 0.1em 0.5em rgb(100, 100, 100);
+  -webkit-box-shadow: 0 0.1em 0.5em rgb(100, 100, 100);
+  box-shadow: 0 0.1em 0.5em rgb(100, 100, 100);
 }
 
 div.topic-path
@@ -160,7 +172,6 @@ dl.entries dt
   border-top: 1px solid #c1c1ec;
   padding-top: 0.15em;
   padding-bottom: 0.25em;
-  background-color: #e9e9f8;
 }
 
 dl.entries dd
