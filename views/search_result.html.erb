@@ -65,11 +65,13 @@
       <ul class="entry-metadata">
         <li class="entry-version"><%= link_version(entry) %></li>
         <li class="entry-type"><%= link_type(entry) %></li>
+      </ul>
+      <ul class="entry-related-entries">
 <%    related_entries(entry).each_with_index do |related_entry, i| %>
 <%      if i < 20 %>
-        <li class="entry-related"><%= link_related_entry(related_entry) %></li>
+        <li class="entry-related-entry"><%= link_related_entry(related_entry) %></li>
 <%      else %>
-        <li class="entry-related-abbrev">...</li>
+        <li class="entry-related-entry-abbrev">...</li>
 <%        break %>
 <%      end %>
 <%    end %>

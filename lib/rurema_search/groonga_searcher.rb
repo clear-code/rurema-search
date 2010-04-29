@@ -257,7 +257,6 @@ module RuremaSearch
         "type" => "種類",
         "module" => "モジュール",
         "class" => "クラス",
-        "module" => "モジュール",
         "object" => "オブジェクト",
         "instance-method" => "インスタンスメソッド",
         "singleton-method" => "シングルトンメソッド",
@@ -364,13 +363,16 @@ module RuremaSearch
         end
       end
 
-      def parameter_link_label(key, value)
+      def parameter_value_label(key, value)
         if key == "type"
-          value_label = type_label(value)
+          type_label(value)
         else
-          value_label = value
+          value
         end
-        "#{parameter_label(key)}:#{value_label}"
+      end
+
+      def parameter_link_label(key, value)
+        "#{parameter_label(key)}:#{parameter_value_label(key, value)}"
       end
 
       def parameter_link_href(key, value)
@@ -381,23 +383,41 @@ module RuremaSearch
         elements = []
         n_elements = @ordered_parameters.size
         @ordered_parameters.each_with_index do |(key, value), i|
-          href = "./" + "../" * (n_elements - i - 1)
-          label = h(parameter_link_label(key, value))
-          if i == n_elements - 1
-            element = label
-          else
-            element = a(label, href)
-          end
+          element = topic_path_element(key, value, i, n_elements)
           remove_href = topic_path_condition_remove_href(i)
           element << a("[x]", remove_href)
           elements << element
         end
         return "" if elements.empty?
 
-        elements.unshift(a(h("全件表示"), "/"))
+        elements.unshift(tag("span", {:class => "all-items"},
+                             a(h("全件表示"), "/")))
         elements.collect do |element|
           tag("span", {:class => "topic-element"}, element)
         end.join(h(" > "))
+      end
+
+      ICON_AVAILABLE_PARAMETERS = ["version", "type", "query"]
+      def topic_path_element(key, value, i, n_elements)
+        href = "./" + "../" * (n_elements - i - 1)
+        key_label = parameter_label(key)
+        if ICON_AVAILABLE_PARAMETERS.include?(key)
+          key_label = tag("img",
+                          {
+                            :class => "parameter-#{key}",
+                            :alt => key_label,
+                            :title => key_label,
+                            :src => "/images/#{key}-icon.png",
+                          })
+        else
+          key_label = h(key_label)
+        end
+        value_label = h(parameter_value_label(key, value))
+        last_element_p = (i == n_elements - 1)
+        unless last_element_p
+          value_label = a(value_label, href)
+        end
+        "#{key_label}:#{value_label}"
       end
 
       def topic_path_condition_remove_href(i)
