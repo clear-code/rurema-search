@@ -750,12 +750,15 @@ EOH
       end
 
       def format_body
+        request = Rack::Request.new(@env)
         body = <<-EOB
+URL: #{request.url}
+--
 #{@exception.class}: #{@exception}
 --
 #{@exception.backtrace.join("\n")}
 EOB
-        params = Rack::Request.new(@env).params
+        params = request.params
         max_key_size = (@env.keys.collect(&:size) +
                         params.keys.collect(&:size)).max
         body << <<-EOE
