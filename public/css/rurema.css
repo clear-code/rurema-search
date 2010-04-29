@@ -26,12 +26,6 @@ a:focus
   background-color: #4c4cc6;
 }
 
-div.content div.statistics,
-div.content div.result h2
-{
-  text-shadow: 0.1em 0.1em 0.1em rgb(100, 100, 100);
-}
-
 div.header
 {
   position: static;
@@ -124,6 +118,7 @@ div.content div.statistics
   background-color: #e9e9f8;
   border-bottom: 1px solid #c1c1ec;
   margin-bottom: 1em;
+  text-shadow: 0.075em 0.075em 0.075em rgb(100, 100, 100);
   -moz-box-shadow: 0 0.1em 0.5em rgb(100, 100, 100);
   -webkit-box-shadow: 0 0.1em 0.5em rgb(100, 100, 100);
   box-shadow: 0 0.1em 0.5em rgb(100, 100, 100);
@@ -141,6 +136,11 @@ div.no-result
   padding-left: 1em;
   padding-right: 1em;
   margin-bottom: 1em;
+}
+
+div.result h2
+{
+  text-shadow: 0.1em 0.1em 0.1em rgb(100, 100, 100);
 }
 
 div.drilldowns
