@@ -29,7 +29,6 @@ for version in 1.8.7 1.8.8 1.9.1 1.9.2; do
     mv ${base_dir}/public/${version}{,.old}
     mv ${base_dir}/public/${version}{.new,}
     rm -rf ${base_dir}/public/${version}.old
-    break
 done
 
 ruby1.9.1 \
