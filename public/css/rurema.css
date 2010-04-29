@@ -135,6 +135,16 @@ div.topic-path span.all-items
   background: url(../images/all-items-icon.png) no-repeat left bottom;
 }
 
+div.topic-path a.drop-condition
+{
+  margin: 0 3px;
+}
+
+div.topic-path a.drop-condition img
+{
+  border: none;
+}
+
 div.result,
 div.no-result
 {

@@ -385,7 +385,14 @@ module RuremaSearch
         @ordered_parameters.each_with_index do |(key, value), i|
           element = topic_path_element(key, value, i, n_elements)
           remove_href = topic_path_condition_remove_href(i)
-          element << a("[x]", remove_href)
+          element << a(tag("img",
+                           {
+                             :alt => "[x]",
+                             :title => "条件を削除",
+                             :src => "/images/drop-condition-icon.png",
+                           }),
+                       remove_href,
+                       :class => "drop-condition")
           elements << element
         end
         return "" if elements.empty?
