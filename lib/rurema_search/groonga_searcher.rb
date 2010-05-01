@@ -727,6 +727,15 @@ module RuremaSearch
         @response["Content-Type"] = open_search_description_mime_type
         @response.write(open_search_description)
       end
+
+      private
+      def version
+        if /\/version:([\d.]+?)\// =~ @request.path_info
+          $1
+        else
+          nil
+        end
+      end
     end
 
     class ErrorPage
