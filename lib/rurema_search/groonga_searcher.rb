@@ -39,7 +39,7 @@ module RuremaSearch
       def open_search_description_path
         _version = version
         if _version
-          "/version:_version/#{open_search_description_base_name}"
+          "/version:#{_version}/#{open_search_description_base_name}"
         else
           "/#{open_search_description_base_name}"
         end
@@ -58,7 +58,7 @@ module RuremaSearch
       def version_url
         url = base_url
         _version = version
-        url += "/version:#{_version}/" if _version
+        url += "version:#{_version}/" if _version
         url
       end
 
