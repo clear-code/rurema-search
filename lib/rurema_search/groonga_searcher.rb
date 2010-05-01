@@ -46,6 +46,13 @@ module RuremaSearch
         (URI(@request.url) + script_name).to_s
       end
 
+      def version_url
+        url = base_url
+        _version = version
+        url += "/version:#{_version}/" if _version
+        url
+      end
+
       def h1
         a(tag("img",
               :src => "/images/rurema-search-title.png",
