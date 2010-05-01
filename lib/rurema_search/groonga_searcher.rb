@@ -32,8 +32,17 @@ module RuremaSearch
         "Rubyのリファレンスマニュアルを検索"
       end
 
+      def open_search_description_base_name
+        "open_search_description.xml"
+      end
+
       def open_search_description_path
-        "/open_search_description.xml"
+        _version = version
+        if _version
+          "/version:_version/#{open_search_description_base_name}"
+        else
+          "/#{open_search_description_base_name}"
+        end
       end
 
       def open_search_description_mime_type
@@ -150,7 +159,7 @@ module RuremaSearch
 
     def dispatch(request, response)
       case request.path_info
-      when PageUtils.open_search_description_path
+      when /#{Regexp.escape(PageUtils.open_search_description_base_name)}\z/
         page = OpenSearchDescriptionPage.new(request, response)
       else
         page = SearchPage.new(@database, request, response)
