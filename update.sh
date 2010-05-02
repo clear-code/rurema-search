@@ -17,6 +17,12 @@ for version in 1.8.7 1.8.8 1.9.1 1.9.2; do
     	${bitclust_dir}/bin/bitclust.rb \
     	--database ${base_dir}/db-${version} \
     	update --stdlibtree ${rubydoc_dir}/refm/api/src
+    ruby \
+    	-I ${bitclust_dir}/lib \
+    	${bitclust_dir}/bin/bitclust.rb \
+    	--database ${base_dir}/db-${version} \
+	--capi \
+    	update ${rubydoc_dir}/refm/capi/src/**/*.rd
     rm -rf ${base_dir}/public/${version}.{old,new}
     ruby \
 	-I ${base_dir}/lib \

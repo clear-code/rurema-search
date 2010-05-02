@@ -59,7 +59,7 @@ module RuremaSearch
     end
 
     def function_url(name)
-      "#{base_url}function/#{name}"
+      "#{base_url}function/#{encode_name_url(name)}.html"
     end
 
     def opensearchdescription_url

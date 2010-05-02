@@ -4,30 +4,34 @@
 
 module RuremaSearch
   class GroongaIndexer
-    def initialize(database, bitclust_database)
+    def initialize(database, method_database, function_database)
       @database = database
-      @bitclust_database = bitclust_database
+      @method_database = method_database
+      @function_database = function_database
     end
 
     def index
-      @bitclust_database.classes.each do |klass|
+      @method_database.classes.each do |klass|
         index_class(klass)
       end
-      @bitclust_database.docs.each do |doc|
+      @method_database.docs.each do |doc|
         index_document(doc)
       end
-      @bitclust_database.libraries.each do |library|
+      @method_database.libraries.each do |library|
         index_library(library)
+      end
+      @function_database.functions.each do |function|
+        # index_function(function)
       end
     end
 
     private
     def version
-      @version ||= @bitclust_database.properties["version"]
+      @version ||= @method_database.properties["version"]
     end
 
     def encoding
-      @encoding ||= @bitclust_database.properties["encoding"]
+      @encoding ||= @method_database.properties["encoding"]
     end
 
     def index_class(klass)
@@ -73,6 +77,23 @@ module RuremaSearch
         :version => version,
       }
       @database.entries.add("#{version}:#{library.name}",
+                            attributes)
+    end
+
+    def index_function(function)
+      source = entry_source(function)
+      attributes = {
+        :name => function.header,
+        :label => function.header,
+        :local_name => function.name,
+        :type => normalize_type_label(function.type_label),
+        :version => version,
+        :document => source,
+        :signature => function.header,
+        :description => source,
+        :visibility => function.private? ? "private" : "public",
+      }
+      @database.entries.add("#{version}:#{function.header}",
                             attributes)
     end
 
@@ -132,14 +153,14 @@ module RuremaSearch
     end
 
     def foreach_method_chunk(source, &block)
-      @screen ||= BitClust::TemplateScreen.new(:database => @bitclust_database)
+      @screen ||= BitClust::TemplateScreen.new(:database => @method_database)
       @screen.send(:foreach_method_chunk, source, &block)
     end
 
     def entry_source(entry)
       source = entry.source
       if source.respond_to?(:force_encoding)
-        source.force_encoding(@bitclust_database.encoding)
+        source.force_encoding(@method_database.encoding)
       end
       source
     end
