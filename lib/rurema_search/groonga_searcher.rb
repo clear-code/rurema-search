@@ -568,6 +568,7 @@ module RuremaSearch
         "document" => "文書",
         "library" => "ライブラリ",
         "function" => "関数",
+        "macro" => "マクロ",
       }
       def type_label(type)
         TYPE_LABELS[type] || type
