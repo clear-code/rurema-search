@@ -24,7 +24,7 @@ class BitClust::TemplateScreen
   undef manual_home_link
   def manual_home_link
     label = _('Ruby %s Reference Manual', ruby_version)
-    "<a href=\"/version:#{@target_version}/\">#{label}</a>"
+    "<a href=\"/version:#{h(@target_version)}/\">#{label}</a>"
   end
 end
 
