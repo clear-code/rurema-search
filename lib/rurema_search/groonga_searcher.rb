@@ -367,8 +367,9 @@ module RuremaSearch
         result = entries.group(drilldown_column)
         result = result.sort([["_nsubrecs", :descending]], :limit => 10)
         result.collect do |record|
+          label = record[label_column]
           {
-            :label => record[label_column],
+            :label => label,
             :n_records => record.n_sub_records
           }
         end
@@ -401,8 +402,11 @@ module RuremaSearch
       end
 
       def parameter_value_label(key, value)
-        if key == "type"
+        case key
+        when "type"
           type_label(value)
+        when "library"
+          library_label(value)
         else
           value
         end
@@ -533,7 +537,9 @@ module RuremaSearch
         if key == "type"
           link_type_raw(record[:label])
         else
-          a(h(record[:label]), "./#{parameter_link_href(key, record[:label])}")
+          label = record[:label]
+          label = library_label(label) if key == "library"
+          a(h(label), "./#{parameter_link_href(key, record[:label])}")
         end
       end
 
@@ -565,6 +571,11 @@ module RuremaSearch
       }
       def type_label(type)
         TYPE_LABELS[type] || type
+      end
+
+      LIBRARY_LABELS = {"_builtin" => "ビルトイン"}
+      def library_label(label)
+        LIBRARY_LABELS[label] || label
       end
 
       def link_version(entry)
