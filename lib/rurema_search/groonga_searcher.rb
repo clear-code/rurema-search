@@ -526,7 +526,7 @@ module RuremaSearch
           mapper.document_url(entry.name)
         when "library"
           mapper.library_url(entry.name)
-        when "function"
+        when "function", "macro"
           mapper.function_url(entry.name)
         else
           "/#{entry.type.key}"
