@@ -42,4 +42,7 @@ ruby1.9.1 \
     -I../rroonga.19/lib \
     -I../rroonga.19/ext/groonga \
     ${base_dir}/bin/bitclust-indexer \
+    --reset \
     ${base_dir}/db-*
+
+touch ${base_dir}/tmp/restart.txt
