@@ -311,6 +311,10 @@ module RuremaSearch
         @parameters["version"]
       end
 
+      def type
+        @parameters["type"]
+      end
+
       def create_conditions
         conditions = []
         @parameters.each do |key, value|
@@ -346,7 +350,7 @@ module RuremaSearch
 
       def drilldown_items(entries)
         result = []
-        if @parameters["type"]
+        if type
           ["class", "module", "object", "library"].each do |column|
             next if @parameters[column]
             item = drilldown_item(entries, column, "_key")
@@ -469,14 +473,19 @@ module RuremaSearch
         excluded_path
       end
 
-      def link_version_select(version)
-        href = version_select_href(version)
-        if href.empty?
-          href = "/"
+      def link_version_select(select_version)
+        label = h(select_version == :all ? "すべて" : select_version)
+        if version == select_version
+          label
         else
-          href = "/#{href}"
+          href = version_select_href(select_version)
+          if href.empty?
+            href = "/"
+          else
+            href = "/#{href}"
+          end
+          a(label, href)
         end
-        a(h(version == :all ? "すべて" : version), href)
       end
 
       def version_select_href(version)
@@ -532,8 +541,13 @@ module RuremaSearch
         link_type_raw(entry.type.key)
       end
 
-      def link_type_raw(type)
-        a(h(type_label(type)), "./#{parameter_link_href('type', type)}")
+      def link_type_raw(linked_type)
+        label = h(type_label(linked_type))
+        if type == linked_type
+          label
+        else
+          a(label, "./#{parameter_link_href('type', linked_type)}")
+        end
       end
 
       TYPE_LABELS = {
@@ -554,7 +568,13 @@ module RuremaSearch
       end
 
       def link_version(entry)
-        a(h(entry.version.key), "./version:#{u(entry.version.key)}/")
+        label = h(entry.version.key)
+        entry_version = entry.version.key
+        if version == entry_version
+          label
+        else
+          a(label, "./version:#{u(entry_version)}/")
+        end
       end
 
       def snippet_width
