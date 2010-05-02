@@ -803,6 +803,10 @@ module RuremaSearch
         "エラー | #{site_title}"
       end
 
+      def version
+        nil
+      end
+
       def query
         ""
       end
