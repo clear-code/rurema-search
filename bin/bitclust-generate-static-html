@@ -30,7 +30,7 @@ end
 
 class BitClust::URLMapperEx
   def opensearchdescription_url
-    "/version:#{h(@target_version)}/open_search_description.xml"
+    "/version:#{@target_version}/open_search_description.xml"
   end
 end
 
