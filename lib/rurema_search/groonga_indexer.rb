@@ -11,9 +11,6 @@ module RuremaSearch
     end
 
     def index
-      @function_database.functions.each do |function|
-        index_function(function)
-      end
       @method_database.classes.each do |klass|
         index_class(klass)
       end
@@ -22,6 +19,9 @@ module RuremaSearch
       end
       @method_database.libraries.each do |library|
         index_library(library)
+      end
+      @function_database.functions.each do |function|
+        index_function(function)
       end
     end
 

@@ -280,6 +280,7 @@ module RuremaSearch
         "variable" => "変数",
         "library" => "ライブラリ",
         "function" => "関数",
+        "macro" => "マクロ",
       }
       def parameter_label(key)
 	PARAMETER_LABELS[key] || key
@@ -327,7 +328,7 @@ module RuremaSearch
               end
             end
           when "instance-method", "singleton-method", "module-function",
-            "constant", "library", "function"
+            "constant"
             conditions << equal_condition("name", value)
             conditions << equal_condition("type", key)
           else
