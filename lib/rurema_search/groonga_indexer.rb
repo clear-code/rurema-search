@@ -11,6 +11,9 @@ module RuremaSearch
     end
 
     def index
+      @function_database.functions.each do |function|
+        index_function(function)
+      end
       @method_database.classes.each do |klass|
         index_class(klass)
       end
@@ -19,9 +22,6 @@ module RuremaSearch
       end
       @method_database.libraries.each do |library|
         index_library(library)
-      end
-      @function_database.functions.each do |function|
-        # index_function(function)
       end
     end
 
@@ -67,23 +67,26 @@ module RuremaSearch
         end
       end
       description << source
+      library_name = library.name
+      library_type = library.type_id.to_s
       attributes = {
-        :name => library.name,
-        :local_name => library.name,
-        :label => library.name,
-        :type => "library",
+        :name => library_name,
+        :local_name => library_name,
+        :label => library_name,
+        :type => library_type,
         :document => source,
         :description => description.join(" "),
         :version => version,
       }
       @database.entries.add("#{version}:#{library.name}",
                             attributes)
+      @database.libraries.add(library_name, :type => library_type)
     end
 
     def index_function(function)
       source = entry_source(function)
       attributes = {
-        :name => function.header,
+        :name => function.name,
         :label => function.header,
         :local_name => function.name,
         :type => normalize_type_label(function.type_label),
@@ -99,14 +102,19 @@ module RuremaSearch
 
     def add_class(klass)
       source = entry_source(klass)
+      attributes = {
+        :name => klass.name,
+        :local_name => klass.name.split(/::/).last,
+        :label => klass.name,
+        :type => klass.type.to_s,
+        :version => version,
+        :document => source,
+        :description => source,
+      }
+      library = klass.library
+      attributes[:library] = library.name if library
       @database.entries.add("#{version}:#{klass.name}",
-                            :name => klass.name,
-                            :local_name => klass.name.split(/::/).last,
-                            :label => klass.name,
-                            :type => klass.type.to_s,
-                            :version => version,
-                            :document => source,
-                            :description => source)
+                            attributes)
       @database.specs.add(klass.name, :type => klass.type.to_s)
     end
 
@@ -123,7 +131,7 @@ module RuremaSearch
             :document => source,
             :signature => signature.to_s,
             :description => description,
-            :visibility => entry.visibility.to_s
+            :visibility => entry.visibility.to_s,
           }
           klass_name = klass.name
           klass_type = normalize_type_label(klass.type.to_s)
@@ -137,6 +145,8 @@ module RuremaSearch
             attributes[:object] = klass_name
             @database.objects.add(klass_name, :type => klass_type)
           end
+          library = entry.library
+          attributes[:library] = library.name if library
           @database.entries.add("#{version}:#{entry.spec_string}:#{signature}",
                                 attributes)
         end

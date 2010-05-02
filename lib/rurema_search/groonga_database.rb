@@ -73,6 +73,10 @@ module RuremaSearch
       @objects ||= Groonga["Objects"]
     end
 
+    def libraries
+      @libraries ||= Groonga["Libraries"]
+    end
+
     def singleton_methods
       @singleton_methods ||= Groonga["SingletonMethods"]
     end
@@ -152,6 +156,12 @@ module RuremaSearch
           table.reference("type", "Types")
         end
 
+        schema.create_table("Libraries",
+                            :type => :hash,
+                            :key_type => "ShortText") do |table|
+          table.reference("type", "Types")
+        end
+
         schema.create_table("SingletonMethods",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
@@ -190,6 +200,7 @@ module RuremaSearch
           table.reference("class", "Classes")
           table.reference("module", "Modules")
           table.reference("object", "Objects")
+          table.reference("library", "Libraries")
           table.reference("version", "Versions")
           table.reference("visibility", "Visibilities")
         end

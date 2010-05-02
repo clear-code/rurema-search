@@ -278,6 +278,8 @@ module RuremaSearch
         "module-function" => "モジュールファンクション",
         "constant" => "定数",
         "variable" => "変数",
+        "library" => "ライブラリ",
+        "function" => "関数",
       }
       def parameter_label(key)
 	PARAMETER_LABELS[key] || key
@@ -325,7 +327,7 @@ module RuremaSearch
               end
             end
           when "instance-method", "singleton-method", "module-function",
-            "constant"
+            "constant", "library", "function"
             conditions << equal_condition("name", value)
             conditions << equal_condition("type", key)
           else
@@ -344,16 +346,14 @@ module RuremaSearch
       def drilldown_items(entries)
         result = []
         if @parameters["type"]
-          [["class", "クラス"],
-           ["module", "モジュール"],
-           ["object", "オブジェクト"]].each do |column, label|
+          ["class", "module", "object", "library"].each do |column|
             next if @parameters[column]
             item = drilldown_item(entries, column, "_key")
-            result << [column, label, item] unless item.empty?
+            result << [column, item] unless item.empty?
           end
         else
           item = drilldown_item(entries, "type", "_key")
-          result << ["type", "種類", item] if item.size > 1
+          result << ["type", item] if item.size > 1
         end
         result
       end
@@ -512,6 +512,8 @@ module RuremaSearch
           mapper.document_url(entry.name)
         when "library"
           mapper.library_url(entry.name)
+        when "function"
+          mapper.function_url(entry.name)
         else
           "/#{entry.type.key}"
         end
@@ -544,6 +546,7 @@ module RuremaSearch
         "variable" => "変数",
         "document" => "文書",
         "library" => "ライブラリ",
+        "function" => "関数",
       }
       def type_label(type)
         TYPE_LABELS[type] || type

@@ -40,9 +40,9 @@
 <% else %>
 <div class="result">
   <div class="drilldowns">
-<% @drilldown_items.each do |key, label, item| %>
+<% @drilldown_items.each do |key, item| %>
     <div class="drilldown">
-      <h2><%= h(label) %></h2>
+      <h2><%= h(parameter_label(key)) %></h2>
   <% item.each do |record| %>
       <span class="drilldown-item">
         <%= link_drilldown_item(key, record) %>
