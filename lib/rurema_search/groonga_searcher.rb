@@ -479,7 +479,8 @@ module RuremaSearch
 
       def link_version_select(select_version)
         label = h(select_version == :all ? "すべて" : select_version)
-        if version == select_version
+        if (version == select_version) or
+            (version.nil? and select_version == :all)
           label
         else
           href = version_select_href(select_version)
