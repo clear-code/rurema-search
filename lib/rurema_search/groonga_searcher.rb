@@ -226,7 +226,7 @@ module RuremaSearch
           @drilldown_items = drilldown_items(result)
         end
         @page = ensure_page
-        @entries = result.sort([["_score", :descending]],
+        @entries = result.sort([["_score", :descending], ["name", :ascending]],
                                :offset => n_entries_per_page * (@page - 1),
                                :limit => n_entries_per_page)
         @versions = @database.versions
