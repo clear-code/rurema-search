@@ -42,6 +42,11 @@ class NormalizePathTest < Test::Unit::TestCase
                      "/library:webrick/server/")
   end
 
+  def test_file
+    assert_normalize("/open_search_description.xml",
+                     "/open_search_description.xml")
+  end
+
   private
   def assert_normalize(expected, path)
     assert_equal(expected, app.send(:normalize_path, path))

@@ -164,7 +164,7 @@ module RuremaSearch
 
     def dispatch(request, response)
       case request.path_info
-      when /#{Regexp.escape(PageUtils.open_search_description_base_name)}\z/
+      when /\/#{Regexp.escape(PageUtils.open_search_description_base_name)}\z/
         page = OpenSearchDescriptionPage.new(request, response)
       else
         page = SearchPage.new(@database, request, response)
@@ -214,6 +214,7 @@ module RuremaSearch
 
     def normalize_path(path)
       components = path.split(path_split_re)
+      return path if components.size == 1
       components.shift if components.first.empty?
       components.pop if components.last == "/"
       return path if components.empty?
