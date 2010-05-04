@@ -658,11 +658,11 @@ module RuremaSearch
           end
         end
         uniq_entries = {}
-        entries.each do |entry|
-          uniq_entries[entry.key] = entry
+        entries.each do |_entry|
+          uniq_entries[_entry.key] = _entry
         end
-        uniq_entries.values.sort_by do |entry|
-          entry.key
+        uniq_entries.values.sort_by do |_entry|
+          _entry.key
         end
       end
 
