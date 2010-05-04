@@ -47,6 +47,11 @@ class NormalizePathTest < Test::Unit::TestCase
                      "/open_search_description.xml")
   end
 
+  def test_versioned_file
+    assert_normalize("/version:1.9.2/open_search_description.xml",
+                     "/version:1.9.2/open_search_description.xml")
+  end
+
   private
   def assert_normalize(expected, path)
     assert_equal(expected, app.send(:normalize_path, path))

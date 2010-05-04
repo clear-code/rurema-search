@@ -14,6 +14,7 @@ require 'rack'
 module RuremaSearch
   class GroongaSearcher
     module Utils
+      module_function
       def production?
         ENV["RACK_ENV"] == "production"
       end
@@ -21,6 +22,14 @@ module RuremaSearch
       def passenger?
         ENV["PASSENGER_ENVIRONMENT"] or
           /Phusion_Passenger/ =~ ENV["SERVER_SOFTWARE"].to_s
+      end
+
+      def open_search_description_base_name
+        "open_search_description.xml"
+      end
+
+      def open_search_description_path?(path)
+        /\/#{Regexp.escape(open_search_description_base_name)}\z/ =~ path
       end
     end
 
@@ -35,10 +44,6 @@ module RuremaSearch
 
       def site_description
         "Rubyのリファレンスマニュアルを検索"
-      end
-
-      def open_search_description_base_name
-        "open_search_description.xml"
       end
 
       def open_search_description_path
@@ -163,8 +168,7 @@ module RuremaSearch
     end
 
     def dispatch(request, response)
-      case request.path_info
-      when /\/#{Regexp.escape(PageUtils.open_search_description_base_name)}\z/
+      if open_search_description_path?(request.path_info)
         page = OpenSearchDescriptionPage.new(request, response)
       else
         page = SearchPage.new(@database, request, response)
@@ -213,8 +217,8 @@ module RuremaSearch
     end
 
     def normalize_path(path)
+      return path if open_search_description_path?(path)
       components = path.split(path_split_re)
-      return path if components.size == 1
       components.shift if components.first.empty?
       components.pop if components.last == "/"
       return path if components.empty?
