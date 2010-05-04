@@ -218,7 +218,7 @@ module RuremaSearch
       components.pop if components.last == "/"
       return path if components.empty?
       components.each_slice(2).collect do |key, value|
-        "#{key}#{CGI.escape(value)}"
+        "#{key}#{escape(value)}"
       end.join + "/"
     end
 
