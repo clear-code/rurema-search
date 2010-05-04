@@ -17,12 +17,12 @@ class RelatedEnetriesTest < Test::Unit::TestCase
   include RuremaSearchTestUtils
 
   def test_not_show_drilldowned_entry_link
-    get "/class:File/"
+    visit "/class:File/"
     assert_equal([], related_entry_links("/class:File/"))
   end
 
   def test_remove_same_type_drilldown
-    get "/singleton-method:File.ftype/"
+    visit "/singleton-method:File.ftype/"
     links = related_entry_links("/singleton-method:File.lstat/")
     assert_equal(["File.lstat"],
                  links.collect {|link| link.text})
