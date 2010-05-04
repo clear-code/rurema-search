@@ -4,6 +4,7 @@ table_create Visibilities 48 ShortText
 table_create Classes 49 ShortText
 table_create Modules 49 ShortText
 table_create Objects 48 ShortText
+table_create Libraries 48 ShortText
 table_create SingletonMethods 48 ShortText
 table_create InstanceMethods 48 ShortText
 table_create ModuleFunctions 48 ShortText
@@ -26,11 +27,13 @@ column_create Terms Entries_name 514 Entries name
 column_create Terms Entries_signature 514 Entries signature
 column_create Specs type 0 Types
 column_create Entries class 0 Classes
+column_create Entries library 0 Libraries
 column_create Entries module 0 Modules
 column_create Entries object 0 Objects
 column_create Entries type 0 Types
 column_create Entries version 0 Versions
 column_create Entries visibility 0 Visibilities
+column_create Libraries type 0 Types
 column_create Objects type 0 Types
 column_create Modules type 0 Types
 column_create Classes type 0 Types
