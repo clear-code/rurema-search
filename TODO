@@ -1,3 +1,2 @@
 * returns '400 Bad Request' instead of 500 for out of 'page' parameter.
 * returns '400 Bad Request' instead of 500 for invalid condition URL.
-* support '%20F' ('/') in condition value.

@@ -17,6 +17,11 @@ module RuremaSearch
       def production?
         ENV["RACK_ENV"] == "production"
       end
+
+      def passenger?
+        ENV["PASSENGER_ENVIRONMENT"] or
+          /Phusion_Passenger/ =~ ENV["SERVER_SOFTWARE"].to_s
+      end
     end
 
     module PageUtils
@@ -135,7 +140,7 @@ module RuremaSearch
 
     private
     def process(env)
-      request = Rack::Request.new(env)
+      request = Rack::Request.new(normalize_environment(env))
       response = Rack::Response.new
       response["Content-Type"] = "text/html; charset=UTF-8"
 
@@ -192,6 +197,39 @@ module RuremaSearch
     def notify_exception(exception, env)
       notifier = ExceptionMailNotifier.new(exception, env, @options[:smtp])
       notifier.notify
+    end
+
+    def normalize_environment(env)
+      env unless passenger?
+      normalized_env = {}
+      env.each do |key, value|
+        case key
+        when "PATH_INFO", "REQUEST_URI"
+          value = normalize_path(value)
+        end
+        normalized_env[key] = value
+      end
+      normalized_env
+    end
+
+    def normalize_path(path)
+      components = path.split(path_split_re)
+      components.shift if components.first.empty?
+      components.pop if components.last == "/"
+      return path if components.empty?
+      components.each_slice(2).collect do |key, value|
+        "#{key}#{CGI.escape(value)}"
+      end.join + "/"
+    end
+
+    def path_split_re
+      @path_split_re ||= /(#{Regexp.union(path_split_keys)}|\/\z)/
+    end
+
+    def path_split_keys
+      SearchPage::PARAMETER_LABELS.keys.collect do |key|
+        "/#{key}:"
+      end
     end
 
     class SearchPage
