@@ -149,20 +149,18 @@ module RuremaSearch
       response = Rack::Response.new
       response["Content-Type"] = "text/html; charset=UTF-8"
 
-      if request.post?
-        query = request['query'] || ''
-        unless query.empty?
-          path_info = request.path_info.gsub(/\/query:.+?\//, '/')
-          encoding = request['encoding']
-          if encoding
-            query.force_encoding(encoding)
-            query = query.encode("utf-8")
-          end
-          request.path_info = "#{path_info}query:#{escape(query)}/"
-        end
-        response.redirect(request.url.split(/\?/, 2)[0])
-      else
+      query = request['query'] || ''
+      if query.empty?
         dispatch(request, response)
+      else
+        path_info = request.path_info.gsub(/\/query:.+?\//, '/')
+        encoding = request['encoding']
+        if encoding
+          query.force_encoding(encoding)
+          query = query.encode("utf-8")
+        end
+        request.path_info = "#{path_info}query:#{escape(query)}/"
+        response.redirect(request.url.split(/\?/, 2)[0])
       end
       response.to_a
     end

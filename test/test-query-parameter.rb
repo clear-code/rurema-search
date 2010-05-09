@@ -14,14 +14,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class PostQueryTest < Test::Unit::TestCase
+class QueryParameterTest < Test::Unit::TestCase
   include RuremaSearchTestUtils
   include ERB::Util
 
-  def test_euc_jp
+  def test_post_euc_jp
     visit "/", :post,
                :query => "クラス変数".encode("euc-jp"),
                :encoding => "euc-jp"
+    assert_equal("http://#{host}/query:#{u('クラス変数')}/", current_url)
+  end
+
+  def test_get
+    visit "/?query=#{u("クラス変数")}"
     assert_equal("http://#{host}/query:#{u('クラス変数')}/", current_url)
   end
 end
