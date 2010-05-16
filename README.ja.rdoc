@@ -1,0 +1,44 @@
+= はじめに
+
+== 名前
+
+るりまサーチ
+
+== 説明
+
+るりまを全文検索するWebアプリケーションです。
+
+TODO: もっとちゃんと書く。
+
+== 作者
+
+Kouhei Sutou:: <tt><kou@clear-code.com></tt>
+
+== ライセンス
+
+LGPL 3またはそれ以降のバージョンです。詳しくは
+license/lgpl-3.0.txtを見てください。
+
+== 依存ソフトウェア
+
+* Ruby 1.9.1
+* rroonga HEAD
+* groonga HEAD
+
+== インストール
+
+TODO
+
+== ドキュメント
+
+TODO
+
+== メーリングリスト
+
+質問、要望、バグ報告などはるりまのMLにお願いします。
+
+http://redmine.ruby-lang.org/wiki/rurema/MailingList
+
+== 感謝
+
+* okkezさん: バグを報告してくれました。
