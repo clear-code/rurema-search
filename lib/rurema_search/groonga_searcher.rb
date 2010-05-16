@@ -287,7 +287,7 @@ module RuremaSearch
         parameters.each do |parameter|
           parameter = parameter.force_encoding("UTF-8")
           key, value = parameter.split(/:/, 2)
-          unescaped_value = URI.unescape(value).gsub(/\+/, ' ').strip
+          unescaped_value = unescape_value(value)
           # TODO: raise unless unescaped_value.valid_encoding?
           next unless parse_parameter(key, unescaped_value)
           @ordered_parameters << [key, unescaped_value]
@@ -305,6 +305,16 @@ module RuremaSearch
           @parameters[key] = value
           true
         end
+      end
+
+      def unescape_value(value)
+        unescaped_value = URI.unescape(value)
+        unescaped_value = URI.unescape(unescaped_value) if thin?
+        unescaped_value.gsub(/\+/, ' ').strip
+      end
+
+      def thin?
+        /\bthin\b/ =~ (@request.env["SERVER_SOFTWARE"] || "")
       end
 
       PARAMETER_LABELS = {
