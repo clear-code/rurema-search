@@ -35,7 +35,9 @@
       <ul class="entry-related-entries">
 <%    collect_related_entries(entries).each_with_index do |related_entry, i| %>
 <%      if i < 20 %>
-        <li class="entry-related-entry"><%= link_related_entry(related_entry) %></li>
+        <li class="entry-related-entry-<%= h(related_entry.type.key) %>">
+          <%= link_related_entry(related_entry) %>
+        </li>
 <%      else %>
         <li class="entry-related-entry-abbrev">...</li>
 <%        break %>

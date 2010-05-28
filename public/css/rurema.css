@@ -277,6 +277,24 @@ dl.entries dd ul.entry-metadata li.entry-type
   background: url(../images/type-icon.png) no-repeat left bottom;
 }
 
+dl.entries dd ul.entry-related-entries li.entry-related-entry-module
+{
+  padding-left: 20px;
+  background: url(../images/module-icon.png) no-repeat left bottom;
+}
+
+dl.entries dd ul.entry-related-entries li.entry-related-entry-class
+{
+  padding-left: 20px;
+  background: url(../images/class-icon.png) no-repeat left bottom;
+}
+
+dl.entries dd ul.entry-related-entries li.entry-related-entry-library
+{
+  padding-left: 20px;
+  background: url(../images/library-icon.png) no-repeat left bottom;
+}
+
 span.score
 {
   color: #ccc;
