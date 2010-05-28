@@ -1,18 +1,20 @@
-<div class="result">
-  <div class="drilldowns">
+<div class="drilldowns">
 <% @drilldown_items.each do |key, item| %>
-    <div class="drilldown">
-      <h2><%= h(parameter_label(key)) %></h2>
+  <div class="drilldown">
+    <h2><%= h(parameter_label(key)) %></h2>
+    <ul class="drilldown-items">
   <% item.each do |record| %>
-      <span class="drilldown-item">
+      <li class="drilldown-item">
         <%= link_drilldown_item(key, record) %>
         (<%= h(record[:n_records]) %>)
-      </span>
+      </li>
   <% end %>
-    </div>
-<% end %>
+    </ul>
   </div>
+<% end %>
+</div>
 
+<div class="result">
 <%= paginate %>
   <dl class="entries">
 <%  @grouped_entries.each do |represent_entry, entries| %>

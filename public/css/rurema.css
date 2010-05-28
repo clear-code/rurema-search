@@ -82,7 +82,7 @@ div.content div.version-select ul li
 
 div.content div.version-select ul
 {
-  padding-left: 1em;
+  padding-left: 10px;
 }
 
 div.content div.version-select ul li
@@ -122,7 +122,7 @@ div.content div.statistics
 
 div.topic-path
 {
-  margin-left: 1em;
+  margin-left: 10px;
 }
 
 div.topic-path span.all-items
@@ -141,6 +141,11 @@ div.topic-path a.drop-condition img
   border: none;
 }
 
+div.search-result
+{
+  position: relative;
+}
+
 div.result,
 div.no-result
 {
@@ -148,26 +153,56 @@ div.no-result
   padding-left: 1em;
   padding-right: 1em;
   margin-bottom: 1em;
+  margin-top: 7.5px;
 }
 
-div.result h2
+div.result
 {
-  text-shadow: 0.1em 0.1em 0.1em rgb(100, 100, 100);
+  margin-left: 160px;
 }
 
 div.drilldowns
 {
+  position: absolute;
+  top: 7.5px;
+  left: 10px;
+  width: 150px;
+  font-size: smaller;
 }
 
 div.drilldown
 {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+  padding: 5px;
+  margin-bottom: 15px;
+  background: #d8ffb2;
+  border: 1px solid #abf562;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-box-shadow: 0.2em 0.2em 0.5em rgb(100, 100, 100);
+  -webkit-box-shadow: 0.2em 0.2em 0.5em rgb(100, 100, 100);
+  box-shadow: 0.2em 0.2em 0.5em rgb(100, 100, 100);
 }
 
 div.drilldown h2
 {
-  display: inline;
+  margin: 0;
+  padding: 0;
+  text-shadow: 0.1em 0.1em 0.1em rgb(100, 100, 100);
+}
+
+div.drilldown ul.drilldown-items,
+div.drilldown ul.drilldown-items li.drilldown-item
+{
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+div.drilldown ul.drilldown-items
+{
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 
 dl.entries

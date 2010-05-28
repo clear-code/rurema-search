@@ -20,8 +20,10 @@
   <%= topic_path %>
 </div>
 
+<div class="search-result">
 <% if @n_entries.zero? %>
 <%= search_no_result %>
 <% else %>
 <%= search_result %>
 <% end %>
+</div>
