@@ -39,8 +39,8 @@ for version in 1.8.7 1.8.8 1.9.1 1.9.2; do
 done
 
 ruby1.9.1 \
-    -I../rroonga.19/lib \
-    -I../rroonga.19/ext/groonga \
+    -I../rroonga/lib \
+    -I../rroonga/ext/groonga \
     ${base_dir}/bin/bitclust-indexer \
     --reset \
     ${base_dir}/db-*
