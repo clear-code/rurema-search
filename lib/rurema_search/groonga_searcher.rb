@@ -177,7 +177,8 @@ module RuremaSearch
 
     def setup_view
       @view = Module.new
-      ["layout", "search_result", "error", "analytics",
+      ["layout", "search", "search_result", "search_no_result",
+       "error", "analytics",
        ["open_search_description", "xml"]].each do |template_name, extension|
         template = create_template(template_name, extension)
         next if template.nil?
@@ -278,7 +279,7 @@ module RuremaSearch
 
       private
       def body
-        search_result
+        search
       end
 
       def parse_parameters(parameters)
