@@ -268,7 +268,7 @@ module RuremaSearch
           @drilldown_items = drilldown_items(result)
         end
         @page = ensure_page
-        @entries = result.sort([["_score", :descending], ["name", :ascending]],
+        @entries = result.sort([["_score", :descending], ["label", :ascending]],
                                :offset => n_entries_per_page * (@page - 1),
                                :limit => n_entries_per_page)
         @grouped_entries = group_entries(@entries)
@@ -432,7 +432,7 @@ module RuremaSearch
         grouped_entries = []
         previous_entry = nil
         entries.each do |entry|
-          if previous_entry.nil? or previous_entry.name != entry.name
+          if previous_entry.nil? or previous_entry.label != entry.label
             grouped_entries << [entry, [entry]]
           else
             grouped_entries.last[1] << entry
@@ -579,8 +579,7 @@ module RuremaSearch
       end
 
       def link_entry(entry)
-        label = entry.label || entry.name
-        a(h(label).gsub(/(::|\.|\.?#|\(\|\)|,|_|\$)/, "<wbr />\\1<wbr />"),
+        a(h(entry.label).gsub(/(::|\.|\.?#|\(\|\)|,|_|\$)/, "<wbr />\\1<wbr />"),
           entry_href(entry))
       end
 
