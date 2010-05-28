@@ -215,7 +215,7 @@ div.drilldown h2.drilldown-library
 }
 
 div.drilldown ul.drilldown-items,
-div.drilldown ul.drilldown-items li.drilldown-item
+div.drilldown ul.drilldown-items li
 {
   display: block;
   margin: 0;
@@ -277,19 +277,22 @@ dl.entries dd ul.entry-metadata li.entry-type
   background: url(../images/type-icon.png) no-repeat left bottom;
 }
 
-dl.entries dd ul.entry-related-entries li.entry-related-entry-module
+dl.entries dd ul.entry-related-entries li.entry-related-entry-module,
+div.drilldown ul.drilldown-items li.drilldown-item-module
 {
   padding-left: 20px;
   background: url(../images/module-icon.png) no-repeat left bottom;
 }
 
-dl.entries dd ul.entry-related-entries li.entry-related-entry-class
+dl.entries dd ul.entry-related-entries li.entry-related-entry-class,
+div.drilldown ul.drilldown-items li.drilldown-item-class
 {
   padding-left: 20px;
   background: url(../images/class-icon.png) no-repeat left bottom;
 }
 
-dl.entries dd ul.entry-related-entries li.entry-related-entry-library
+dl.entries dd ul.entry-related-entries li.entry-related-entry-library,
+div.drilldown ul.drilldown-items li.drilldown-item-library
 {
   padding-left: 20px;
   background: url(../images/library-icon.png) no-repeat left bottom;

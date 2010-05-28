@@ -4,7 +4,7 @@
     <h2 class="drilldown-<%= h(key) %>"><%= h(parameter_label(key)) %></h2>
     <ul class="drilldown-items">
   <% item.each do |record| %>
-      <li class="drilldown-item">
+      <li class="drilldown-item-<%= h(record[:label]) %>">
         <%= link_drilldown_item(key, record) %>
         (<%= h(record[:n_records]) %>)
       </li>
