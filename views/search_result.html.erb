@@ -55,19 +55,23 @@
 
 <%= paginate %>
   <dl class="entries">
-<%  @entries.each do |entry| %>
+<%  @grouped_entries.each do |represent_entry, entries| %>
     <dt class="entry-name">
-      <%= link_entry(entry) %>
-      <span class="score">(<%= h(entry.score) %>)</span>
+      <%= link_entry(represent_entry) %>
+      <span class="score">(<%= h(represent_entry.score) %>)</span>
     </dt>
     <dd>
-      <div class="entry-description"><%= format_description(entry) %></div>
+<%    entries.each do |entry| %>
+      <div class="entry-description">
+        <span class="entry-version"><%= link_version(entry) %></span>
+        <%= format_description(entry) %>
+      </div>
+<%    end %>
       <ul class="entry-metadata">
-        <li class="entry-version"><%= link_version(entry) %></li>
-        <li class="entry-type"><%= link_type(entry) %></li>
+        <li class="entry-type"><%= link_type(represent_entry) %></li>
       </ul>
       <ul class="entry-related-entries">
-<%    related_entries(entry).each_with_index do |related_entry, i| %>
+<%    collect_related_entries(entries).each_with_index do |related_entry, i| %>
 <%      if i < 20 %>
         <li class="entry-related-entry"><%= link_related_entry(related_entry) %></li>
 <%      else %>

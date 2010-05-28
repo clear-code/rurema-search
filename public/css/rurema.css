@@ -194,6 +194,12 @@ dl.entries dd
   padding-left: 0;
 }
 
+dl.entries dd div.entry-description span.entry-version
+{
+  padding-left: 20px;
+  background: url(../images/version-icon.png) no-repeat left bottom;
+}
+
 dl.entries dd ul.entry-metadata,
 dl.entries dd ul.entry-related-entries
 {
@@ -205,12 +211,6 @@ dl.entries dd ul.entry-metadata li,
 dl.entries dd ul.entry-related-entries li
 {
   display: inline;
-}
-
-dl.entries dd ul.entry-metadata li.entry-version
-{
-  padding-left: 20px;
-  background: url(../images/version-icon.png) no-repeat left bottom;
 }
 
 dl.entries dd ul.entry-metadata li.entry-type

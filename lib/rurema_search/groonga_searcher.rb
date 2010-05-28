@@ -270,6 +270,7 @@ module RuremaSearch
         @entries = result.sort([["_score", :descending], ["name", :ascending]],
                                :offset => n_entries_per_page * (@page - 1),
                                :limit => n_entries_per_page)
+        @grouped_entries = group_entries(@entries)
         @versions = @database.versions
         @elapsed_time = Time.now.to_f - start
         @response.write(layout)
@@ -423,6 +424,22 @@ module RuremaSearch
             :label => label,
             :n_records => record.n_sub_records
           }
+        end
+      end
+
+      def group_entries(entries)
+        grouped_entries = []
+        previous_entry = nil
+        entries.each do |entry|
+          if previous_entry.nil? or previous_entry.name != entry.name
+            grouped_entries << [entry, [entry]]
+          else
+            grouped_entries.last[1] << entry
+          end
+          previous_entry = entry
+        end
+        grouped_entries.collect do |represent_entry, entries|
+          [represent_entry, entries.sort_by {|entry| entry.version.key}]
         end
       end
 
@@ -693,6 +710,20 @@ module RuremaSearch
       def remove_markup(source)
         return nil if source.nil?
         source.gsub(/\[\[.+?:(.+?)\]\]/, '\1')
+      end
+
+      def collect_related_entries(entries)
+        _related_entries = []
+        entries.each do |entry|
+          _related_entries.concat(related_entries(entry))
+        end
+        uniq_entries = {}
+        _related_entries.each do |_entry|
+          uniq_entries[_entry.key] = _entry
+        end
+        uniq_entries.values.sort_by do |_entry|
+          _entry.key
+        end
       end
 
       def related_entries(entry)
