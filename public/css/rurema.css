@@ -158,7 +158,7 @@ div.no-result
 
 div.result
 {
-  margin-left: 160px;
+  margin-left: 190px;
 }
 
 div.drilldowns
@@ -166,7 +166,7 @@ div.drilldowns
   position: absolute;
   top: 7.5px;
   left: 10px;
-  width: 150px;
+  width: 180px;
   font-size: smaller;
 }
 
@@ -188,7 +188,30 @@ div.drilldown h2
 {
   margin: 0;
   padding: 0;
-  text-shadow: 0.1em 0.1em 0.1em rgb(100, 100, 100);
+}
+
+div.drilldown h2.drilldown-type
+{
+  padding-left: 30px;
+  background: url(../images/type-icon-medium.png) no-repeat left center;
+}
+
+div.drilldown h2.drilldown-class
+{
+  padding-left: 30px;
+  background: url(../images/class-icon-medium.png) no-repeat left center;
+}
+
+div.drilldown h2.drilldown-module
+{
+  padding-left: 30px;
+  background: url(../images/module-icon-medium.png) no-repeat left center;
+}
+
+div.drilldown h2.drilldown-library
+{
+  padding-left: 30px;
+  background: url(../images/library-icon-medium.png) no-repeat left center;
 }
 
 div.drilldown ul.drilldown-items,

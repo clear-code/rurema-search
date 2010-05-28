@@ -1,7 +1,7 @@
 <div class="drilldowns">
 <% @drilldown_items.each do |key, item| %>
   <div class="drilldown">
-    <h2><%= h(parameter_label(key)) %></h2>
+    <h2 class="drilldown-<%= h(key) %>"><%= h(parameter_label(key)) %></h2>
     <ul class="drilldown-items">
   <% item.each do |record| %>
       <li class="drilldown-item">
