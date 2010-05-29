@@ -274,28 +274,49 @@ dl.entries dd ul.entry-related-entries li
 dl.entries dd ul.entry-metadata li.entry-type
 {
   padding-left: 20px;
-  background: url(../images/type-icon.png) no-repeat left bottom;
+  background: url(../images/type-icon.png) no-repeat left center;
 }
 
-dl.entries dd ul.entry-related-entries li.entry-related-entry-module,
-div.drilldown ul.drilldown-items li.drilldown-item-module
+dl.entries dd ul.entry-related-entries li.entry-related-entry-instance-method,
+div.drilldown ul.drilldown-items li.drilldown-item-instance-method
 {
   padding-left: 20px;
-  background: url(../images/module-icon.png) no-repeat left bottom;
+  background: url(../images/instance-method-icon.png) no-repeat left center;
 }
 
 dl.entries dd ul.entry-related-entries li.entry-related-entry-class,
 div.drilldown ul.drilldown-items li.drilldown-item-class
 {
   padding-left: 20px;
-  background: url(../images/class-icon.png) no-repeat left bottom;
+  background: url(../images/class-icon.png) no-repeat left center;
+}
+
+dl.entries dd ul.entry-related-entries li.entry-related-entry-function,
+div.drilldown ul.drilldown-items li.drilldown-item-function
+{
+  padding-left: 20px;
+  background: url(../images/function-icon.png) no-repeat left center;
+}
+
+dl.entries dd ul.entry-related-entries li.entry-related-entry-module-function,
+div.drilldown ul.drilldown-items li.drilldown-item-module-function
+{
+  padding-left: 20px;
+  background: url(../images/module-function-icon.png) no-repeat left center;
 }
 
 dl.entries dd ul.entry-related-entries li.entry-related-entry-library,
 div.drilldown ul.drilldown-items li.drilldown-item-library
 {
   padding-left: 20px;
-  background: url(../images/library-icon.png) no-repeat left bottom;
+  background: url(../images/library-icon.png) no-repeat left center;
+}
+
+dl.entries dd ul.entry-related-entries li.entry-related-entry-module,
+div.drilldown ul.drilldown-items li.drilldown-item-module
+{
+  padding-left: 20px;
+  background: url(../images/module-icon.png) no-repeat left center;
 }
 
 span.score

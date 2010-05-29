@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!-- Created with Inkscape (http://www.inkscape.org/) -->
+
 <svg
    xmlns:dc="http://purl.org/dc/elements/1.1/"
    xmlns:cc="http://creativecommons.org/ns#"
@@ -9,17 +10,17 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   inkscape:export-ydpi="90.000000"
-   inkscape:export-xdpi="90.000000"
-   inkscape:export-filename="/home/jimmac/Desktop/wi-fi.png"
+   inkscape:export-ydpi="30"
+   inkscape:export-xdpi="30"
+   inkscape:export-filename="/home/kou/work/ruby/rurema-search/public/images/module-icon.png"
    width="48px"
    height="48px"
    id="svg11300"
    sodipodi:version="0.32"
-   inkscape:version="0.46"
-   sodipodi:docbase="/home/jimmac/src/cvs/tango-icon-theme/scalable/apps"
-   sodipodi:docname="preferences-desktop-theme.svg"
-   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+   inkscape:version="0.47 r22583"
+   sodipodi:docname="module-icon.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape"
+   version="1.1">
   <defs
      id="defs3">
     <inkscape:perspective
@@ -592,7 +593,8 @@
      inkscape:window-width="872"
      inkscape:window-height="703"
      inkscape:window-x="234"
-     inkscape:window-y="145" />
+     inkscape:window-y="145"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata4">
     <rdf:RDF>
