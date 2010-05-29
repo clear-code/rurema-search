@@ -30,7 +30,11 @@
       </div>
 <%    end %>
       <ul class="entry-metadata">
-        <li class="entry-type"><%= link_type(represent_entry) %></li>
+        <li class="entry-type">
+          <span class="entry-<%= h(represent_entry.type.key) %>">
+            <%= link_type(represent_entry) %>
+          </span>
+        </li>
       </ul>
       <ul class="entry-related-entries">
 <%    collect_related_entries(entries).each_with_index do |related_entry, i| %>

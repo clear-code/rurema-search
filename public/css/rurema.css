@@ -277,6 +277,7 @@ dl.entries dd ul.entry-metadata li.entry-type
   background: url(../images/type-icon.png) no-repeat left center;
 }
 
+dl.entries dd ul.entry-metadata li.entry-type span.entry-instance-method,
 dl.entries dd ul.entry-related-entries li.entry-related-entry-instance-method,
 div.drilldown ul.drilldown-items li.drilldown-item-instance-method
 {
@@ -284,6 +285,7 @@ div.drilldown ul.drilldown-items li.drilldown-item-instance-method
   background: url(../images/instance-method-icon.png) no-repeat left center;
 }
 
+dl.entries dd ul.entry-metadata li.entry-type span.entry-class,
 dl.entries dd ul.entry-related-entries li.entry-related-entry-class,
 div.drilldown ul.drilldown-items li.drilldown-item-class
 {
@@ -291,6 +293,7 @@ div.drilldown ul.drilldown-items li.drilldown-item-class
   background: url(../images/class-icon.png) no-repeat left center;
 }
 
+dl.entries dd ul.entry-metadata li.entry-type span.entry-function,
 dl.entries dd ul.entry-related-entries li.entry-related-entry-function,
 div.drilldown ul.drilldown-items li.drilldown-item-function
 {
@@ -298,6 +301,7 @@ div.drilldown ul.drilldown-items li.drilldown-item-function
   background: url(../images/function-icon.png) no-repeat left center;
 }
 
+dl.entries dd ul.entry-metadata li.entry-type span.entry-module-function,
 dl.entries dd ul.entry-related-entries li.entry-related-entry-module-function,
 div.drilldown ul.drilldown-items li.drilldown-item-module-function
 {
@@ -305,6 +309,7 @@ div.drilldown ul.drilldown-items li.drilldown-item-module-function
   background: url(../images/module-function-icon.png) no-repeat left center;
 }
 
+dl.entries dd ul.entry-metadata li.entry-type span.entry-library,
 dl.entries dd ul.entry-related-entries li.entry-related-entry-library,
 div.drilldown ul.drilldown-items li.drilldown-item-library
 {
@@ -312,6 +317,7 @@ div.drilldown ul.drilldown-items li.drilldown-item-library
   background: url(../images/library-icon.png) no-repeat left center;
 }
 
+dl.entries dd ul.entry-metadata li.entry-type span.entry-module,
 dl.entries dd ul.entry-related-entries li.entry-related-entry-module,
 div.drilldown ul.drilldown-items li.drilldown-item-module
 {
