@@ -274,7 +274,7 @@ dl.entries dd ul.entry-related-entries li
 dl.entries dd ul.entry-metadata li.entry-type
 {
   padding-left: 20px;
-  background: url(../images/type-icon.png) no-repeat left center;
+  background: url(../images/type-icon.png) no-repeat left 3px;
 }
 
 dl.entries dd ul.entry-metadata li.entry-type span.entry-instance-method,
@@ -282,7 +282,7 @@ dl.entries dd ul.entry-related-entries li.entry-related-entry-instance-method,
 div.drilldown ul.drilldown-items li.drilldown-item-instance-method
 {
   padding-left: 20px;
-  background: url(../images/instance-method-icon.png) no-repeat left center;
+  background: url(../images/instance-method-icon.png) no-repeat left 3px;
 }
 
 dl.entries dd ul.entry-metadata li.entry-type span.entry-class,
@@ -290,7 +290,7 @@ dl.entries dd ul.entry-related-entries li.entry-related-entry-class,
 div.drilldown ul.drilldown-items li.drilldown-item-class
 {
   padding-left: 20px;
-  background: url(../images/class-icon.png) no-repeat left center;
+  background: url(../images/class-icon.png) no-repeat left 3px;
 }
 
 dl.entries dd ul.entry-metadata li.entry-type span.entry-function,
@@ -298,7 +298,7 @@ dl.entries dd ul.entry-related-entries li.entry-related-entry-function,
 div.drilldown ul.drilldown-items li.drilldown-item-function
 {
   padding-left: 20px;
-  background: url(../images/function-icon.png) no-repeat left center;
+  background: url(../images/function-icon.png) no-repeat left 3px;
 }
 
 dl.entries dd ul.entry-metadata li.entry-type span.entry-module-function,
@@ -306,7 +306,7 @@ dl.entries dd ul.entry-related-entries li.entry-related-entry-module-function,
 div.drilldown ul.drilldown-items li.drilldown-item-module-function
 {
   padding-left: 20px;
-  background: url(../images/module-function-icon.png) no-repeat left center;
+  background: url(../images/module-function-icon.png) no-repeat left 3px;
 }
 
 dl.entries dd ul.entry-metadata li.entry-type span.entry-library,
@@ -314,7 +314,7 @@ dl.entries dd ul.entry-related-entries li.entry-related-entry-library,
 div.drilldown ul.drilldown-items li.drilldown-item-library
 {
   padding-left: 20px;
-  background: url(../images/library-icon.png) no-repeat left center;
+  background: url(../images/library-icon.png) no-repeat left 3px;
 }
 
 dl.entries dd ul.entry-metadata li.entry-type span.entry-module,
@@ -322,7 +322,7 @@ dl.entries dd ul.entry-related-entries li.entry-related-entry-module,
 div.drilldown ul.drilldown-items li.drilldown-item-module
 {
   padding-left: 20px;
-  background: url(../images/module-icon.png) no-repeat left center;
+  background: url(../images/module-icon.png) no-repeat left 3px;
 }
 
 span.score
