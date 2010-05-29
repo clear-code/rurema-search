@@ -49,11 +49,20 @@ div.header h1 a:focus
   background-color: transparent;
 }
 
+div.header div.description
+{
+  position: absolute;
+  top: 0.2em;
+  left: 260px;
+  font-size: smaller;
+  color: #aaa;
+}
+
 div.header div.search-form
 {
   position: absolute;
   left: 260px;
-  top: 15px;
+  top: 1.5em;
 }
 
 div.header div.search-form form input.query

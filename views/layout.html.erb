@@ -16,6 +16,9 @@
 <body>
   <div class="header">
     <h1><%= h1 %></h1>
+    <div class="description">
+      Rubyでgroonga使ってRubyのリファレンスマニュアルを全文検索！
+    </div>
     <div class="search-form">
       <form method="POST" action="./">
 	<input type="text" class="query" name="query" value="<%= h(query) %>">
