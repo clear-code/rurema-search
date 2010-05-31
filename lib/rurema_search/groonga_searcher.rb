@@ -590,8 +590,12 @@ module RuremaSearch
         end
       end
 
+      def make_breakable(escaped_string)
+        escaped_string.gsub(/(::|\.|\.?#|\(\|\)|,|_|\$)/, "<wbr />\\1<wbr />")
+      end
+
       def entry_label(entry)
-        h(entry.label).gsub(/(::|\.|\.?#|\(\|\)|,|_|\$)/, "<wbr />\\1<wbr />")
+        make_breakable(h(entry.label))
       end
 
       def entry_href(entry)
@@ -619,7 +623,8 @@ module RuremaSearch
         else
           label = record[:label]
           label = library_label(label) if key == "library"
-          a(h(label), "./#{parameter_link_href(key, record[:label])}")
+          a(make_breakable(h(label)),
+            "./#{parameter_link_href(key, record[:label])}")
         end
       end
 
