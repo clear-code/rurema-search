@@ -17,7 +17,7 @@
 <div class="result">
 <%= paginate %>
   <dl class="entries">
-<%  @grouped_entries.each do |represent_entry, entries| %>
+<%  @grouped_entries.each_with_index do |(represent_entry, entries), i| %>
     <dt class="entry-name">
       <%= link_entry_if(entries.size == 1, represent_entry) %>
       <span class="score">(<%= h(represent_entry.score) %>)</span>
@@ -50,9 +50,11 @@
 <%      end %>
 <%    end %>
       </ul>
-    </dd>
+<%    if ((i + 1) % 5).zero? %>
+      <p class="jump-to-top"><a href="#top">絞り込み条件を変える</a></p>
+<%    end %>
 <%  end %>
-    </tbody>
+    </dd>
   </dl>
 <%= paginate %>
 </div>

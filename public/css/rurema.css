@@ -19,13 +19,6 @@ a:visited
   color: #9191ec;
 }
 
-a:hover,
-a:focus
-{
-  color: white;
-  background-color: #4c4cc6;
-}
-
 div.header
 {
   position: static;
@@ -41,12 +34,6 @@ div.header h1
 div.header h1 a img
 {
   border-style: none;
-}
-
-div.header h1 a:hover,
-div.header h1 a:focus
-{
-  background-color: transparent;
 }
 
 div.header div.description
@@ -97,6 +84,11 @@ div.content div.version-select ul
 div.content div.version-select ul li
 {
   display: inline;
+}
+
+div.content div.version-select ul li span,
+div.content div.version-select ul li a
+{
   padding-left: 0.5em;
   padding-right: 0.5em;
   border: 1px solid #c1c1ec;
@@ -104,9 +96,10 @@ div.content div.version-select ul li
   -moz-border-radius: 5px 5px 0 0;
   -webkit-border-radius: 5px 5px 0 0;
   border-radius: 5px 5px 0 0;
+  /* margin-right: -5px; */ /* This will be broken on IE. (not confirmed) */
 }
 
-div.content div.version-select ul li.version-select-current
+div.content div.version-select ul li span
 {
   color: white;
   background-color: #4c4cc6;
@@ -115,6 +108,13 @@ div.content div.version-select ul li.version-select-current
 div.content div.version-select ul li a
 {
   text-decoration: none;
+}
+
+div.content div.version-select ul li a:hover,
+div.content div.version-select ul li a:focus
+{
+  color: white;
+  background-color: #4c4cc6;
 }
 
 div.content div.statistics
@@ -371,13 +371,20 @@ div.paginate a
   text-decoration: none;
 }
 
-div.paginate span.paginate-link,
+div.paginate span.paginate-link a,
 div.paginate span.paginate-text,
 div.paginate span.paginate-current
 {
   border: 1px solid #c1c1ec;
   vertical-align: middle;
   padding: 0.2em 0.4em;
+}
+
+div.paginate span.paginate-link a:hover,
+div.paginate span.paginate-link a:focus
+{
+  color: white;
+  background-color: #4c4cc6;
 }
 
 div.paginate span.paginate-text
@@ -416,4 +423,15 @@ div.footer p
   padding: 0;
   margin: 0;
   text-align: center;
+}
+
+p.jump-to-top
+{
+  text-align: right;
+}
+
+p.jump-to-top a
+{
+  padding-left: 20px;
+  background: url(../images/change-query-icon.png) no-repeat left bottom;
 }

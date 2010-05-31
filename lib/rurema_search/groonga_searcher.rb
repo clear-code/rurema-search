@@ -550,7 +550,7 @@ module RuremaSearch
         label = h(select_version == :all ? "すべて" : select_version)
         if (version == select_version) or
             (version.nil? and select_version == :all)
-          label
+          tag("span", {:class => "version-select-text"}, label)
         else
           href = version_select_href(select_version)
           if href.empty?
@@ -558,7 +558,7 @@ module RuremaSearch
           else
             href = "/#{href}"
           end
-          a(label, href)
+          a(label, href, :class => "version-select-link")
         end
       end
 
