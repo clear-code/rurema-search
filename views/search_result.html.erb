@@ -19,13 +19,15 @@
   <dl class="entries">
 <%  @grouped_entries.each do |represent_entry, entries| %>
     <dt class="entry-name">
-      <%= link_entry(represent_entry) %>
+      <%= link_entry_if(entries.size == 1, represent_entry) %>
       <span class="score">(<%= h(represent_entry.score) %>)</span>
     </dt>
     <dd>
 <%    entries.each do |entry| %>
       <div class="entry-description">
-        <span class="entry-version"><%= link_version(entry) %></span>
+        <span class="entry-version">
+          <%= link_entry(entry, :label => h(entry.version.key)) %>
+        </span>
         <%= format_description(entry) %>
       </div>
 <%    end %>

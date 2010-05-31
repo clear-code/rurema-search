@@ -578,9 +578,20 @@ module RuremaSearch
         end.join
       end
 
-      def link_entry(entry)
-        a(h(entry.label).gsub(/(::|\.|\.?#|\(\|\)|,|_|\$)/, "<wbr />\\1<wbr />"),
-          entry_href(entry))
+      def link_entry(entry, options={})
+        a(options[:label] || entry_label(entry), entry_href(entry))
+      end
+
+      def link_entry_if(boolean, entry, options={})
+        if boolean
+          link_entry(entry, options)
+        else
+          options[:label] || entry_label(entry)
+        end
+      end
+
+      def entry_label(entry)
+        h(entry.label).gsub(/(::|\.|\.?#|\(\|\)|,|_|\$)/, "<wbr />\\1<wbr />")
       end
 
       def entry_href(entry)
