@@ -1,0 +1,4 @@
+base_url:
+  /static/
+remove_dot_from_version:
+  true

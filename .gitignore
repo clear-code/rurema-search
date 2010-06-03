@@ -5,3 +5,5 @@
 /webrat.log
 /test/groonga-database
 /test/.test-result
+/document.yaml
+/smtp.yaml

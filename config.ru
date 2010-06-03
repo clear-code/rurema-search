@@ -43,6 +43,16 @@ environment = ENV["RACK_ENV"] || "development"
 
 searcher_options = {}
 
+load_yaml = Proc.new do |key, file_name|
+  configuration_file = base_dir + file_name
+  if configuration_file.exist?
+    require 'yaml'
+    searcher_options[key] = YAML.load(configuration_file.read)
+  end
+end
+
+load_yaml.call(:document, "document.yaml")
+
 use Rack::CommonLogger
 use Rack::Runtime
 
@@ -68,11 +78,7 @@ when "development"
 
   use Rack::ShowExceptions
 when "production"
-  smtp_configuration_file = base_dir + "smtp.yaml"
-  if smtp_configuration_file.exist?
-    require 'yaml'
-    searcher_options[:smtp] = YAML.load(smtp_configuration_file.read)
-  end
+  load_yaml.call(:smtp, "smtp.yaml")
 end
 
 use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s

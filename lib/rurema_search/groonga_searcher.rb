@@ -185,7 +185,7 @@ module RuremaSearch
       if open_search_description_path?(request.path_info)
         page = OpenSearchDescriptionPage.new(request, response)
       else
-        page = SearchPage.new(@database, request, response)
+        page = SearchPage.new(@database, request, response, @options[:document])
       end
       page.extend(@view)
       page.process
@@ -255,11 +255,12 @@ module RuremaSearch
     class SearchPage
       include PageUtils
 
-      def initialize(database, request, response)
+      def initialize(database, request, response, document_options=nil)
         @database = database
         @request = request
         @response = response
         @url_mappers = {}
+        @document_options = document_options || {}
       end
 
       def process
@@ -813,7 +814,11 @@ module RuremaSearch
       end
 
       def create_url_mapper(version)
-        RuremaSearch::URLMapper.new(:base_url => base_path,
+        base_url = @document_options["base_url"] || base_path
+        if @document_options["remove_dot_from_version"]
+          version = version.gsub(/\./, '')
+        end
+        RuremaSearch::URLMapper.new(:base_url => base_url,
                                     :version => version)
       end
 
