@@ -265,7 +265,7 @@ module RuremaSearch
       def process
         start = Time.now.to_f
         _, *parameters = @request.path_info.split(/\//)
-	conditions = parse_parameters(parameters)
+        conditions = parse_parameters(parameters)
         entries = @database.entries
         if conditions.empty?
           @n_entries = entries.size
