@@ -9,9 +9,10 @@
         type="<%= h(open_search_description_mime_type) %>"
         title="<%= h(site_title) %>"
         href="<%= h(open_search_description_path) %>" />
-  <link rel="stylesheet" href="/css/rurema.css" type="text/css" media="all" />
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <link rel="icon" href="/favicon.png" />
+  <link rel="stylesheet" href="<%= full_path('css', 'rurema.css') %>"
+        type="text/css" media="all" />
+  <link rel="shortcut icon" href="<%= full_path('favicon.ico') %>" />
+  <link rel="icon" href="<%= full_path('favicon.png') %>" />
 </head>
 <body>
   <div id="top" class="header">

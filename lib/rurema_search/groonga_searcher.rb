@@ -49,9 +49,9 @@ module RuremaSearch
       def open_search_description_path
         _version = version
         if _version
-          "/version:#{_version}/#{open_search_description_base_name}"
+          full_path("version:#{_version}", open_search_description_base_name)
         else
-          "/#{open_search_description_base_name}"
+          full_path(open_search_description_base_name)
         end
       end
 
@@ -59,10 +59,26 @@ module RuremaSearch
         "application/opensearchdescription+xml"
       end
 
-      def base_url
+      def base_path
         script_name = @request.script_name
-        script_name = "/" if script_name.empty?
-        (URI(@request.url) + script_name).to_s
+        script_name += "/" if /\/\z/ !~ script_name
+        script_name
+      end
+
+      def full_path(*components)
+        "#{base_path}#{components.join('/')}"
+      end
+
+      def top_path
+        full_path
+      end
+
+      def image_path(*components)
+        full_path("images", *components)
+      end
+
+      def base_url
+        (URI(@request.url) + base_path).to_s
       end
 
       def version_url
@@ -74,10 +90,10 @@ module RuremaSearch
 
       def h1
         a(tag("img",
-              :src => "/images/rurema-search-title.png",
+              :src => image_path("rurema-search-title.png"),
               :alt => site_title,
               :title => site_title),
-          "/")
+          top_path)
       end
 
       def a(label, href, attributes={})
@@ -499,7 +515,7 @@ module RuremaSearch
                            {
                              :alt => "[x]",
                              :title => "条件を削除",
-                             :src => "/images/drop-condition-icon.png",
+                             :src => image_path("drop-condition-icon.png"),
                            }),
                        remove_href,
                        :class => "drop-condition")
@@ -508,7 +524,7 @@ module RuremaSearch
         return "" if elements.empty?
 
         elements.unshift(tag("span", {:class => "all-items"},
-                             a(h("全件表示"), "/")))
+                             a(h("全件表示"), top_path)))
         elements.collect do |element|
           tag("span", {:class => "topic-element"}, element)
         end.join(h(" > "))
@@ -524,7 +540,7 @@ module RuremaSearch
                             :class => "parameter-#{key}",
                             :alt => key_label,
                             :title => key_label,
-                            :src => "/images/#{key}-icon.png",
+                            :src => image_path("#{key}-icon.png"),
                           })
         else
           key_label = h(key_label)
@@ -554,9 +570,9 @@ module RuremaSearch
         else
           href = version_select_href(select_version)
           if href.empty?
-            href = "/"
+            href = top_path
           else
-            href = "/#{href}"
+            href = full_path(href)
           end
           a(label, href, :class => "version-select-link")
         end
@@ -797,7 +813,7 @@ module RuremaSearch
       end
 
       def create_url_mapper(version)
-        RuremaSearch::URLMapper.new(:base_url => "/",
+        RuremaSearch::URLMapper.new(:base_url => base_path,
                                     :version => version)
       end
 
