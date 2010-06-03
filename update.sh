@@ -38,11 +38,11 @@ for version in 1.8.7 1.8.8 1.9.1 1.9.2; do
     rm -rf ${base_dir}/public/${version}.old
 done
 
+rm -rf ${base_dir}/groonga-database
 (sleep 5; touch ${base_dir}/tmp/restart.txt) &
 
 ruby1.9.1 \
     -I../rroonga/lib \
     -I../rroonga/ext/groonga \
     ${base_dir}/bin/bitclust-indexer \
-    --reset \
     ${base_dir}/db-*
