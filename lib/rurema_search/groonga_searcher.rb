@@ -88,6 +88,11 @@ module RuremaSearch
         url
       end
 
+      def groonga_version
+        major, minor, micro, tag = Groonga::VERSION
+        [[major, minor, micro].join("."), tag].compact.join("-")
+      end
+
       def h1
         a(tag("img",
               :src => image_path("rurema-search-title.png"),
