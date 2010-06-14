@@ -1,0 +1,114 @@
+#!/usr/bin/env ruby
+#
+# Copyright (C) 2010  Kouhei Sutou <kou@clear-code.com>
+#
+# This library is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this library.  If not, see <http://www.gnu.org/licenses/>.
+#
+#%# family=auto
+#%# capabilities=autoconf
+
+require 'rubygems'
+
+mode = ARGV[0]
+
+@pid_file = ENV["pid_file"]
+@ruby = ENV["ruby"] || Gem.ruby
+@gem_path = ((ENV["GEM_HOME"] || '').split(/:/) + Gem.path).find do |path|
+  File.exist?(passenger_status_path(path))
+end
+
+def passenger_status_path(gem_path)
+  File.join(gem_path, "bin", "passenger-status")
+end
+
+def passenger_status
+  if @pid_file
+    unless File.readable?(@pid_file)
+      return [false, "PID file isn't readable: #{@pid_file}"]
+    end
+    pid = File.read(@pid_file).strip
+  else
+    pid = nil
+  end
+  result = `#{@ruby} #{passenger_status_path(@gem_path)} #{pid}`
+  [$?.success?, result]
+end
+
+def parse_result(result)
+  sections = {}
+  section = nil
+  result.each_line do |line|
+    case section
+    when "Global information"
+      case line.chomp
+      when /\A(.+)\s*=\s*(\d+)\z/
+        key = $1
+        value = $2.to_i
+        sections[section][key] = {:label => key, :value => value}
+      when /\A(Waiting on global queue):\s*(\d+)\z/
+        label = $1
+        value = $2.to_i
+        sections[section]["global_queue"] = {:label => label, :value => value}
+      end
+    else
+      if /\A-+\s+(.+)\s+-+\z/ =~ line
+        section = $1
+        sections[section] = {}
+      end
+    end
+  end
+  sections
+end
+
+def config
+  success, result = passenger_status
+  exit(false) unless success
+
+  sections = parse_result(result)
+  puts(<<-EOC)
+graph_title Passenger status
+graph_category Passenger
+graph_info Passenger status
+
+EOC
+  sections["General information"].each do |key, attributes|
+    puts("#{key}.label #{attributes[:label]}")
+  end
+end
+
+def report
+  success, result = passenger_status
+  exit(false) unless success
+
+  sections = parse_result(result)
+  sections["General information"].each do |key, attributes|
+    puts("#{key}.value #{attributes[:value]}")
+  end
+end
+
+case mode
+when "auto", "autoconf", "detect"
+  success, result = passenger_status
+  if success
+    puts "yes"
+    exit(true)
+  else
+    puts "no (#{result})"
+    exit(false)
+  end
+when "config"
+  config
+else
+  report
+end
