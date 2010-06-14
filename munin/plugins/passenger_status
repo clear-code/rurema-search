@@ -96,11 +96,10 @@ EOC
   have_stack_base = false
   sections["General information"].each do |attributes|
     key = attributes[:key]
+    next if key == "count"
     puts("#{key}.label #{attributes[:label]}")
     case key
-    when "max"
-      draw = "AREA"
-    when "global_queue"
+    when "max", "global_queue"
       draw = "LINE2"
     else
       if have_stack_base
