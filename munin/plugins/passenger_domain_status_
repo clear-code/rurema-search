@@ -20,9 +20,6 @@
 
 require 'rubygems'
 
-@domain = File.basename($0).gsub(/passenger_domain_status_/, '')
-@domain = nil if @domain and @domain.empty?
-
 mode = ARGV[0]
 
 def passenger_status_path(gem_path)
@@ -35,6 +32,14 @@ end
 @gem_path = ((ENV["GEM_HOME"] || '').split(/:/) + Gem.path).find do |path|
   File.exist?(passenger_status_path(path))
 end
+
+if @label
+  domain_prefix = /\Apassenger_(?:#{@label}_)?domain_status_/
+else
+  domain_prefix = /\Apassenger_domain_status_/
+end
+@domain = File.basename($0).gsub(domain_prefix, '')
+@domain = nil if @domain and @domain.empty?
 
 def passenger_status
   if @pid_file
