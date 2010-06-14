@@ -18,6 +18,7 @@
 #%# family=auto
 #%# capabilities=autoconf suggest
 
+require 'English'
 require 'rubygems'
 
 mode = ARGV[0]
@@ -34,12 +35,18 @@ end
 end
 
 if @label
-  domain_prefix = /\Apassenger_(?:#{@label}_)?domain_status_/
+  parameter_prefix = /\Apassenger_(?:#{@label}_)?domain_status_/
 else
-  domain_prefix = /\Apassenger_domain_status_/
+  parameter_prefix = /\Apassenger_domain_status_/
 end
-@domain = File.basename($0).gsub(domain_prefix, '')
-@domain = nil if @domain and @domain.empty?
+parameter = File.basename($0).gsub(parameter_prefix, '')
+if /_(sessions|processed|uptime)\z/ =~ parameter
+  @domain = $PREMATCH
+  @type = $1
+  @domain = nil if @domain and @domain.empty?
+else
+  @domain = @type = nil
+end
 
 def passenger_status
   if @pid_file
@@ -116,6 +123,19 @@ def key_prefix(pid)
   "pid#{pid}"
 end
 
+def vlabel
+  case @type
+  when "sessions"
+    "number of processing sessions"
+  when "processed"
+    "number of processed sessions"
+  when "uptime"
+    "uptime by minutes"
+  else
+    "unknown"
+  end
+end
+
 def config
   success, result = passenger_status
   unless success
@@ -124,29 +144,23 @@ def config
   end
 
   if @label
-    title = "Passenger: #{@label}: #{@domain}: status"
+    title = "Passenger: #{@label}: #{@type}: #{@domain}"
   else
-    title = "Passenger: #{@domain}: status"
+    title = "Passenger: #{@type}: #{@domain}"
   end
   sections = parse_result(result)
   puts(<<-EOC)
 graph_title #{title}
 graph_category passenger
-graph_info Passenger #{@domain} status
+graph_info Passenger #{@domain} #{@type}
+graph_vlabel #{vlabel}
 
 EOC
   sections["Domains"].each do |domain, processes|
     next if domain != @domain
     processes.each do |attributes|
       _key_prefix = key_prefix(attributes[:pid])
-      label_prefix = "PID #{attributes[:pid]}"
-
-      puts("#{_key_prefix}_sessions.label #{label_prefix} sessions")
-      puts
-      puts("#{_key_prefix}_processed.label #{label_prefix} processed")
-      puts
-      puts("#{_key_prefix}_uptime.label #{label_prefix} uptime (min)")
-      puts
+      puts("#{_key_prefix}_#{@type}.label PID #{attributes[:pid]}")
     end
   end
 end
@@ -163,9 +177,7 @@ def report
     next if domain != @domain
     processes.each do |attributes|
       _key_prefix = key_prefix(attributes[:pid])
-      puts("#{_key_prefix}_sessions.value #{attributes[:sessions]}")
-      puts("#{_key_prefix}_processed.value #{attributes[:processed]}")
-      puts("#{_key_prefix}_uptime.value #{attributes[:uptime]}")
+      puts("#{_key_prefix}_#{@type}.value #{attributes[@type.to_sym]}")
     end
   end
 end
@@ -187,7 +199,9 @@ when "suggest"
     domains = sections["Domains"]
     if domains
       domains.each do |domain, processes|
-        puts domain
+        puts "#{domain}_sessions"
+        puts "#{domain}_processed"
+        puts "#{domain}_uptime"
       end
       exit(true)
     else
@@ -201,6 +215,10 @@ when "suggest"
 else
   if @domain.nil?
     puts "no domain"
+    exit(false)
+  end
+  if @type.nil?
+    puts "no type: #{@domain}"
     exit(false)
   end
   case mode
