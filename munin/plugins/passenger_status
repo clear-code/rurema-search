@@ -93,6 +93,7 @@ graph_category passenger
 graph_info Passenger status
 
 EOC
+  have_stack_base = false
   sections["General information"].each do |attributes|
     key = attributes[:key]
     puts("#{key}.label #{attributes[:label]}")
@@ -102,7 +103,12 @@ EOC
     when "global_queue"
       draw = "LINE2"
     else
-      draw = "STACK"
+      if have_stack_base
+        draw = "STACK"
+      else
+        draw = "LINE2"
+        have_stack_base = true
+      end
     end
     puts("#{attributes[:key]}.draw #{draw}")
   end
