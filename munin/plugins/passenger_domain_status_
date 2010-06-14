@@ -68,7 +68,7 @@ def parse_result(result)
     case section
     when "Domains"
       case line.chomp
-      when /\A(.+):\z/
+      when /\A(.+):\s*\z/
         domain = $1
         sections[section] << [domain, []]
       when /\A\s+PID:\s+(\d+)\s+
