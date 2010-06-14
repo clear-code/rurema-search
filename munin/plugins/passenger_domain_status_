@@ -79,10 +79,13 @@ def parse_result(result)
         sessions = $2.to_i
         processed = $3.to_i
         uptime = parse_uptime($3)
-        sections[section].last.last << {:pid => pid,
-                                        :sessions => sessions,
-                                        :processed => processed,
-                                        :uptime => uptime}
+        _domain, processes = sections[section].last
+        processes << {
+          :pid => pid,
+          :sessions => sessions,
+          :processed => processed,
+          :uptime => uptime
+        }
       end
     else
       if /-+\s+(.+)\s+-+/ =~ line
@@ -163,7 +166,8 @@ when "auto", "autoconf", "detect"
 when "suggest"
   success, result = passenger_status
   if success
-    domains = result["Domains"]
+    sections = parse_result(result)
+    domains = sections["Domains"]
     if domains
       domains.each do |domain, processes|
         puts domain
