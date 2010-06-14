@@ -83,7 +83,7 @@ def config
   end
   sections = parse_result(result)
   puts(<<-EOC)
-graph_title #{label}
+graph_title #{title}
 graph_category passenger
 graph_info Passenger status
 
