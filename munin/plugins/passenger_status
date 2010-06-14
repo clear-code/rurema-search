@@ -26,6 +26,7 @@ def passenger_status_path(gem_path)
   File.join(gem_path, "bin", "passenger-status")
 end
 
+@label = ENV["label"]
 @pid_file = ENV["pid_file"]
 @ruby = ENV["ruby"] || Gem.ruby
 @gem_path = ((ENV["GEM_HOME"] || '').split(/:/) + Gem.path).find do |path|
@@ -75,10 +76,15 @@ def config
   success, result = passenger_status
   exit(false) unless success
 
+  if @label
+    title = "Passenger: #{@label}: status"
+  else
+    title = "Passenger: status"
+  end
   sections = parse_result(result)
   puts(<<-EOC)
-graph_title Passenger status
-graph_category Passenger
+graph_title #{label}
+graph_category passenger
 graph_info Passenger status
 
 EOC
