@@ -69,7 +69,13 @@ def parse_result(result)
     when "Domains"
       case line.chomp
       when /\A(.+):\s*\z/
-        domain = $1
+        path = $1
+        components = path.split(/\//)
+        ignore_components = ["current"]
+        while ignore_components.include?(components.last)
+          components.pop
+        end
+        domain = components.pop
         sections[section] << [domain, []]
       when /\A\s+PID:\s+(\d+)\s+
                  Sessions:\s+(\d+)\s+
