@@ -35,9 +35,9 @@ end
 end
 
 if @label
-  parameter_prefix = /\Apassenger_(?:#{@label}_)?domain_status_/
+  parameter_prefix = /\Apassenger_(?:#{@label}_)?domain_/
 else
-  parameter_prefix = /\Apassenger_domain_status_/
+  parameter_prefix = /\Apassenger_domain_/
 end
 parameter = File.basename($0).gsub(parameter_prefix, '')
 if /_(sessions|processed|uptime)\z/ =~ parameter
