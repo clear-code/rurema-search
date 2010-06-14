@@ -60,6 +60,15 @@ def parse_uptime(uptime)
   uptime_in_minutes
 end
 
+def extract_domain(path)
+  components = path.split(/\//)
+  ignore_components = ["current"]
+  while ignore_components.include?(components.last)
+    components.pop
+  end
+  components.pop
+end
+
 def parse_result(result)
   sections = {}
   section = nil
@@ -70,12 +79,7 @@ def parse_result(result)
       case line.chomp
       when /\A(.+):\s*\z/
         path = $1
-        components = path.split(/\//)
-        ignore_components = ["current"]
-        while ignore_components.include?(components.last)
-          components.pop
-        end
-        domain = components.pop
+        domain = extract_domain(path)
         sections[section] << [domain, []]
       when /\A\s+PID:\s+(\d+)\s+
                  Sessions:\s+(\d+)\s+
@@ -84,7 +88,7 @@ def parse_result(result)
         pid = $1.to_i
         sessions = $2.to_i
         processed = $3.to_i
-        uptime = parse_uptime($3)
+        uptime = parse_uptime($4)
         _domain, processes = sections[section].last
         processes << {
           :pid => pid,
@@ -150,6 +154,7 @@ def report
 
   sections = parse_result(result)
   sections["Domains"].each do |domain, processes|
+    next if domain != @domain
     processes.each do |attributes|
       _key_prefix = key_prefix(attributes[:pid])
       puts("#{_key_prefix}_sessions.value #{attributes[:sessions]}")
