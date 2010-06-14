@@ -91,6 +91,7 @@ def config
 graph_title #{title}
 graph_category passenger
 graph_info Passenger status
+graph_vlabel number of processes
 
 EOC
   have_stack_base = false
