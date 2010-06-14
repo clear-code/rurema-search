@@ -56,11 +56,13 @@ def parse_result(result)
       when /\A(\S+)\s*=\s*(\d+)\z/
         key = $1
         value = $2.to_i
-        sections[section][key] = {:label => key, :value => value}
+        sections[section] << [{:key => key, :label => key, :value => value}]
       when /\A(Waiting on global queue):\s*(\d+)\z/
         label = $1
         value = $2.to_i
-        sections[section]["global_queue"] = {:label => label, :value => value}
+        sections[section] << [{:key => "global_queue",
+                               :label => label,
+                               :value => value}]
       end
     else
       if /-+\s+(.+)\s+-+/ =~ line
@@ -88,8 +90,8 @@ graph_category passenger
 graph_info Passenger status
 
 EOC
-  sections["General information"].each do |key, attributes|
-    puts("#{key}.label #{attributes[:label]}")
+  sections["General information"].each do |attributes|
+    puts("#{attributes[:key]}.label #{attributes[:label]}")
   end
 end
 
@@ -98,8 +100,8 @@ def report
   exit(false) unless success
 
   sections = parse_result(result)
-  sections["General information"].each do |key, attributes|
-    puts("#{key}.value #{attributes[:value]}")
+  sections["General information"].each do |attributes|
+    puts("#{attributes[:key]}.value #{attributes[:value]}")
   end
 end
 
