@@ -50,9 +50,9 @@ def parse_result(result)
   section = nil
   result.each_line do |line|
     case section
-    when "Global information"
+    when "General information"
       case line.chomp
-      when /\A(.+)\s*=\s*(\d+)\z/
+      when /\A(\S+)\s*=\s*(\d+)\z/
         key = $1
         value = $2.to_i
         sections[section][key] = {:label => key, :value => value}
