@@ -42,7 +42,7 @@ rm -rf ${base_dir}/groonga-database
 (sleep 5; touch ${base_dir}/tmp/restart.txt) &
 
 ruby1.9.1 \
-    -I../rroonga/lib \
-    -I../rroonga/ext/groonga \
+    -I${base_dir}/../rroonga/lib \
+    -I${base_dir}/../rroonga/ext/groonga \
     ${base_dir}/bin/bitclust-indexer \
     ${base_dir}/db-*
