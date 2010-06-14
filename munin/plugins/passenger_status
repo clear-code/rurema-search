@@ -105,7 +105,7 @@ EOC
       if have_stack_base
         draw = "STACK"
       else
-        draw = "LINE2"
+        draw = "AREA"
         have_stack_base = true
       end
     end
