@@ -94,7 +94,17 @@ graph_info Passenger status
 
 EOC
   sections["General information"].each do |attributes|
-    puts("#{attributes[:key]}.label #{attributes[:label]}")
+    key = attributes[:key]
+    puts("#{key}.label #{attributes[:label]}")
+    case key
+    when "max"
+      draw = "AREA"
+    when "global_queue"
+      draw = "LINE2"
+    else
+      draw = "STACK"
+    end
+    puts("#{attributes[:key]}.draw #{draw}")
   end
 end
 
