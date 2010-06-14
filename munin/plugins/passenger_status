@@ -76,7 +76,10 @@ end
 
 def config
   success, result = passenger_status
-  exit(false) unless success
+  unless success
+    puts result
+    exit(false)
+  end
 
   if @label
     title = "Passenger: #{@label}: status"
