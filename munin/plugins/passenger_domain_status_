@@ -20,7 +20,7 @@
 
 require 'rubygems'
 
-@domain = File.basename($0).gsub(/milter_manager_/, '')
+@domain = File.basename($0).gsub(/passenger_domain_status_/, '')
 @domain = nil if @domain and @domain.empty?
 
 mode = ARGV[0]
@@ -131,6 +131,7 @@ graph_info Passenger #{@domain} status
 
 EOC
   sections["Domains"].each do |domain, processes|
+    next if domain != @domain
     processes.each do |attributes|
       _key_prefix = key_prefix(attributes[:pid])
       label_prefix = "PID #{attributes[:pid]}"
