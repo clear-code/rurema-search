@@ -67,7 +67,7 @@ def parse_result(result)
     else
       if /-+\s+(.+)\s+-+/ =~ line
         section = $1
-        sections[section] = {}
+        sections[section] = []
       end
     end
   end
