@@ -119,10 +119,6 @@ def parse_result(result)
   sections
 end
 
-def key_prefix(pid)
-  "pid#{pid}"
-end
-
 def vlabel
   case @type
   when "sessions"
@@ -158,9 +154,10 @@ graph_vlabel #{vlabel}
 EOC
   sections["Domains"].each do |domain, processes|
     next if domain != @domain
-    processes.each do |attributes|
-      _key_prefix = key_prefix(attributes[:pid])
-      puts("#{_key_prefix}_#{@type}.label PID #{attributes[:pid]}")
+    processes.sort_by do |attributes|
+      attributes[:pid]
+    end.each_with_index do |attributes, i|
+      puts("#{@type}#{i}.label #{i} (PID #{attributes[:pid]})")
     end
   end
 end
@@ -175,9 +172,10 @@ def report
   sections = parse_result(result)
   sections["Domains"].each do |domain, processes|
     next if domain != @domain
-    processes.each do |attributes|
-      _key_prefix = key_prefix(attributes[:pid])
-      puts("#{_key_prefix}_#{@type}.value #{attributes[@type.to_sym]}")
+    processes.sort_by do |attributes|
+      attributes[:pid]
+    end.each_with_index do |attributes, i|
+      puts("#{@type}#{i}.value #{attributes[@type.to_sym]}")
     end
   end
 end
