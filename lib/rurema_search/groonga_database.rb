@@ -123,6 +123,11 @@ module RuremaSearch
 
     def populate_schema
       Groonga::Schema.define do |schema|
+        schema.create_table("LocalNames",
+                            :type => :hash,
+                            :key_type => "ShortText") do |table|
+        end
+
         schema.create_table("Types",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
@@ -191,7 +196,7 @@ module RuremaSearch
                             :type => :hash,
                             :key_type => "ShortText") do |table|
           table.short_text("name")
-          table.short_text("local_name")
+          table.reference("local_name", "LocalNames")
           table.short_text("label")
           table.text("document")
           table.text("signature")
@@ -217,11 +222,14 @@ module RuremaSearch
                             :default_tokenizer => "TokenBigram",
                             :key_normalize => true) do |table|
           table.index("Entries.name")
-          table.index("Entries.local_name")
           table.index("Entries.label")
           table.index("Entries.document")
           table.index("Entries.signature")
           table.index("Entries.description")
+        end
+
+        schema.change_table("LocalNames") do |table|
+          table.index("Entries.local_name")
         end
       end
     end
