@@ -58,8 +58,6 @@ if [ "$index_update" = "yes" ]; then
     (sleep 5; touch ${base_dir}/tmp/restart.txt) &
 
     ruby1.9.1 \
-	-I${base_dir}/../rroonga/lib \
-	-I${base_dir}/../rroonga/ext/groonga \
 	${base_dir}/bin/bitclust-indexer \
 	${base_dir}/db-*
 
