@@ -22,12 +22,25 @@ license/lgpl-3.0.txtを見てください。
 == 依存ソフトウェア
 
 * Ruby 1.9.1
-* rroonga HEAD
-* groonga HEAD
+* Rack
+* BitClust
+* groonga
+* rroonga
+* racknga
 
 == インストール
 
-TODO
+Debian GNU/Linuxの場合。
+
+  % mkdir rurema
+  % cd rurema
+  % git clone git://github.com/kou/rurema-search.git
+  % cd rurema-search
+  % ./setup.sh
+  % ruby1.9.1 rackup
+  % www-browser http://localhost:9292/
+
+TODO: Passengerの設定方法
 
 == ドキュメント
 
