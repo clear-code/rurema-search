@@ -102,18 +102,12 @@ module RuremaSearch
     end
 
     def purge_old_records(base_time)
-      target_tables = @database.find_all do |object|
-        object.is_a?(Groonga::Table) and object.have_column?(:last_modified)
+      old_entries = entries.select do |record|
+        record.last_modified < base_time
       end
-
-      target_tables.each do |table|
-        old_records = table.select do |record|
-          record.last_modified < base_time
-        end
-        old_records.each do |record|
-          real_record = record.key
-          real_record.delete
-        end
+      old_entries.each do |record|
+        real_record = record.key
+        real_record.delete
       end
     end
 
@@ -142,83 +136,70 @@ module RuremaSearch
         schema.create_table("LocalNames",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
-          table.time("last_modified")
         end
 
         schema.create_table("Types",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
-          table.time("last_modified")
         end
 
         schema.create_table("Versions",
                             :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
-          table.time("last_modified")
         end
 
         schema.create_table("Visibilities",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
-          table.time("last_modified")
         end
 
         schema.create_table("Classes",
                             :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
           table.reference("type", "Types")
-          table.time("last_modified")
         end
 
         schema.create_table("Modules",
                             :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
           table.reference("type", "Types")
-          table.time("last_modified")
         end
 
         schema.create_table("Objects",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
           table.reference("type", "Types")
-          table.time("last_modified")
         end
 
         schema.create_table("Libraries",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
           table.reference("type", "Types")
-          table.time("last_modified")
         end
 
         schema.create_table("SingletonMethods",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
-          table.time("last_modified")
         end
 
         schema.create_table("InstanceMethods",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
-          table.time("last_modified")
         end
 
         schema.create_table("ModuleFunctions",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
-          table.time("last_modified")
         end
 
         schema.create_table("Constants",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
-          table.time("last_modified")
         end
 
         schema.create_table("SpecialVariables",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
-          table.time("last_modified")
         end
 
         schema.create_table("Entries",
@@ -244,7 +225,6 @@ module RuremaSearch
                             :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
           table.reference("type", "Types")
-          table.time("last_modified")
         end
 
         schema.create_table("Terms",

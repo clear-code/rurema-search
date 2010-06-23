@@ -39,7 +39,7 @@ module RuremaSearch
     def index_class(klass)
       add_class(klass)
       klass.entries.each do |entry|
-        add_entry(klass, entry)
+        add_class_entry(klass, entry)
         add_spec(klass, entry)
       end
     end
@@ -54,10 +54,8 @@ module RuremaSearch
         :document => source,
         :description => "#{document.title} #{source}",
         :version => version,
-        :last_modified => @base_time,
       }
-      @database.entries.add("#{version}:#{document.name}",
-                            attributes)
+      add_entry("#{version}:#{document.name}", attributes)
     end
 
     def index_library(library)
@@ -80,13 +78,9 @@ module RuremaSearch
         :document => source,
         :description => description.join(" "),
         :version => version,
-        :last_modified => @base_time,
       }
-      @database.entries.add("#{version}:#{library.name}",
-                            attributes)
-      @database.libraries.add(library_name,
-                              :type => library_type,
-                              :last_modified => @base_time)
+      add_entry("#{version}:#{library.name}", attributes)
+      @database.libraries.add(library_name, :type => library_type)
     end
 
     def index_function(function)
@@ -101,10 +95,8 @@ module RuremaSearch
         :signature => function.header,
         :description => source,
         :visibility => function.private? ? "private" : "public",
-        :last_modified => @base_time,
       }
-      @database.entries.add("#{version}:#{function.header}",
-                            attributes)
+      add_entry("#{version}:#{function.header}", attributes)
     end
 
     def add_class(klass)
@@ -117,18 +109,14 @@ module RuremaSearch
         :version => version,
         :document => source,
         :description => source,
-        :last_modified => @base_time,
       }
       library = klass.library
       attributes[:library] = library.name if library
-      @database.entries.add("#{version}:#{klass.name}",
-                            attributes)
-      @database.specs.add(klass.name,
-                          :type => klass.type.to_s,
-                          :last_modified => @base_time)
+      add_entry("#{version}:#{klass.name}", attributes)
+      @database.specs.add(klass.name, :type => klass.type.to_s)
     end
 
-    def add_entry(klass, entry)
+    def add_class_entry(klass, entry)
       source = entry_source(entry)
       foreach_method_chunk(source) do |signatures, description|
         signatures.each do |signature|
@@ -142,38 +130,35 @@ module RuremaSearch
             :signature => signature.to_s,
             :description => description,
             :visibility => entry.visibility.to_s,
-            :last_modified => @base_time,
           }
           klass_name = klass.name
           klass_type = normalize_type_label(klass.type.to_s)
           if klass.class?
             attributes[:class] = klass_name
-            @database.classes.add(klass_name,
-                                  :type => klass_type,
-                                  :last_modified => @base_time)
+            @database.classes.add(klass_name, :type => klass_type)
           elsif klass.module?
             attributes[:module] = klass_name
-            @database.modules.add(klass_name,
-                                  :type => klass_type,
-                                  :last_modified => @base_time)
+            @database.modules.add(klass_name, :type => klass_type)
           else
             attributes[:object] = klass_name
-            @database.objects.add(klass_name,
-                                  :type => klass_type,
-                                  :last_modified => @base_time)
+            @database.objects.add(klass_name, :type => klass_type)
           end
           library = entry.library
           attributes[:library] = library.name if library
-          @database.entries.add("#{version}:#{entry.spec_string}:#{signature}",
-                                attributes)
+          add_entry("#{version}:#{entry.spec_string}:#{signature}",
+                    attributes)
         end
       end
     end
 
     def add_spec(klass, entry)
       @database.specs.add(entry.spec_string,
-                          :type => normalize_type_label(entry.type_label),
-                          :last_modified => @base_time)
+                          :type => normalize_type_label(entry.type_label))
+    end
+
+    def add_entry(key, attributes)
+      attributes[:last_modified] = @base_time
+      @database.entries.add(key, attributes)
     end
 
     def normalize_type_label(label)
