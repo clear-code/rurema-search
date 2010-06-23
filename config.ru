@@ -108,5 +108,6 @@ end
 
 use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
 
+use Racknga::Middleware::Deflater
 use Rack::Lint
 run searcher
