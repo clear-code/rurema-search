@@ -62,4 +62,6 @@ if [ "$index_update" = "yes" ]; then
 	-I${base_dir}/../rroonga/ext/groonga \
 	${base_dir}/bin/bitclust-indexer \
 	${base_dir}/db-*
+
+    ruby1.9.1 ${base_dir}/bin/clear-cache
 fi

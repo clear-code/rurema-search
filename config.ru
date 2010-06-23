@@ -109,5 +109,7 @@ end
 use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
 
 use Racknga::Middleware::Deflater
+cache_database_path = base_dir + "var" + "cache" + "db"
+use Racknga::Middleware::Cache, :database_path => cache_database_path.to_s
 use Rack::Lint
 run searcher
