@@ -102,7 +102,7 @@ when "production"
   use show_error_page, :searcher => searcher
 
   load_yaml.call(:smtp, "smtp.yaml")
-  notifiers = [Racnga::ExceptionMailNotifier.new(searcher_options[:smtp])]
+  notifiers = [Racknga::ExceptionMailNotifier.new(searcher_options[:smtp])]
   use Racknga::Middleware::ExceptionNotifier, :notifiers => notifiers
 end
 
