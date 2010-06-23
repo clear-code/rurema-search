@@ -60,6 +60,7 @@ load_yaml.call(:document, "document.yaml")
 
 use Rack::CommonLogger
 use Rack::Runtime
+use Rack::ConditionalGet
 use Rack::ContentLength
 
 urls = ["/favicon.", "/css/", "/images/", "/js/", "/1.8.", "/1.9."]
