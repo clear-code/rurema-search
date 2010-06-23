@@ -147,25 +147,6 @@ module RuremaSearch
     end
 
     def call(env)
-      process(env)
-    rescue Exception => exception
-      raise unless production?
-      begin
-        notify_exception(exception, env)
-      rescue Exception
-        begin
-          $stderr.puts("#{$!.class}: #{$!}")
-          $stderr.puts($@)
-        rescue Exception
-        end
-      end
-      page = ErrorPage.new(exception)
-      page.extend(@view)
-      page.process
-    end
-
-    private
-    def process(env)
       request = Rack::Request.new(normalize_environment(env))
       response = Rack::Response.new
       response["Content-Type"] = "text/html; charset=UTF-8"
@@ -186,6 +167,13 @@ module RuremaSearch
       response.to_a
     end
 
+    def error_page(env, exception)
+      page = ErrorPage.new(env, exception)
+      page.extend(@view)
+      page.process
+    end
+
+    private
     def dispatch(request, response)
       if open_search_description_path?(request.path_info)
         page = OpenSearchDescriptionPage.new(request, response)
@@ -216,11 +204,6 @@ module RuremaSearch
       erb = ERB.new(File.read(template_file), 0, "%<>")
       erb.filename = template_file
       erb
-    end
-
-    def notify_exception(exception, env)
-      notifier = ExceptionMailNotifier.new(exception, env, @options[:smtp])
-      notifier.notify
     end
 
     def normalize_environment(env)
@@ -911,8 +894,9 @@ module RuremaSearch
     class ErrorPage
       include PageUtils
 
-      def initialize(env)
+      def initialize(env, exception)
         @env = env
+        @exception = exception
         @request = Rack::Request.new(env)
         @response = Rack::Response.new
         @response["Content-Type"] = "text/html; charset=UTF-8"
@@ -939,104 +923,6 @@ module RuremaSearch
 
       def body
         error
-      end
-    end
-
-    class ExceptionMailNotifier
-      include Utils
-
-      def initialize(exception, env, options)
-        @exception = exception
-        @env = env
-        @options = options || {}
-      end
-
-      def notify
-        host = @options["host"]
-        return if host.nil?
-        return if to.empty?
-        mail = format
-        Net::SMTP.start(host, @options["port"]) do |smtp|
-          smtp.send_message(mail, from, *to)
-        end
-      end
-
-      private
-      def format
-        mail = "#{format_header}\n#{format_body}"
-        mail.force_encoding("UTF-8")
-        begin
-          mail = mail.encode('iso-2022-jp')
-        rescue EncodingError
-        end
-        mail.force_encoding("ASCII-8BIT")
-      end
-
-      def format_header
-        <<-EOH
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-2022-jp
-Content-Transfer-Encoding: 7bit
-From: #{from}
-To: #{to.join(', ')}
-Subject: #{NKF.nkf('-Wj -M', subject)}
-EOH
-      end
-
-      def format_body
-        request = Rack::Request.new(@env)
-        body = <<-EOB
-URL: #{request.url}
---
-#{@exception.class}: #{@exception}
---
-#{@exception.backtrace.join("\n")}
-EOB
-        params = request.params
-        max_key_size = (@env.keys.collect(&:size) +
-                        params.keys.collect(&:size)).max
-        body << <<-EOE
---
-Environments:
-EOE
-        @env.sort_by {|key, value| key}.each do |key, value|
-          body << "  %*s: <%s>\n" % [max_key_size, key, value]
-        end
-
-        unless params.empty?
-          body << <<-EOE
---
-Parameters:
-EOE
-          params.sort_by {|key, value| key}.each do |key, value|
-            body << "  %#{max_key_size}s: <%s>\n" % [key, value]
-          end
-        end
-
-        body
-      end
-
-      def subject
-        "[るりまサーチ] #{@exception}"
-      end
-
-      def to
-        @to ||= ensure_array(@options["to"]) || []
-      end
-
-      def ensure_array(maybe_array)
-        maybe_array = [maybe_array] if maybe_array.is_a?(String)
-        maybe_array
-      end
-
-      def from
-        @from ||= @options["from"] || guess_from
-      end
-
-      def guess_from
-        name = Etc.getpwuid(Process.uid).name
-        host = Socket.gethostname
-        "#{name}@#{host}"
       end
     end
   end

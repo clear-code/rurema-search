@@ -27,11 +27,16 @@ bitclust_lib_dir = bitclust_dir + "lib"
 rroonga_dir = base_dir.parent + "rroonga"
 rroonga_lib_dir = rroonga_dir + "lib"
 rroonga_ext_dir = rroonga_dir + "ext" + "groonga"
+racknga_dir = base_dir.parent + "racknga"
+racknga_lib_dir = racknga_dir + "lib"
 
 $LOAD_PATH.unshift(bitclust_lib_dir.to_s)
 $LOAD_PATH.unshift(rroonga_ext_dir.to_s)
 $LOAD_PATH.unshift(rroonga_lib_dir.to_s)
+$LOAD_PATH.unshift(racknga_lib_dir.to_s)
 $LOAD_PATH.unshift(lib_dir.to_s)
+
+require 'racknga'
 
 require 'rurema_search'
 require 'rurema_search/groonga_searcher'
@@ -55,9 +60,13 @@ load_yaml.call(:document, "document.yaml")
 
 use Rack::CommonLogger
 use Rack::Runtime
+use Rack::ContentLength
 
 urls = ["/favicon.", "/css/", "/images/", "/js/", "/1.8.", "/1.9."]
 
+searcher = RuremaSearch::GroongaSearcher.new(database,
+                                             base_dir.to_s,
+                                             searcher_options)
 case environment
 when "development"
   class DirectoryIndex
@@ -78,10 +87,26 @@ when "development"
 
   use Rack::ShowExceptions
 when "production"
+  show_error_page = Class.new do
+    def initialize(app, options={})
+      @app = app
+      @searcher = options[:searcher]
+    end
+
+    def call(env)
+      @app.call(env)
+    rescue Exception => exception
+      @searcher.error_page(env, exception)
+    end
+  end
+  use show_error_page, :searcher => searcher
+
   load_yaml.call(:smtp, "smtp.yaml")
+  notifiers = [Racnga::ExceptionMailNotifier.new(searcher_options[:smtp])]
+  use Racnga::Middleware::ExceptionNotifier, :notifiers => notifiers
 end
 
 use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
 
 use Rack::Lint
-run RuremaSearch::GroongaSearcher.new(database, base_dir.to_s, searcher_options)
+run searcher
