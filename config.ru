@@ -103,7 +103,7 @@ when "production"
 
   load_yaml.call(:smtp, "smtp.yaml")
   notifiers = [Racnga::ExceptionMailNotifier.new(searcher_options[:smtp])]
-  use Racnga::Middleware::ExceptionNotifier, :notifiers => notifiers
+  use Racknga::Middleware::ExceptionNotifier, :notifiers => notifiers
 end
 
 use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
