@@ -54,9 +54,6 @@ if [ "$rurema_update" = "yes" ]; then
 fi
 
 if [ "$index_update" = "yes" ]; then
-    rm -rf ${base_dir}/groonga-database
-    (sleep 5; touch ${base_dir}/tmp/restart.txt) &
-
     ruby1.9.1 \
 	${base_dir}/bin/bitclust-indexer \
 	${base_dir}/db-*

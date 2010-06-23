@@ -47,14 +47,17 @@ def main(database_path)
   database = RuremaSearch::GroongaDatabase.new
   database.open(database_path, "utf-8") do
     database.purge if reset
+    base_time = Time.now
     bitclust_database_paths.each do |bitclust_database_path|
       method_database = BitClust::MethodDatabase.new(bitclust_database_path)
       function_database = BitClust::FunctionDatabase.new(bitclust_database_path)
       indexer = RuremaSearch::GroongaIndexer.new(database,
                                                  method_database,
                                                  function_database)
+      indexer.base_time = base_time
       indexer.index
     end
+    database.purge_old_records(base_time)
   end
 end
 

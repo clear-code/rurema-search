@@ -4,10 +4,12 @@
 
 module RuremaSearch
   class GroongaIndexer
+    attr_accessor :base_time
     def initialize(database, method_database, function_database)
       @database = database
       @method_database = method_database
       @function_database = function_database
+      @base_time = nil
     end
 
     def index
@@ -52,6 +54,7 @@ module RuremaSearch
         :document => source,
         :description => "#{document.title} #{source}",
         :version => version,
+        :last_modified => @base_time,
       }
       @database.entries.add("#{version}:#{document.name}",
                             attributes)
@@ -77,10 +80,13 @@ module RuremaSearch
         :document => source,
         :description => description.join(" "),
         :version => version,
+        :last_modified => @base_time,
       }
       @database.entries.add("#{version}:#{library.name}",
                             attributes)
-      @database.libraries.add(library_name, :type => library_type)
+      @database.libraries.add(library_name,
+                              :type => library_type,
+                              :last_modified => @base_time)
     end
 
     def index_function(function)
@@ -95,6 +101,7 @@ module RuremaSearch
         :signature => function.header,
         :description => source,
         :visibility => function.private? ? "private" : "public",
+        :last_modified => @base_time,
       }
       @database.entries.add("#{version}:#{function.header}",
                             attributes)
@@ -110,12 +117,15 @@ module RuremaSearch
         :version => version,
         :document => source,
         :description => source,
+        :last_modified => @base_time,
       }
       library = klass.library
       attributes[:library] = library.name if library
       @database.entries.add("#{version}:#{klass.name}",
                             attributes)
-      @database.specs.add(klass.name, :type => klass.type.to_s)
+      @database.specs.add(klass.name,
+                          :type => klass.type.to_s,
+                          :last_modified => @base_time)
     end
 
     def add_entry(klass, entry)
@@ -132,18 +142,25 @@ module RuremaSearch
             :signature => signature.to_s,
             :description => description,
             :visibility => entry.visibility.to_s,
+            :last_modified => @base_time,
           }
           klass_name = klass.name
           klass_type = normalize_type_label(klass.type.to_s)
           if klass.class?
             attributes[:class] = klass_name
-            @database.classes.add(klass_name, :type => klass_type)
+            @database.classes.add(klass_name,
+                                  :type => klass_type,
+                                  :last_modified => @base_time)
           elsif klass.module?
             attributes[:module] = klass_name
-            @database.modules.add(klass_name, :type => klass_type)
+            @database.modules.add(klass_name,
+                                  :type => klass_type,
+                                  :last_modified => @base_time)
           else
             attributes[:object] = klass_name
-            @database.objects.add(klass_name, :type => klass_type)
+            @database.objects.add(klass_name,
+                                  :type => klass_type,
+                                  :last_modified => @base_time)
           end
           library = entry.library
           attributes[:library] = library.name if library
@@ -155,7 +172,8 @@ module RuremaSearch
 
     def add_spec(klass, entry)
       @database.specs.add(entry.spec_string,
-                          :type => normalize_type_label(entry.type_label))
+                          :type => normalize_type_label(entry.type_label),
+                          :last_modified => @base_time)
     end
 
     def normalize_type_label(label)
