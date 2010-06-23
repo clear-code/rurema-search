@@ -4,3 +4,7 @@ from:
   rurema@example.com
 to:
   developer@example.com
+charset:
+  iso-2022-jp
+subject_label:
+  [るりまサーチ]
