@@ -20,6 +20,7 @@ module RuremaSearch
       path = File.join(base_path, "bitclust.db")
       if File.exist?(path)
         @database = Groonga::Database.open(path)
+        populate_schema
       else
         FileUtils.mkdir_p(base_path)
         populate(path)
