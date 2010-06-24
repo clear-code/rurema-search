@@ -4,20 +4,24 @@ base_dir=$(dirname $0)
 bitclust_dir=${base_dir}/../bitclust
 rubydoc_dir=${base_dir}/../rubydoc
 
-rurema_update=yes
-index_update=yes
+update_rurema=yes
+update_index=yes
+reset_index=no
 for argument in $*; do
     case "$argument" in
-	"--no-rurema-update")
-	    rurema_update=no
+	"--no-update-rurema")
+	    update_rurema=no
 	    ;;
-	"--no-index-update")
-	    index_update=no
+	"--no-update-index")
+	    update_index=no
+	    ;;
+	"--reset-index")
+	    reset_index=yes
 	    ;;
     esac
 done
 
-if [ "$rurema_update" = "yes" ]; then
+if [ "$update_update" = "yes" ]; then
     svn up -q ${rubydoc_dir}
 
     for version in 1.8.7 1.8.8 1.9.1 1.9.2; do
@@ -53,8 +57,14 @@ if [ "$rurema_update" = "yes" ]; then
     done
 fi
 
-if [ "$index_update" = "yes" ]; then
+if [ "$update_index" = "yes" ]; then
+    indexer_arguments=
+    if [ "$reset_index" = "yes" ]; then
+	rm -rf ${base_dir}/groonga-database
+	indexer_arguments="${arguments} --reset"
+    fi
     ruby1.9.1 \
 	${base_dir}/bin/bitclust-indexer \
+	${indexer_arguments} \
 	${base_dir}/db-*
 fi
