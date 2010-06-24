@@ -57,6 +57,4 @@ if [ "$index_update" = "yes" ]; then
     ruby1.9.1 \
 	${base_dir}/bin/bitclust-indexer \
 	${base_dir}/db-*
-
-    ruby1.9.1 ${base_dir}/bin/clear-cache
 fi
