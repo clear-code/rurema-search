@@ -69,4 +69,4 @@ main((base_dir + "groonga-database").to_s)
 
 cache_database_path = base_dir + "var" + "cache" + "db"
 cache_database = Racknga::CacheDatabase.new(cache_database_path.to_s)
-cache_database.purge_old_records
+cache_database.purge_old_responses
