@@ -261,7 +261,6 @@ module RuremaSearch
         conditions = parse_parameters(parameters)
         entries = @database.entries
         if conditions.empty?
-          @n_entries = entries.size
           @drilldown_items = drilldown_items(entries)
           result = entries.select
           @expression = result.expression
@@ -273,13 +272,11 @@ module RuremaSearch
             end.flatten
           end
           @expression = result.expression
-          @n_entries = result.size
           @drilldown_items = drilldown_items(result)
         end
-        @page = ensure_page
         @entries = result.paginate([["_score", :descending],
                                     ["label", :ascending]],
-                                   :page => @page,
+                                   :page => ensure_page(result.size),
                                    :size => n_entries_per_page)
         @grouped_entries = group_entries(@entries)
         @versions = @database.versions
@@ -455,7 +452,7 @@ module RuremaSearch
         end
       end
 
-      def ensure_page
+      def ensure_page(n_entries)
         page = @request["page"]
         return 1 if page.nil? or page.empty?
 
@@ -465,7 +462,7 @@ module RuremaSearch
           return 1
         end
         return 1 if page < 0
-        return 1 if (page - 1) * n_entries_per_page > @n_entries
+        return 1 if (page - 1) * n_entries_per_page > n_entries
         page
       end
 
@@ -839,7 +836,7 @@ module RuremaSearch
           case link
           when ""
             link
-          when @page.to_s
+          when @entries.current_page.to_s
             tag("span", {"class" => "paginate-current"}, link)
           when /\A<a/
             tag("span", {"class" => "paginate-link"}, link)
@@ -853,9 +850,9 @@ module RuremaSearch
       def paginate_content_middle(_paginate)
         abbreved = false
         @entries.pages.each do |page|
-          if page == @page
+          if page == @entries.current_page
             _paginate << h(page)
-          elsif (@page - page).abs < 3
+          elsif (@entries.current_page - page).abs < 3
             if abbreved
               _paginate << "..."
               abbreved = false

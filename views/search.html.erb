@@ -12,7 +12,12 @@
 </div>
 
 <div class="statistics">
-  <span class="total"><%= h("#{@n_entries}件ヒット") %></span>
+  <span class="total"><%= h("#{@entries.n_records}件ヒット") %></span>
+<% unless @entries.n_records.zero? %>
+  <span class="showen-records">
+    <%= h("[#{@entries.start_offset}-#{@entries.end_offset}件を表示]") %>
+  </span>
+<% end %>
   <span class="elapsed-time"><%= h("（%.3f秒）" % @elapsed_time) %></span>
 </div>
 
@@ -21,7 +26,7 @@
 </div>
 
 <div class="search-result">
-<% if @n_entries.zero? %>
+<% if @entries.n_records.zero? %>
 <%= search_no_result %>
 <% else %>
 <%= search_result %>
