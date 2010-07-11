@@ -51,7 +51,7 @@ module RuremaSearchTestUtils
 
     private
     def ensure_database
-      ensure_document
+      updated = ensure_bitclust_database
       database_dir = test_dir + "groonga-database"
       database_file = database_dir + "bitclust.db"
       bitclust_database_dir = test_dir + "db-1.9.1"
@@ -79,7 +79,20 @@ module RuremaSearchTestUtils
       _database
     end
 
-    def ensure_document
+    def ensure_bitclust_database
+      archive_dir = nil
+      [[1, 8, 7], [1, 9, 1]].each do |version|
+        bitclust_database_dir = test_dir + "db-#{version.join('.')}"
+        unless bitclust_database_dir.exist?
+          archive_dir ||= ensure_bitclust_archive
+          FileUtils.cp_r((archive_dir + "db-#{version.join('_')}").to_s,
+                         bitclust_database_dir.to_s)
+        end
+      end
+      FileUtils.rm_rf(archive_dir) if archive_dir
+    end
+
+    def ensure_bitclust_archive
       base_name = "ruby-refm-1.9.1-dynamic-20100629.tar.bz2"
       path = fixtures_dir + base_name
       unless path.exist?
@@ -98,13 +111,7 @@ module RuremaSearchTestUtils
           raise "failed to extract #{path}."
         end
       end
-      [[1, 8, 7], [1, 9, 1]].each do |version|
-        bitclust_database_dir = test_dir + "db-#{version.join('.')}"
-        unless bitclust_database_dir.exist?
-          FileUtils.cp_r((archive_dir + "db-#{version.join('_')}").to_s,
-                         bitclust_database_dir.to_s)
-        end
-      end
+      archive_dir
     end
   end
 

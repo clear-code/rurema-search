@@ -24,16 +24,16 @@ class PaginateTest < Test::Unit::TestCase
                      ["paginate-link", "?page=3", "3"],
                      ["paginate-text", nil, "..."],
                      ["paginate-link", "?page=2", ">"],
-                     ["paginate-link", "?page=7", ">>"]])
+                     ["paginate-link", "?page=304", ">>"]])
   end
 
   def test_no_paginate
-    visit "/type:class/"
+    visit "/type:object/"
     assert_paginate(nil)
   end
 
   def test_two_pages
-    visit "/type:singleton-method/"
+    visit "/type:instance-method/class:Object/"
     assert_paginate([["paginate-text", nil, "<<"],
                      ["paginate-current", nil, "1"],
                      ["paginate-link", "?page=2", "2"],
@@ -42,14 +42,14 @@ class PaginateTest < Test::Unit::TestCase
   end
 
   def test_border_hits
-    visit "/version:1.9.2/type:singleton-method/?n_entries=10"
+    visit "/version:1.9.1/type:constant/?n_entries=10"
     assert_paginate([["paginate-text", nil, "<<"],
                      ["paginate-current", nil, "1"],
                      ["paginate-link", "?page=2", "2"],
                      ["paginate-link", "?page=3", "3"],
                      ["paginate-text", nil, "..."],
                      ["paginate-link", "?page=2", ">"],
-                     ["paginate-link", "?page=6", ">>"]])
+                     ["paginate-link", "?page=223", ">>"]])
   end
 
   private
