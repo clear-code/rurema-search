@@ -277,9 +277,10 @@ module RuremaSearch
           @drilldown_items = drilldown_items(result)
         end
         @page = ensure_page
-        @entries = result.sort([["_score", :descending], ["label", :ascending]],
-                               :offset => n_entries_per_page * (@page - 1),
-                               :limit => n_entries_per_page)
+        @entries = result.paginate([["_score", :descending],
+                                    ["label", :ascending]],
+                                   :page => @page,
+                                   :size => n_entries_per_page)
         @grouped_entries = group_entries(@entries)
         @versions = @database.versions
         @elapsed_time = Time.now.to_f - start
@@ -348,17 +349,22 @@ module RuremaSearch
         @n_entries_per_page ||= compute_n_entries_per_page
       end
 
+      def default_page_size
+        100
+      end
+
       def compute_n_entries_per_page
-        default_n_entries = 100
-        n_entries = @request["n_entries"] || 100
+        default_n_entries = default_page_size
+        max_n_entries = 100
+        n_entries = @request["n_entries"] || default_n_entries
         if n_entries
           begin
             n_entries = Integer(n_entries)
           rescue ArgumentError
-            n_entries = 100
+            n_entries = default_n_entries
           end
         end
-        [10, [n_entries, 100].min].max
+        [10, [n_entries, max_n_entries].min].max
       end
 
       def query
@@ -811,23 +817,21 @@ module RuremaSearch
       end
 
       def paginate
-        return if @entries.size >= @n_entries
+        return unless @entries.have_pages?
         _paginate = ['']
 
-        if @page == 1
+        if @entries.first_page?
           _paginate << h("<<")
         else
-          _paginate << a(h("<<"), "./")
-          _paginate << a(h("<"), "?page=#{@page - 1}")
+          _paginate << a(h("<<"), paginate_path(@entries.first_page))
+          _paginate << a(h("<"), paginate_path(@entries.previous_page))
         end
-        last_page = @n_entries / n_entries_per_page
-        last_page += 1 unless (@n_entries % n_entries_per_page).zero?
-        paginate_content_middle(_paginate, last_page)
-        if @page == last_page
+        paginate_content_middle(_paginate)
+        if @entries.last_page?
           _paginate << h(">>")
         else
-          _paginate << a(h(">"), "?page=#{@page + 1}")
-          _paginate << a(h(">>"), "?page=#{last_page}")
+          _paginate << a(h(">"), paginate_path(@entries.next_page))
+          _paginate << a(h(">>"), paginate_path(@entries.last_page))
         end
 
         _paginate << ""
@@ -846,10 +850,9 @@ module RuremaSearch
         tag("div", {"class" => "paginate"}, _paginate.join("\n"))
       end
 
-      def paginate_content_middle(_paginate, last_page)
+      def paginate_content_middle(_paginate)
         abbreved = false
-        last_page.times do |page|
-          page += 1
+        @entries.pages.each do |page|
           if page == @page
             _paginate << h(page)
           elsif (@page - page).abs < 3
@@ -857,7 +860,7 @@ module RuremaSearch
               _paginate << "..."
               abbreved = false
             end
-            _paginate << a(h(page), "?page=#{page}")
+            _paginate << a(h(page), paginate_path(page))
           else
             abbreved = true
           end
@@ -865,6 +868,21 @@ module RuremaSearch
         if abbreved
           _paginate << "..."
         end
+      end
+
+      def paginate_path(page)
+        if page == 1
+          path = "./"
+          if @entries.page_size != default_page_size
+            path << "?n_entries=#{@entries.page_size}"
+          end
+        else
+          path = "?page=#{page}"
+          if @entries.page_size != default_page_size
+            path << ";n_entries=#{@entries.page_size}"
+          end
+        end
+        path
       end
     end
 
