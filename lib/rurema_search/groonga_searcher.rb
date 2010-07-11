@@ -24,6 +24,10 @@ module RuremaSearch
           /Phusion_Passenger/ =~ ENV["SERVER_SOFTWARE"].to_s
       end
 
+      def apache?
+        /Apache/ =~ ENV["SERVER_SOFTWARE"].to_s
+      end
+
       def thin?
         /\bthin\b/ =~ (ENV["SERVER_SOFTWARE"] || "")
       end
@@ -210,8 +214,12 @@ module RuremaSearch
       erb
     end
 
+    def need_normalize_environment?(env)
+      passenger?(env) or apache?(env)
+    end
+
     def normalize_environment(env)
-      return env unless passenger?
+      return env unless need_normalize_environment?(env)
       normalized_env = {}
       env.each do |key, value|
         case key
