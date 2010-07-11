@@ -444,8 +444,8 @@ module RuremaSearch
           end
           previous_entry = entry
         end
-        grouped_entries.collect do |represent_entry, entries|
-          [represent_entry, entries.sort_by {|entry| entry.version.key}]
+        grouped_entries.collect do |represent_entry, sub_entries|
+          [represent_entry, sub_entries.sort_by {|entry| entry.version.key}]
         end
       end
 
