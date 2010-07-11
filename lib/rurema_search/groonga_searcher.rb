@@ -215,7 +215,7 @@ module RuremaSearch
     end
 
     def need_normalize_environment?(env)
-      passenger?(env) or apache?(env)
+      passenger? or apache?
     end
 
     def normalize_environment(env)
