@@ -21,7 +21,7 @@ for argument in $*; do
     esac
 done
 
-if [ "$update_update" = "yes" ]; then
+if [ "$update_rurema" = "yes" ]; then
     svn up -q ${rubydoc_dir}
 
     for version in 1.8.7 1.8.8 1.9.1 1.9.2; do
