@@ -24,6 +24,10 @@ module RuremaSearch
           /Phusion_Passenger/ =~ ENV["SERVER_SOFTWARE"].to_s
       end
 
+      def thin?
+        /\bthin\b/ =~ (ENV["SERVER_SOFTWARE"] || "")
+      end
+
       def open_search_description_base_name
         "open_search_description.xml"
       end
@@ -207,7 +211,7 @@ module RuremaSearch
     end
 
     def normalize_environment(env)
-      env unless passenger?
+      return env unless passenger?
       normalized_env = {}
       env.each do |key, value|
         case key
@@ -318,10 +322,6 @@ module RuremaSearch
         unescaped_value = URI.unescape(value)
         unescaped_value = URI.unescape(unescaped_value) if thin?
         unescaped_value.gsub(/\+/, ' ').strip
-      end
-
-      def thin?
-        /\bthin\b/ =~ (@request.env["SERVER_SOFTWARE"] || "")
       end
 
       PARAMETER_LABELS = {
