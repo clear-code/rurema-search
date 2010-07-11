@@ -13,6 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+require 'open-uri'
 require 'webrick/httpstatus'
 
 require 'rubygems'
@@ -50,24 +51,60 @@ module RuremaSearchTestUtils
 
     private
     def ensure_database
+      ensure_document
       database_dir = test_dir + "groonga-database"
       database_file = database_dir + "bitclust.db"
-      dump_file = fixtures_dir + "dump.grn"
-      if !database_file.exist? or database_file.mtime < dump_file.mtime
+      bitclust_database_dir = test_dir + "db-1.9.1"
+      if !database_file.exist? or
+          database_file.mtime < bitclust_database_dir.mtime
         FileUtils.rm_rf(database_dir.to_s)
         database_dir.mkpath
-        command = "groonga -n #{database_file} < #{dump_file}"
+        ruby = File.join(RbConfig::CONFIG["bindir"],
+                         RbConfig::CONFIG["ruby_install_name"])
+        ruby << RbConfig::CONFIG["EXEEXT"]
+        indexer = base_dir + "bin" + "bitclust-indexer"
+        command = "#{ruby} #{indexer} "
+        command << "--database #{database_dir} #{test_dir + 'db-*'}"
+        print("creating database by '#{command}'...")
         result = `#{command} 2>&1`
-        # groonga not returns success status on success exit for now.
-        # unless $?.success?
-        #   FileUtils.rm_rf(database_dir.to_s)
-        #   raise "failed to create test database: " +
-        #           "<#{command}>: <#{$?.to_i}>: <#{result}>"
-        # end
+        unless $?.success?
+          FileUtils.rm_rf(database_dir.to_s)
+          raise "failed to create test database: " +
+                  "<#{command}>: <#{$?.to_i}>: <#{result}>"
+        end
+        puts "done."
       end
       _database = RuremaSearch::GroongaDatabase.new
       _database.open(database_dir.to_s, "utf-8")
       _database
+    end
+
+    def ensure_document
+      base_name = "ruby-refm-1.9.1-dynamic-20100629.tar.bz2"
+      path = fixtures_dir + base_name
+      unless path.exist?
+        url = "http://www.ruby-lang.org/ja/man/archive/#{base_name}"
+        print("downloading #{url}...")
+        open(url, "rb") do |input|
+          path.open("wb") do |output|
+            output.print(input.read)
+          end
+        end
+        puts("done.")
+      end
+      archive_dir = fixtures_dir + base_name.gsub(/\.tar\.bz2\z/, '')
+      unless archive_dir.exist?
+        unless system("tar", "xjf", path.to_s, "-C", fixtures_dir.to_s)
+          raise "failed to extract #{path}."
+        end
+      end
+      [[1, 8, 7], [1, 9, 1]].each do |version|
+        bitclust_database_dir = test_dir + "db-#{version.join('.')}"
+        unless bitclust_database_dir.exist?
+          FileUtils.cp_r((archive_dir + "db-#{version.join('_')}").to_s,
+                         bitclust_database_dir.to_s)
+        end
+      end
     end
   end
 
