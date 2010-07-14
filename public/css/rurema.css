@@ -62,39 +62,9 @@ div.content
   clear: both;
 }
 
-div.content div.version-select
-{
-  margin: 0;
-  padding: 0;
-}
-
-div.content div.version-select ul,
-div.content div.version-select ul li
-{
-  margin: 0;
-  padding: 0;
-}
-
-div.content div.version-select ul
-{
-  padding-left: 10px;
-}
-
-div.content div.version-select ul li
-{
-  display: inline;
-}
-
-div.content div.version-select ul li span,
-div.content div.version-select ul li a
-{
-  padding-left: 0.5em;
-  padding-right: 0.5em;
-}
-
 div.content div.top-search-form
 {
-  width: 30em;
+  width: 50em;
   margin: 70px auto;
 }
 
@@ -126,26 +96,63 @@ div.content div.top-search-form p.button input
   width: 10em;
 }
 
-div.content div.top-search-form div.version-select ul
+div.content div.top-search-form table.version-select
 {
-  text-align: center;
+  margin: 0 auto;
 }
 
-div.content div.top-search-form div.version-select ul li.version-select-current span
+div.content div.top-search-form table.version-select th
+{
+  padding: 0 10px;
+}
+
+div.content div.top-search-form table.version-select th.version-select-current span
 {
   padding-left: 20px;
   background: url(../images/version-icon.png) no-repeat left bottom;
 }
 
+div.content div.top-search-form table.version-select td
+{
+  text-align: center;
+}
+
+div.content div.top-search-form table.version-select td span
+{
+  font-size: x-small;
+  color: #999;
+}
+
 div.content div.search-header div.version-select
 {
+  margin: 0;
+  padding: 0;
   margin-bottom: -2px;
   border-bottom: 1px solid #c1c1ec;
+}
+
+div.content div.search-header div.version-select ul,
+div.content div.search-header div.version-select ul li
+{
+  margin: 0;
+  padding: 0;
+}
+
+div.content div.search-header div.version-select ul
+{
+  padding-left: 10px;
+}
+
+div.content div.search-header div.version-select ul li
+{
+  display: inline;
 }
 
 div.content div.search-header div.version-select ul li span,
 div.content div.search-header div.version-select ul li a
 {
+  padding-left: 0.5em;
+  padding-right: 0.5em;
   border: 1px solid #c1c1ec;
   border-bottom-color: #e9e9f8;
   -moz-border-radius: 5px 5px 0 0;
@@ -158,6 +165,11 @@ div.content div.search-header div.version-select ul li span
 {
   color: white;
   background-color: #4c4cc6;
+}
+
+div.content div.search-header div.version-select ul li span.version-n-entries
+{
+  display: none;
 }
 
 div.content div.search-header div.version-select ul li a

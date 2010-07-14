@@ -1,7 +1,22 @@
 <div class="top-search-form">
   <h1><%= h1 %></h1>
 
-  <%= version_select %>
+  <table class="version-select">
+    <tr>
+    <% @version_names.each do |name| %>
+      <th class="version-select<%= version == name ? '-current' : '' %>">
+	<%= link_version_select(name) %>
+      </th>
+    <% end %>
+    </tr>
+    <tr>
+    <% @version_n_entries.each do |n_entries| %>
+      <td>
+        <span class="version-select-n-entries"><%= h(n_entries) %>件</span>
+      </td>
+    <% end %>
+    </tr>
+  </table>
 
   <form method="POST" action="./">
     <p class="input-form">

@@ -234,7 +234,7 @@ module RuremaSearch
 
     def setup_view
       @view = Module.new
-      ["layout", "version_select",
+      ["layout",
        "index",
        "search_header", "search", "search_result", "search_no_result",
        "error", "analytics",
@@ -323,13 +323,20 @@ module RuremaSearch
 
       def initialize(database, version, request, response)
         @database = database
-        @version = version
+        @version = version || :all
         @request = request
         @response = response
       end
 
       def process
-        @versions = @database.versions
+        @versions = @database.entries.group("version").sort(["_key"],
+                                                            :limit => -1)
+        @version_names = [:all]
+        @version_n_entries = [@database.entries.size]
+        @versions.each do |version|
+          @version_names << version.key.key
+          @version_n_entries << version.n_sub_records
+        end
         @response.write(layout)
       end
 
@@ -370,20 +377,13 @@ module RuremaSearch
         _, *parameters = @request.path_info.split(/\//)
         conditions = parse_parameters(parameters)
         entries = @database.entries
-        if conditions.empty?
-          @drilldown_items = drilldown_items(entries)
-          result = entries.select
-          @expression = result.expression
-          result = result.select("_score = rand()", :syntax => :script)
-        else
-          result = entries.select do |record|
-            conditions.collect do |condition|
-              condition.call(record)
-            end.flatten
-          end
-          @expression = result.expression
-          @drilldown_items = drilldown_items(result)
+        result = entries.select do |record|
+          conditions.collect do |condition|
+            condition.call(record)
+          end.flatten
         end
+        @expression = result.expression
+        @drilldown_items = drilldown_items(result)
         @entries = result.paginate([["_score", :descending],
                                     ["label", :ascending]],
                                    :page => ensure_page(result.size),
