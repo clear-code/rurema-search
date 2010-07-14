@@ -113,6 +113,34 @@ module RuremaSearch
         tag("a", attributes.merge(:href => href), label)
       end
 
+      def link_version_select(select_version)
+        label = h(select_version == :all ? "すべて" : select_version)
+        if (version == select_version) or
+            (version.nil? and select_version == :all)
+          tag("span", {:class => "version-select-text"}, label)
+        else
+          href = version_select_href(select_version)
+          if href.empty?
+            href = top_path
+          else
+            href = full_path(href)
+          end
+          a(label, href, :class => "version-select-link")
+        end
+      end
+
+      def version_select_href(version)
+        if version == :all
+          "../"
+        else
+          parameter_link_href("version", version)
+        end
+      end
+
+      def parameter_link_href(key, value)
+        "#{key}:#{u(value)}/"
+      end
+
       def tag(name, attributes={}, content=nil)
         _tag = "<#{name}"
         attributes.each do |key, value|
@@ -142,6 +170,20 @@ module RuremaSearch
           ""
         end
       end
+
+      DOCUMENT_OPTIONS_KEY = "rurema-search.document.options"
+      def document_options
+        @document_options ||= @request.env[DOCUMENT_OPTIONS_KEY] || {}
+      end
+
+      def create_url_mapper(version)
+        base_url = document_options["base_url"] || base_path
+        if document_options["remove_dot_from_version"]
+          version = version.gsub(/\./, '')
+        end
+        RuremaSearch::URLMapper.new(:base_url => base_url,
+                                    :version => version)
+      end
     end
 
     include Rack::Utils
@@ -155,6 +197,7 @@ module RuremaSearch
     end
 
     def call(env)
+      env[PageUtils::DOCUMENT_OPTIONS_KEY] = @options[:document]
       request = Rack::Request.new(normalize_environment(env))
       response = Rack::Response.new
       response["Content-Type"] = "text/html; charset=UTF-8"
@@ -183,18 +226,17 @@ module RuremaSearch
 
     private
     def dispatch(request, response)
-      if open_search_description_path?(request.path_info)
-        page = OpenSearchDescriptionPage.new(request, response)
-      else
-        page = SearchPage.new(@database, request, response, @options[:document])
-      end
+      dispatcher = Dispatcher.new(@database, request, response)
+      page = dispatcher.dispatch
       page.extend(@view)
       page.process
     end
 
     def setup_view
       @view = Module.new
-      ["layout", "search", "search_result", "search_no_result",
+      ["layout", "version_select",
+       "index",
+       "search_header", "search", "search_result", "search_no_result",
        "error", "analytics",
        ["open_search_description", "xml"]].each do |template_name, extension|
         template = create_template(template_name, extension)
@@ -252,15 +294,75 @@ module RuremaSearch
       end
     end
 
+    class Dispatcher
+      include PageUtils
+
+      def initialize(database, request, response)
+        @database = database
+        @request = request
+        @response = response
+      end
+
+      def dispatch
+        if open_search_description_path?(@request.path_info)
+          OpenSearchDescriptionPage.new(@request, @response)
+        else
+          case @request.path_info
+          when /\A\/(?:version:([^\/]+)\/)?\z/
+            version = $1
+            IndexPage.new(@database, version, @request, @response)
+          else
+            SearchPage.new(@database, @request, @response)
+          end
+        end
+      end
+    end
+
+    class IndexPage
+      include PageUtils
+
+      def initialize(database, version, request, response)
+        @database = database
+        @version = version
+        @request = request
+        @response = response
+      end
+
+      def process
+        @versions = @database.versions
+        @response.write(layout)
+      end
+
+      private
+      def header
+        ""
+      end
+
+      def body
+        index
+      end
+
+      def title
+        site_title
+      end
+
+      def version
+        @version
+      end
+
+      def query
+        ""
+      end
+    end
+
     class SearchPage
       include PageUtils
 
-      def initialize(database, request, response, document_options=nil)
+      def initialize(database, request, response)
         @database = database
         @request = request
         @response = response
         @url_mappers = {}
-        @document_options = document_options || {}
       end
 
       def process
@@ -293,6 +395,10 @@ module RuremaSearch
       end
 
       private
+      def header
+        search_header
+      end
+
       def body
         search
       end
@@ -501,10 +607,6 @@ module RuremaSearch
         "#{parameter_label(key)}:#{parameter_value_label(key, value)}"
       end
 
-      def parameter_link_href(key, value)
-        "#{key}:#{u(value)}/"
-      end
-
       def topic_path
         elements = []
         n_elements = @ordered_parameters.size
@@ -560,22 +662,6 @@ module RuremaSearch
           excluded_path << parameter_link_href(key, value)
         end
         excluded_path
-      end
-
-      def link_version_select(select_version)
-        label = h(select_version == :all ? "すべて" : select_version)
-        if (version == select_version) or
-            (version.nil? and select_version == :all)
-          tag("span", {:class => "version-select-text"}, label)
-        else
-          href = version_select_href(select_version)
-          if href.empty?
-            href = top_path
-          else
-            href = full_path(href)
-          end
-          a(label, href, :class => "version-select-link")
-        end
       end
 
       def version_select_href(version)
@@ -812,15 +898,6 @@ module RuremaSearch
         @url_mappers[version] ||= create_url_mapper(version)
       end
 
-      def create_url_mapper(version)
-        base_url = @document_options["base_url"] || base_path
-        if @document_options["remove_dot_from_version"]
-          version = version.gsub(/\./, '')
-        end
-        RuremaSearch::URLMapper.new(:base_url => base_url,
-                                    :version => version)
-      end
-
       def paginate
         return unless @entries.have_pages?
         _paginate = ['']
@@ -942,6 +1019,10 @@ module RuremaSearch
 
       def query
         ""
+      end
+
+      def header
+        "<h1>#{h1}</h1>"
       end
 
       def body

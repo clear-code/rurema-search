@@ -66,7 +66,6 @@ div.content div.version-select
 {
   margin: 0;
   padding: 0;
-  border-bottom: 1px solid #c1c1ec;
 }
 
 div.content div.version-select ul,
@@ -91,6 +90,62 @@ div.content div.version-select ul li a
 {
   padding-left: 0.5em;
   padding-right: 0.5em;
+}
+
+div.content div.top-search-form
+{
+  width: 30em;
+  margin: 70px auto;
+}
+
+div.content div.top-search-form h1
+{
+  text-align: center;
+  margin-right: 40px;
+}
+
+div.content div.top-search-form h1 a img
+{
+  border-style: none;
+}
+
+div.content div.top-search-form p
+{
+  text-align: center;
+  padding: 0;
+  margin: 10px 0;
+}
+
+div.content div.top-search-form p.input-form input
+{
+  width: 30em;
+}
+
+div.content div.top-search-form p.button input
+{
+  width: 10em;
+}
+
+div.content div.top-search-form div.version-select ul
+{
+  text-align: center;
+}
+
+div.content div.top-search-form div.version-select ul li.version-select-current span
+{
+  padding-left: 20px;
+  background: url(../images/version-icon.png) no-repeat left bottom;
+}
+
+div.content div.search-header div.version-select
+{
+  margin-bottom: -2px;
+  border-bottom: 1px solid #c1c1ec;
+}
+
+div.content div.search-header div.version-select ul li span,
+div.content div.search-header div.version-select ul li a
+{
   border: 1px solid #c1c1ec;
   border-bottom-color: #e9e9f8;
   -moz-border-radius: 5px 5px 0 0;
@@ -99,19 +154,19 @@ div.content div.version-select ul li a
   /* margin-right: -5px; */ /* This will be broken on IE. (not confirmed) */
 }
 
-div.content div.version-select ul li span
+div.content div.search-header div.version-select ul li span
 {
   color: white;
   background-color: #4c4cc6;
 }
 
-div.content div.version-select ul li a
+div.content div.search-header div.version-select ul li a
 {
   text-decoration: none;
 }
 
-div.content div.version-select ul li a:hover,
-div.content div.version-select ul li a:focus
+div.content div.search-header div.version-select ul li a:hover,
+div.content div.search-header div.version-select ul li a:focus
 {
   color: white;
   background-color: #4c4cc6;

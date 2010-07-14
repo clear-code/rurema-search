@@ -1,28 +1,19 @@
-<div class="version-select">
-  <ul>
-    <li class="version-select<%= version.nil? ? '-current' : '' %>">
-      <%= link_version_select(:all) %>
-    </li>
-<% @versions.each do |_version| %>
-    <li class="version-select<%= version == _version.key ? '-current' : '' %>">
-      <%= link_version_select(_version.key) %>
-    </li>
-<% end %>
-  </ul>
-</div>
+<div class="search-header">
+  <%= version_select %>
 
-<div class="statistics">
-  <span class="total"><%= h("#{@entries.n_records}件ヒット") %></span>
-<% unless @entries.n_records.zero? %>
-  <span class="showen-records">
-    <%= h("[#{@entries.start_offset}-#{@entries.end_offset}件を表示]") %>
-  </span>
-<% end %>
-  <span class="elapsed-time"><%= h("（%.3f秒）" % @elapsed_time) %></span>
-</div>
+  <div class="statistics">
+    <span class="total"><%= h("#{@entries.n_records}件ヒット") %></span>
+  <% unless @entries.n_records.zero? %>
+    <span class="showen-records">
+      <%= h("[#{@entries.start_offset}-#{@entries.end_offset}件を表示]") %>
+    </span>
+  <% end %>
+    <span class="elapsed-time"><%= h("（%.3f秒）" % @elapsed_time) %></span>
+  </div>
 
-<div class="topic-path">
-  <%= topic_path %>
+  <div class="topic-path">
+    <%= topic_path %>
+  </div>
 </div>
 
 <div class="search-result">

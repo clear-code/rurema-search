@@ -1,0 +1,14 @@
+<div class="top-search-form">
+  <h1><%= h1 %></h1>
+
+  <%= version_select %>
+
+  <form method="POST" action="./">
+    <p class="input-form">
+      <input type="text" class="query" name="query" value="<%= h(query) %>" />
+    </p>
+    <p class="button">
+      <input type="submit" value="検索" />
+    </p>
+  </form>
+</div>

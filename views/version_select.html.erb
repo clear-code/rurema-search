@@ -1,0 +1,12 @@
+<div class="version-select">
+  <ul>
+    <li class="version-select<%= version.nil? ? '-current' : '' %>">
+      <%= link_version_select(:all) %>
+    </li>
+<% @versions.each do |_version| %>
+    <li class="version-select<%= version == _version.key ? '-current' : '' %>">
+      <%= link_version_select(_version.key) %>
+    </li>
+<% end %>
+  </ul>
+</div>
