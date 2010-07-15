@@ -20,10 +20,12 @@
 
   <form method="POST" action="./">
     <p class="input-form">
-      <input type="text" class="query" name="query" value="<%= h(query) %>" />
+      <input id="query-input" type="text" class="query" name="query"
+             value="<%= h(query) %>" />
     </p>
     <p class="button">
       <input type="submit" value="検索" />
     </p>
   </form>
+  <script type="text/javascript">$("#query-input").focus();</script>
 </div>

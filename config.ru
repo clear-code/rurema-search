@@ -62,7 +62,7 @@ use Rack::CommonLogger
 use Rack::Runtime
 use Rack::ContentLength
 
-urls = ["/favicon.", "/css/", "/images/", "/js/", "/1.8.", "/1.9."]
+urls = ["/favicon.", "/css/", "/images/", "/javascripts/", "/1.8.", "/1.9."]
 
 searcher = RuremaSearch::GroongaSearcher.new(database,
                                              base_dir.to_s,
