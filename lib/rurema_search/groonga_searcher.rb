@@ -204,6 +204,26 @@ module RuremaSearch
         end
       end
 
+      PARAMETER_LABELS = {
+        "query" => "クエリ",
+        "version" => "バージョン",
+        "type" => "種類",
+        "module" => "モジュール",
+        "class" => "クラス",
+        "object" => "オブジェクト",
+        "instance-method" => "インスタンスメソッド",
+        "singleton-method" => "シングルトンメソッド",
+        "module-function" => "モジュールファンクション",
+        "constant" => "定数",
+        "variable" => "変数",
+        "library" => "ライブラリ",
+        "function" => "関数",
+        "macro" => "マクロ",
+      }
+      def parameter_label(key)
+	PARAMETER_LABELS[key] || key
+      end
+
       LIBRARY_LABELS = {"_builtin" => "ビルトイン"}
       def library_label(label)
         LIBRARY_LABELS[label] || label
@@ -421,7 +441,11 @@ module RuremaSearch
       end
 
       def title
-        site_title
+        if version == :all
+          site_title
+        else
+          "Ruby #{version} | #{site_title}"
+        end
       end
 
       def version
@@ -558,26 +582,6 @@ module RuremaSearch
         unescaped_value = URI.unescape(value)
         unescaped_value = URI.unescape(unescaped_value) if thin?
         unescaped_value.gsub(/\+/, ' ').strip
-      end
-
-      PARAMETER_LABELS = {
-        "query" => "クエリ",
-        "version" => "バージョン",
-        "type" => "種類",
-        "module" => "モジュール",
-        "class" => "クラス",
-        "object" => "オブジェクト",
-        "instance-method" => "インスタンスメソッド",
-        "singleton-method" => "シングルトンメソッド",
-        "module-function" => "モジュールファンクション",
-        "constant" => "定数",
-        "variable" => "変数",
-        "library" => "ライブラリ",
-        "function" => "関数",
-        "macro" => "マクロ",
-      }
-      def parameter_label(key)
-	PARAMETER_LABELS[key] || key
       end
 
       def n_entries_per_page
