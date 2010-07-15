@@ -64,8 +64,8 @@ div.content
 
 div.content div.top-search-form
 {
-  width: 50em;
-  margin: 70px auto;
+  width: 40em;
+  margin: 70px auto 35px;
 }
 
 div.content div.top-search-form h1
@@ -121,6 +121,56 @@ div.content div.top-search-form table.version-select td span
 {
   font-size: x-small;
   color: #999;
+}
+
+div.content div.built-in-classes-sort-by-frequency,
+div.content div.built-in-classes-sort-by-name
+{
+  margin: 30px auto;
+  width: 40em;
+}
+
+div.content div.built-in-classes-sort-by-frequency h2,
+div.content div.built-in-classes-sort-by-name h2
+{
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+div.content div.built-in-classes-sort-by-frequency dl,
+div.content div.built-in-classes-sort-by-name dl
+{
+  margin: 0;
+  padding: 0;
+}
+
+div.content div.built-in-classes-sort-by-frequency dl dt,
+div.content div.built-in-classes-sort-by-name dl dt
+{
+  clear: both;
+  float: left;
+  width: 5em;
+}
+
+div.content div.built-in-classes-sort-by-frequency dl dd,
+div.content div.built-in-classes-sort-by-name dl dd
+{
+  margin-left: 5em;
+  padding: 0;
+}
+
+div.content div.built-in-classes-sort-by-frequency ol,
+div.content div.built-in-classes-sort-by-name ol
+{
+  margin: 0;
+  padding: 0;
+}
+
+div.content div.built-in-classes-sort-by-frequency ol li,
+div.content div.built-in-classes-sort-by-name ol li
+{
+  display: inline;
 }
 
 div.content div.search-header div.version-select

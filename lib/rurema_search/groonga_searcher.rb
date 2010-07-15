@@ -141,6 +141,74 @@ module RuremaSearch
         "#{key}:#{u(value)}/"
       end
 
+      def link_entry(entry, options={})
+        a(options[:label] || entry_label(entry), entry_href(entry))
+      end
+
+      def link_entry_if(boolean, entry, options={})
+        if boolean
+          link_entry(entry, options)
+        else
+          options[:label] || entry_label(entry)
+        end
+      end
+
+      def make_breakable(escaped_string)
+        escaped_string.gsub(/(::|\.|\.?#|\(\|\)|,|_|\$)/, "<wbr />\\1<wbr />")
+      end
+
+      def entry_label(entry)
+        make_breakable(h(entry.label))
+      end
+
+      def entry_href(entry)
+        mapper = url_mapper(entry.version.key)
+        case entry.type.key
+        when "class", "module", "object"
+          mapper.class_url(entry.name)
+        when "constant", "variable", "instance-method", "module-function",
+               "singleton-method"
+          mapper.method_url(entry.name)
+        when "document"
+          mapper.document_url(entry.name)
+        when "library"
+          mapper.library_url(entry.name)
+        when "function", "macro"
+          mapper.function_url(entry.name)
+        else
+          "/#{entry.type.key}"
+        end
+      end
+
+      def link_drilldown_item(key, record)
+        if key == "type"
+          link_type_raw(record[:label])
+        else
+          label = record[:label]
+          label = library_label(label) if key == "library"
+          a(make_breakable(h(label)),
+            "./#{parameter_link_href(key, record[:label])}")
+        end
+      end
+
+      def link_type(entry)
+        link_type_raw(entry.type.key)
+      end
+
+      def link_type_raw(linked_type)
+        label = h(type_label(linked_type))
+        if type == linked_type
+          label
+        else
+          a(label, "./#{parameter_link_href('type', linked_type)}")
+        end
+      end
+
+      LIBRARY_LABELS = {"_builtin" => "ビルトイン"}
+      def library_label(label)
+        LIBRARY_LABELS[label] || label
+      end
+
       def tag(name, attributes={}, content=nil)
         _tag = "<#{name}"
         attributes.each do |key, value|
@@ -329,14 +397,17 @@ module RuremaSearch
       end
 
       def process
-        @versions = @database.entries.group("version").sort(["_key"],
-                                                            :limit => -1)
+        entries = @database.entries
+        @versions = entries.group("version").sort(["_key"], :limit => -1)
         @version_names = [:all]
-        @version_n_entries = [@database.entries.size]
+        @version_n_entries = [entries.size]
         @versions.each do |version|
           @version_names << version.key.key
           @version_n_entries << version.n_sub_records
         end
+
+        prepare_built_in_classes(entries)
+
         @response.write(layout)
       end
 
@@ -359,6 +430,56 @@ module RuremaSearch
 
       def query
         ""
+      end
+
+      def prepare_built_in_classes(entries)
+        built_in_classes = entries.select do |record|
+          record.library == "_builtin"
+        end.group("class")
+
+        sort_and_group = Proc.new do |*args, &block|
+          built_in_classes.sort(*args).select do |record|
+            record.n_sub_records > 25
+          end.group_by(&block).sort_by do |(key, classes)|
+            representing_value, label = key
+            representing_value
+          end.collect do |(key, classes)|
+            representing_value, label = key
+            [label, classes]
+          end
+        end
+
+        sorted_classes = sort_and_group.call(["_key"]) do |record|
+          case record.key.key[0]
+          when "A"..."F"
+            ["A", "A〜E"]
+          when "F"..."K"
+            ["F", "F〜J"]
+          when "K"..."P"
+            ["K", "K〜O"]
+          when "P"..."U"
+            ["P", "P〜T"]
+          else
+            ["U", "U〜Z"]
+          end
+        end
+        @built_in_classes_sort_by_name = sorted_classes
+
+        sorted_classes = sort_and_group.call([["_nsubrecs", :descending],
+                                              ["_key"]],
+                                             :limit => 20) do |record|
+          case record.n_sub_records
+          when 0...101
+            [-100, "〜100件"]
+          when 101...201
+            [-200, "〜200件"]
+          when 201...301
+            [-300, "〜300件"]
+          else
+            [-301, "300件〜"]
+          end
+        end
+        @built_in_classes_sort_by_frequency = sorted_classes
       end
     end
 
@@ -680,69 +801,6 @@ module RuremaSearch
         end.join
       end
 
-      def link_entry(entry, options={})
-        a(options[:label] || entry_label(entry), entry_href(entry))
-      end
-
-      def link_entry_if(boolean, entry, options={})
-        if boolean
-          link_entry(entry, options)
-        else
-          options[:label] || entry_label(entry)
-        end
-      end
-
-      def make_breakable(escaped_string)
-        escaped_string.gsub(/(::|\.|\.?#|\(\|\)|,|_|\$)/, "<wbr />\\1<wbr />")
-      end
-
-      def entry_label(entry)
-        make_breakable(h(entry.label))
-      end
-
-      def entry_href(entry)
-        mapper = url_mapper(entry.version.key)
-        case entry.type.key
-        when "class", "module", "object"
-          mapper.class_url(entry.name)
-        when "constant", "variable", "instance-method", "module-function",
-               "singleton-method"
-          mapper.method_url(entry.name)
-        when "document"
-          mapper.document_url(entry.name)
-        when "library"
-          mapper.library_url(entry.name)
-        when "function", "macro"
-          mapper.function_url(entry.name)
-        else
-          "/#{entry.type.key}"
-        end
-      end
-
-      def link_drilldown_item(key, record)
-        if key == "type"
-          link_type_raw(record[:label])
-        else
-          label = record[:label]
-          label = library_label(label) if key == "library"
-          a(make_breakable(h(label)),
-            "./#{parameter_link_href(key, record[:label])}")
-        end
-      end
-
-      def link_type(entry)
-        link_type_raw(entry.type.key)
-      end
-
-      def link_type_raw(linked_type)
-        label = h(type_label(linked_type))
-        if type == linked_type
-          label
-        else
-          a(label, "./#{parameter_link_href('type', linked_type)}")
-        end
-      end
-
       TYPE_LABELS = {
         "class" => "クラス",
         "module" => "モジュール",
@@ -759,11 +817,6 @@ module RuremaSearch
       }
       def type_label(type)
         TYPE_LABELS[type] || type
-      end
-
-      LIBRARY_LABELS = {"_builtin" => "ビルトイン"}
-      def library_label(label)
-        LIBRARY_LABELS[label] || label
       end
 
       def link_version(entry)
