@@ -434,7 +434,10 @@ module RuremaSearch
 
       def prepare_built_in_classes(entries)
         built_in_classes = entries.select do |record|
-          record.library == "_builtin"
+          conditions = []
+          conditions << (record.library == "_builtin")
+          conditions << (record.version == version) unless version == :all
+          conditions
         end.group("class")
 
         sort_and_group = Proc.new do |*args, &block|
