@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+#
+# Copyright (c) 2010 Kouhei Sutou <kou@clear-code.com>
+#
+# License: GPLv3+
+
+require 'pathname'
+
+base_dir = Pathname.new(__FILE__).dirname.parent.cleanpath.realpath
+
+rroonga_dir = base_dir.parent + "rroonga"
+rroonga_lib_dir = rroonga_dir + "lib"
+rroonga_ext_dir = rroonga_dir + "ext" + "groonga"
+racknga_dir = base_dir.parent + "racknga"
+racknga_lib_dir = racknga_dir + "lib"
+
+$LOAD_PATH.unshift(rroonga_ext_dir.to_s)
+$LOAD_PATH.unshift(rroonga_lib_dir.to_s)
+$LOAD_PATH.unshift(racknga_lib_dir.to_s)
+
+require 'racknga'
+
+cache_database_path = base_dir + "var" + "cache" + "db"
+cache_database = Racknga::CacheDatabase.new(cache_database_path.to_s)
+cache_database.purge_old_responses

@@ -7,6 +7,7 @@ rubydoc_dir=${base_dir}/../rubydoc
 update_rurema=yes
 update_index=yes
 reset_index=no
+clear_cache=no
 for argument in $*; do
     case "$argument" in
 	"--no-update-rurema")
@@ -17,6 +18,9 @@ for argument in $*; do
 	    ;;
 	"--reset-index")
 	    reset_index=yes
+	    ;;
+	"--no-clear-cache")
+	    clear_cache=no
 	    ;;
     esac
 done
@@ -67,4 +71,8 @@ if [ "$update_index" = "yes" ]; then
 	${base_dir}/bin/bitclust-indexer \
 	${indexer_arguments} \
 	${base_dir}/db-*
+fi
+
+if [ "$clear_cache" = "yes" ]; then
+    ruby1.9.1 ${base_dir}/bin/rurema-search-clear-cache
 fi
