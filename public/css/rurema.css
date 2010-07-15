@@ -133,6 +133,7 @@ div.content div.built-in-classes-sort-by-name
 div.content div.built-in-classes-sort-by-frequency h2,
 div.content div.built-in-classes-sort-by-name h2
 {
+  font-size: larger;
   text-align: center;
   margin: 0;
   padding: 0;
