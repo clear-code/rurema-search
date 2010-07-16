@@ -93,6 +93,12 @@ div.content div.top-search-form h1 a img
   border-style: none;
 }
 
+div.content div.top-search-form h2
+{
+  text-align: center;
+  font-size: normal;
+}
+
 div.content div.top-search-form p
 {
   text-align: center;

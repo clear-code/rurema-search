@@ -54,6 +54,10 @@ module RuremaSearch
         "Rubyのリファレンスマニュアルを検索"
       end
 
+      def catch_phrase
+        "Rubyでgroonga使ってRubyのリファレンスマニュアルを全文検索！"
+      end
+
       def open_search_description_path
         _version = version
         if _version
