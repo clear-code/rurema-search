@@ -37,6 +37,7 @@ $LOAD_PATH.unshift(racknga_lib_dir.to_s)
 $LOAD_PATH.unshift(lib_dir.to_s)
 
 require 'racknga'
+require 'racknga/middleware/cache'
 
 require 'rurema_search'
 require 'rurema_search/groonga_searcher'
