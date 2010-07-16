@@ -7,7 +7,7 @@ rubydoc_dir=${base_dir}/../rubydoc
 update_rurema=yes
 update_index=yes
 reset_index=no
-clear_cache=no
+clear_cache=yes
 for argument in $*; do
     case "$argument" in
 	"--no-update-rurema")
