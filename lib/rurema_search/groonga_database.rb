@@ -54,6 +54,10 @@ module RuremaSearch
       @database.nil? or @database.closed?
     end
 
+    def names
+      @names ||= Groonga["Names"]
+    end
+
     def entries
       @entries ||= Groonga["Entries"]
     end
@@ -134,6 +138,11 @@ module RuremaSearch
 
     def populate_schema
       Groonga::Schema.define do |schema|
+        schema.create_table("Names",
+                            :type => :patricia_trie,
+                            :key_type => "ShortText") do |table|
+        end
+
         schema.create_table("LocalNames",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
@@ -206,11 +215,12 @@ module RuremaSearch
         schema.create_table("Entries",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
-          table.short_text("name")
+          table.reference("name", "Names")
           table.reference("local_name", "LocalNames")
           table.short_text("label")
           table.text("document")
           table.text("signature")
+          table.text("summary")
           table.text("description")
           table.reference("type", "Types")
           table.reference("class", "Classes")
@@ -219,6 +229,7 @@ module RuremaSearch
           table.reference("library", "Libraries")
           table.reference("version", "Versions")
           table.reference("visibility", "Visibilities")
+          table.reference("related_names", "Names", :type => :vector)
           table.time("last_modified")
         end
 
@@ -233,11 +244,15 @@ module RuremaSearch
                             :key_type => "ShortText",
                             :default_tokenizer => "TokenBigram",
                             :key_normalize => true) do |table|
-          table.index("Entries.name")
           table.index("Entries.label")
           table.index("Entries.document")
           table.index("Entries.signature")
+          table.index("Entries.summary")
           table.index("Entries.description")
+        end
+
+        schema.change_table("Names") do |table|
+          table.index("Entries.name")
         end
 
         schema.change_table("LocalNames") do |table|

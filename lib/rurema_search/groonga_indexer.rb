@@ -158,6 +158,8 @@ module RuremaSearch
 
     def add_entry(key, attributes)
       attributes[:last_modified] = @base_time
+      extracted_attributes = extract_attributes(attributes[:description])
+      attributes = extracted_attributes.merge(attributes)
       @database.entries.add(key, attributes)
     end
 
@@ -166,8 +168,14 @@ module RuremaSearch
     end
 
     def foreach_method_chunk(source, &block)
-      @screen ||= BitClust::TemplateScreen.new(:database => @method_database)
-      @screen.send(:foreach_method_chunk, source, &block)
+      input = LineInput.for_string(source)
+      while input.next?
+        signatures = input.span(/\A---/).collect do |line|
+          BitClust::MethodSignature.parse(line.rstrip)
+        end
+        body = input.break(/\A---/).join
+        yield signatures, body
+      end
     end
 
     def entry_source(entry)
@@ -176,6 +184,47 @@ module RuremaSearch
         source.force_encoding(@method_database.encoding)
       end
       source
+    end
+
+    def extract_attributes(source)
+      extractor = RDAttributesExtractor.new
+      extractor.extract(source)
+    end
+
+    class RDAttributesExtractor < BitClust::RDCompiler
+      def initialize
+        super(nil)
+      end
+
+      def extract(src)
+        @related_names = []
+        compile(src)
+        {
+          :summary => src.split(/\n\n/, 2).first,
+          :related_names => @related_names
+        }
+      end
+
+      private
+      def library_link(name, label=nil, fragment=nil)
+        @related_names << name
+      end
+
+      def class_link(name, label=nil, fragment=nil)
+        @related_names << name
+      end
+
+      def method_link(spec, label=nil, fragment=nil)
+        @related_names << spec
+      end
+
+      def function_link(name, label=nil, fragment=nil)
+        @related_names << name
+      end
+
+      def document_link(name, label=nil, fragment=nil)
+        @related_names << name
+      end
     end
   end
 end

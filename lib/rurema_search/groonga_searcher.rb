@@ -166,19 +166,20 @@ module RuremaSearch
       end
 
       def entry_href(entry)
+        name = entry.name.key
         mapper = url_mapper(entry.version.key)
         case entry.type.key
         when "class", "module", "object"
-          mapper.class_url(entry.name)
+          mapper.class_url(name)
         when "constant", "variable", "instance-method", "module-function",
                "singleton-method"
-          mapper.method_url(entry.name)
+          mapper.method_url(name)
         when "document"
-          mapper.document_url(entry.name)
+          mapper.document_url(name)
         when "library"
-          mapper.library_url(entry.name)
+          mapper.library_url(name)
         when "function", "macro"
-          mapper.function_url(entry.name)
+          mapper.function_url(name)
         else
           "/#{entry.type.key}"
         end
@@ -631,8 +632,10 @@ module RuremaSearch
               target = record.match_target do |match_record|
                 (match_record["local_name"] * 1000) |
                   (match_record["name"] * 100) |
-                  (match_record["signature"] * 10) |
-                  (match_record["description"])
+                  (match_record["signature"] * 50) |
+                  (match_record["summary"] * 25) |
+                  (match_record["description"] * 10) |
+                  (match_record["document"])
               end
               value.split.collect do |word|
                 target =~ word
@@ -640,8 +643,8 @@ module RuremaSearch
             end
           when "instance-method", "singleton-method", "module-function",
             "constant"
-            conditions << equal_condition("name", value)
             conditions << equal_condition("type", key)
+            conditions << equal_condition("name._key", value)
           else
             conditions << equal_condition(key, value)
           end
@@ -758,7 +761,7 @@ module RuremaSearch
         return "" if elements.empty?
 
         elements.unshift(tag("span", {:class => "all-items"},
-                             a(h("全件表示"), top_path)))
+                             a(h("トップページ"), top_path)))
         elements.collect do |element|
           tag("span", {:class => "topic-element"}, element)
         end.join(h(" > "))
@@ -844,7 +847,7 @@ module RuremaSearch
         300
       end
 
-      def format_description(entry)
+      def snippet_description(entry)
         @snippet ||= create_snippet
         description = remove_markup(entry.description)
         snippet_description = nil
@@ -857,13 +860,6 @@ module RuremaSearch
                   "#{separator}#{snippet}#{separator}")
             end
             snippet_description = snippets.join("")
-          end
-        end
-        if snippet_description.nil? and description and !description.empty?
-          if description.size > snippet_width
-            snippet_description = h(description[0, snippet_width] + "...")
-          else
-            snippet_description = h(description)
           end
         end
         tag("div", {:class => "snippets"}, snippet_description)
@@ -895,56 +891,42 @@ module RuremaSearch
       end
 
       def collect_related_entries(entries)
-        _related_entries = []
+        _related_entries = {}
         entries.each do |entry|
-          _related_entries.concat(related_entries(entry))
+          related_entries(entry, _related_entries)
         end
-        uniq_entries = {}
-        _related_entries.each do |_entry|
-          uniq_entries[_entry.key] = _entry
-        end
-        uniq_entries.values.sort_by do |_entry|
-          _entry.key
+        _related_entries.values.sort_by do |_entry|
+          _entry[:key]
         end
       end
 
-      def related_entries(entry)
-        entries = []
+      def related_entries(entry, entries={})
+        entries ||= {}
         ["class", "module", "object"].each do |type|
-          add_related_entry(entries, entry[type], @parameters[type])
+          related_entry = entry[type]
+          next if related_entry.nil?
+          current_value = @parameters[type]
+          next if related_entry.key == current_value
+          entries[related_entry.key] = {
+            :key => related_entry.key,
+            :label => related_entry.key,
+            :type => type,
+          }
         end
-        description = entry.description
-        if description
-          @database.specs.scan(description) do |record, word, start, length|
-            current_value = @parameters[record.type.key]
-            next if record.key == current_value
-            entries << record
-          end
+        entry.related_names.each do |name|
+          entries[name.key] = {
+            :key => name.key,
+            :label => name.key,
+            :type => "query",
+          }
         end
-        uniq_entries = {}
-        entries.each do |_entry|
-          uniq_entries[_entry.key] = _entry
-        end
-        uniq_entries.values.sort_by do |_entry|
-          _entry.key
-        end
-      end
-
-      def add_related_entry(entries, related_entry, current_value)
-        return if related_entry.nil?
-        return if related_entry.key == current_value
-        entries << related_entry
+        entries
       end
 
       def link_related_entry(related_entry)
-        if related_entry.have_column?("label")
-          key = related_entry.name
-          label = related_entry.label
-        else
-          key = related_entry.key
-          label = related_entry.key
-        end
-        type = related_entry.type.key
+        key = related_entry[:key]
+        label = related_entry[:label]
+        type = related_entry[:type]
         if @parameters[type]
           href = "/"
           @ordered_parameters.each do |_key, _value|

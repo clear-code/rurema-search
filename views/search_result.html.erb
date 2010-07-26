@@ -23,12 +23,15 @@
       <span class="score">(<%= h(represent_entry.score) %>)</span>
     </dt>
     <dd>
+      <div class="entry-summary">
+        <p><%= h(remove_markup(represent_entry.summary)) %></p>
+      </div>
 <%    entries.each do |entry| %>
       <div class="entry-description">
         <span class="entry-version">
           <%= link_entry(entry, :label => h(entry.version.key)) %>
         </span>
-        <%= format_description(entry) %>
+        <%= snippet_description(entry) %>
       </div>
 <%    end %>
       <ul class="entry-metadata">
@@ -41,7 +44,7 @@
       <ul class="entry-related-entries">
 <%    collect_related_entries(entries).each_with_index do |related_entry, j| %>
 <%      if j < 20 %>
-        <li class="entry-related-entry-<%= h(related_entry.type.key) %>">
+        <li class="entry-related-entry-<%= h(related_entry[:type]) %>">
           <%= link_related_entry(related_entry) %>
         </li>
 <%      else %>
