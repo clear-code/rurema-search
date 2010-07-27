@@ -37,6 +37,7 @@ $LOAD_PATH.unshift(racknga_lib_dir.to_s)
 $LOAD_PATH.unshift(lib_dir.to_s)
 
 require 'racknga'
+require 'racknga/middleware/log'
 require 'racknga/middleware/cache'
 
 require 'rurema_search'
@@ -49,15 +50,25 @@ environment = ENV["RACK_ENV"] || "development"
 
 searcher_options = {}
 
-load_yaml = Proc.new do |key, file_name|
+load_yaml = Proc.new do |file_name|
   configuration_file = base_dir + file_name
   if configuration_file.exist?
     require 'yaml'
-    searcher_options[key] = YAML.load(configuration_file.read)
+    YAML.load(configuration_file.read)
+  else
+    nil
   end
 end
 
-load_yaml.call(:document, "document.yaml")
+load_searcher_option = Proc.new do |key, file_name|
+  configuration = load_yaml.call(file_name)
+  if configuration
+    require 'yaml'
+    searcher_options[key] = configuration
+  end
+end
+
+load_searcher_option.call(:document, "document.yaml")
 
 use Rack::CommonLogger
 use Rack::Runtime
@@ -102,7 +113,7 @@ when "production"
   end
   use show_error_page, :searcher => searcher
 
-  load_yaml.call(:smtp, "smtp.yaml")
+  load_searcher_option.call(:smtp, "smtp.yaml")
   notifiers = [Racknga::ExceptionMailNotifier.new(searcher_options[:smtp])]
   use Racknga::Middleware::ExceptionNotifier, :notifiers => notifiers
 end
@@ -114,8 +125,15 @@ use Rack::ConditionalGet
 
 case environment
 when "production"
-  cache_database_path = base_dir + "var" + "cache" + "db"
-  use Racknga::Middleware::Cache, :database_path => cache_database_path.to_s
+  configuration = load_yaml.call("production.yaml") || {}
+  if configuration[:use_log]
+    log_database_path = base_dir + "var" + "log" + "db"
+    use Racknga::Middleware::Log, :database_path => log_database_path.to_s
+  end
+  if configuration[:use_cache]
+    cache_database_path = base_dir + "var" + "cache" + "db"
+    use Racknga::Middleware::Cache, :database_path => cache_database_path.to_s
+  end
 end
 
 use Rack::Lint
