@@ -126,11 +126,11 @@ use Rack::ConditionalGet
 case environment
 when "production"
   configuration = load_yaml.call("production.yaml") || {}
-  if configuration[:use_log]
+  if configuration["use_log"]
     log_database_path = base_dir + "var" + "log" + "db"
     use Racknga::Middleware::Log, :database_path => log_database_path.to_s
   end
-  if configuration[:use_cache]
+  if configuration["use_cache"]
     cache_database_path = base_dir + "var" + "cache" + "db"
     use Racknga::Middleware::Cache, :database_path => cache_database_path.to_s
   end
