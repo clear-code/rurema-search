@@ -70,6 +70,13 @@ end
 
 load_searcher_option.call(:document, "document.yaml")
 
+configuration = load_yaml.call("#{environment}.yaml") || {}
+
+if configuration["use_log"]
+  log_database_path = base_dir + "var" + "log" + "db"
+  use Racknga::Middleware::Log, :database_path => log_database_path.to_s
+end
+
 use Rack::CommonLogger
 use Rack::Runtime
 use Rack::ContentLength
@@ -123,17 +130,9 @@ use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
 use Racknga::Middleware::Deflater
 use Rack::ConditionalGet
 
-case environment
-when "production"
-  configuration = load_yaml.call("production.yaml") || {}
-  if configuration["use_log"]
-    log_database_path = base_dir + "var" + "log" + "db"
-    use Racknga::Middleware::Log, :database_path => log_database_path.to_s
-  end
-  if configuration["use_cache"]
-    cache_database_path = base_dir + "var" + "cache" + "db"
-    use Racknga::Middleware::Cache, :database_path => cache_database_path.to_s
-  end
+if configuration["use_cache"]
+  cache_database_path = base_dir + "var" + "cache" + "db"
+  use Racknga::Middleware::Cache, :database_path => cache_database_path.to_s
 end
 
 use Rack::Lint
