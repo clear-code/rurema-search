@@ -185,6 +185,36 @@ module RuremaSearch
         end
       end
 
+      def drilldown_item(entries, drilldown_column, label_column)
+        result = entries.group(drilldown_column)
+        result = result.sort([["_nsubrecs", :descending]], :limit => 10)
+        result.collect do |record|
+          label = record[label_column]
+          {
+            :label => label,
+            :n_records => record.n_sub_records
+          }
+        end
+      end
+
+      TYPE_LABELS = {
+        "class" => "クラス",
+        "module" => "モジュール",
+        "object" => "オブジェクト",
+        "instance-method" => "インスタンスメソッド",
+        "singleton-method" => "シングルトンメソッド",
+        "module-function" => "モジュールファンクション",
+        "constant" => "定数",
+        "variable" => "変数",
+        "document" => "文書",
+        "library" => "ライブラリ",
+        "function" => "関数",
+        "macro" => "マクロ",
+      }
+      def type_label(type)
+        TYPE_LABELS[type] || type
+      end
+
       def link_drilldown_item(key, record)
         if key == "type"
           link_type_raw(record[:label])
@@ -201,12 +231,8 @@ module RuremaSearch
       end
 
       def link_type_raw(linked_type)
-        label = h(type_label(linked_type))
-        if type == linked_type
-          label
-        else
-          a(label, "./#{parameter_link_href('type', linked_type)}")
-        end
+        a(h(type_label(linked_type)),
+          "./#{parameter_link_href('type', linked_type)}")
       end
 
       PARAMETER_LABELS = {
@@ -432,6 +458,7 @@ module RuremaSearch
         end
 
         prepare_built_in_classes(entries)
+        prepare_drilldown_items(entries)
 
         @response.write(layout)
       end
@@ -512,6 +539,25 @@ module RuremaSearch
           end
         end
         @built_in_classes_sort_by_frequency = sorted_classes
+      end
+
+      def prepare_drilldown_items(entries)
+        @drilldown_items = drilldown_items(entries)
+      end
+
+      def drilldown_items(entries)
+        unless version == :all
+          entries = entries.select do |record|
+            record.version == version
+          end
+        end
+
+        result = []
+        ["type"].each do |column|
+          item = drilldown_item(entries, column, "_key")
+          result << [column, item] unless item.empty?
+        end
+        result
       end
     end
 
@@ -673,18 +719,6 @@ module RuremaSearch
         result
       end
 
-      def drilldown_item(entries, drilldown_column, label_column)
-        result = entries.group(drilldown_column)
-        result = result.sort([["_nsubrecs", :descending]], :limit => 10)
-        result.collect do |record|
-          label = record[label_column]
-          {
-            :label => label,
-            :n_records => record.n_sub_records
-          }
-        end
-      end
-
       def group_entries(entries)
         grouped_entries = []
         previous_entry = nil
@@ -815,24 +849,6 @@ module RuremaSearch
         end.join
       end
 
-      TYPE_LABELS = {
-        "class" => "クラス",
-        "module" => "モジュール",
-        "object" => "オブジェクト",
-        "instance-method" => "インスタンスメソッド",
-        "singleton-method" => "シングルトンメソッド",
-        "module-function" => "モジュールファンクション",
-        "constant" => "定数",
-        "variable" => "変数",
-        "document" => "文書",
-        "library" => "ライブラリ",
-        "function" => "関数",
-        "macro" => "マクロ",
-      }
-      def type_label(type)
-        TYPE_LABELS[type] || type
-      end
-
       def link_version(entry)
         label = h(entry.version.key)
         entry_version = entry.version.key
@@ -938,6 +954,14 @@ module RuremaSearch
           a(label, href)
         else
           a(label, "./#{parameter_link_href(type, key)}")
+        end
+      end
+
+      def link_type_raw(linked_type)
+        if type == linked_type
+          h(type_label(linked_type))
+        else
+          super
         end
       end
 

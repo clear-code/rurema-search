@@ -144,20 +144,18 @@ div.content div.top-search-form table.version-select td span
   color: #999;
 }
 
-div.content div.built-in-classes-sort-by-frequency,
-div.content div.built-in-classes-sort-by-name
+div.content div.top-page-drilldowns div.drilldown
 {
   margin: 30px auto;
   width: 40em;
 }
 
-div.content div.built-in-classes-sort-by-name
+div.content div.top-page-drilldowns div.drilldown
 {
   margin-bottom: 50px;
 }
 
-div.content div.built-in-classes-sort-by-frequency h2,
-div.content div.built-in-classes-sort-by-name h2
+div.content div.top-page-drilldowns div.drilldown h2
 {
   font-size: larger;
   text-align: center;
@@ -165,37 +163,51 @@ div.content div.built-in-classes-sort-by-name h2
   padding: 0;
 }
 
-div.content div.built-in-classes-sort-by-frequency dl,
-div.content div.built-in-classes-sort-by-name dl
+div.content div.top-page-drilldowns div.drilldown h2.drilldown-type
+{
+  float: left;
+  margin-top: 5px;
+  padding-left: 30px;
+  text-align: left;
+  background-position: left top;
+}
+
+div.content div.top-page-drilldowns div.drilldown dl
 {
   margin: 0;
   padding: 0;
 }
 
-div.content div.built-in-classes-sort-by-frequency dl dt,
-div.content div.built-in-classes-sort-by-name dl dt
+div.content div.top-page-drilldowns div.drilldown dl dt
 {
   clear: both;
   float: left;
   width: 5em;
 }
 
-div.content div.built-in-classes-sort-by-frequency dl dd,
-div.content div.built-in-classes-sort-by-name dl dd
+div.content div.top-page-drilldowns div.drilldown dl dd
 {
   margin-left: 5em;
   padding: 0;
 }
 
-div.content div.built-in-classes-sort-by-frequency ol,
-div.content div.built-in-classes-sort-by-name ol
+div.content div.top-page-drilldowns div.drilldown ol
 {
   margin: 0;
   padding: 0;
 }
 
-div.content div.built-in-classes-sort-by-frequency ol li,
-div.content div.built-in-classes-sort-by-name ol li
+div.content div.top-page-drilldowns div.drilldown ol li
+{
+  display: inline;
+}
+
+div.content div.top-page-drilldowns div.drilldown ul
+{
+  margin-left: 5em;
+}
+
+div.content div.top-page-drilldowns div.drilldown ul li
 {
   display: inline;
 }
