@@ -60,14 +60,13 @@ module RuremaSearch
 
     def index_library(library)
       source = entry_source(library)
-      description = []
+      related_names = []
       [library.requires, library.classes, library.methods,
        library.sublibraries].each do |entries|
         entries.each do |entry|
-          description << entry.name
+          related_names << entry.name
         end
       end
-      description << source
       library_name = library.name
       library_type = library.type_id.to_s
       attributes = {
@@ -76,8 +75,9 @@ module RuremaSearch
         :label => library_name,
         :type => library_type,
         :document => source,
-        :description => description.join(" "),
+        :description => source,
         :version => version,
+        :related_names => related_names,
       }
       add_entry("#{version}:#{library.name}", attributes)
       @database.libraries.add(library_name, :type => library_type)
@@ -158,8 +158,10 @@ module RuremaSearch
 
     def add_entry(key, attributes)
       attributes[:last_modified] = @base_time
+      related_names = attributes[:related_names] || []
       extracted_attributes = extract_attributes(attributes[:description])
       attributes = extracted_attributes.merge(attributes)
+      attributes[:related_names].concat(related_names)
       @database.entries.add(key, attributes)
     end
 
