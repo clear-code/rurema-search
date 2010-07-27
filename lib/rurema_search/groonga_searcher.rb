@@ -914,6 +914,7 @@ module RuremaSearch
           }
         end
         entry.related_names.each do |name|
+          next if name.nil? # "E" is missing. Why?: TODO
           entries[name.key] = {
             :key => name.key,
             :label => name.key,
