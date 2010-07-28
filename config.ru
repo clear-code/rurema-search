@@ -72,38 +72,11 @@ load_searcher_option.call(:document, "document.yaml")
 
 configuration = load_yaml.call("#{environment}.yaml") || {}
 
-if configuration["use_log"]
-  log_database_path = base_dir + "var" + "log" + "db"
-  use Racknga::Middleware::Log, :database_path => log_database_path.to_s
-end
-
-use Rack::CommonLogger
-use Rack::Runtime
-use Rack::ContentLength
-
-urls = ["/favicon.", "/css/", "/images/", "/javascripts/", "/1.8.", "/1.9."]
-
 searcher = RuremaSearch::GroongaSearcher.new(database,
                                              base_dir.to_s,
                                              searcher_options)
 case environment
 when "development"
-  class DirectoryIndex
-    def initialize(app, options={})
-      @app = app
-      @urls = options[:urls]
-    end
-
-    def call(env)
-      path = env["PATH_INFO"]
-      can_serve = @urls.any? { |url| path.index(url) == 0 }
-      env["PATH_INFO"] += "index.html" if can_serve and /\/\z/ =~ path
-      @app.call(env)
-    end
-  end
-
-  use DirectoryIndex, :urls => urls
-
   use Rack::ShowExceptions
 when "production"
   show_error_page = Class.new do
@@ -123,6 +96,36 @@ when "production"
   load_searcher_option.call(:smtp, "smtp.yaml")
   notifiers = [Racknga::ExceptionMailNotifier.new(searcher_options[:smtp])]
   use Racknga::Middleware::ExceptionNotifier, :notifiers => notifiers
+end
+
+if configuration["use_log"]
+  log_database_path = base_dir + "var" + "log" + "db"
+  use Racknga::Middleware::Log, :database_path => log_database_path.to_s
+end
+
+use Rack::CommonLogger
+use Rack::Runtime
+use Rack::ContentLength
+
+urls = ["/favicon.", "/css/", "/images/", "/javascripts/", "/1.8.", "/1.9."]
+
+case environment
+when "development"
+  class DirectoryIndex
+    def initialize(app, options={})
+      @app = app
+      @urls = options[:urls]
+    end
+
+    def call(env)
+      path = env["PATH_INFO"]
+      can_serve = @urls.any? { |url| path.index(url) == 0 }
+      env["PATH_INFO"] += "index.html" if can_serve and /\/\z/ =~ path
+      @app.call(env)
+    end
+  end
+
+  use DirectoryIndex, :urls => urls
 end
 
 use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
