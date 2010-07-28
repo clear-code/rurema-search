@@ -103,7 +103,11 @@ if configuration["use_log"]
   use Racknga::Middleware::Log, :database_path => log_database_path.to_s
 end
 
-use Rack::CommonLogger
+case environment
+when "development"
+  use Rack::CommonLogger
+end
+
 use Rack::Runtime
 use Rack::ContentLength
 
