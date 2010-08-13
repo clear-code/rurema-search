@@ -801,7 +801,8 @@ module RuremaSearch
         end.join(h(" > "))
       end
 
-      ICON_AVAILABLE_PARAMETERS = ["version", "type", "query"]
+      ICON_AVAILABLE_PARAMETERS = ["version", "type", "query", "module",
+                                   "library"]
       def topic_path_element(key, value, i, n_elements)
         href = "./" + "../" * (n_elements - i - 1)
         key_label = parameter_label(key)
