@@ -258,10 +258,6 @@ module RuremaSearch
         schema.change_table("LocalNames") do |table|
           table.index("Entries.local_name")
         end
-
-        schema.change_table("Versions") do |table|
-          table.index("Entries.version")
-        end
       end
     end
   end
