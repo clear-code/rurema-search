@@ -492,7 +492,7 @@ module RuremaSearch
         built_in_classes = entries.select do |record|
           conditions = []
           conditions << (record.library == "_builtin")
-          conditions << (record.version == version) unless version == :all
+          conditions << (record.version =~ version) unless version == :all
           conditions
         end.group("class")
 
@@ -548,7 +548,7 @@ module RuremaSearch
       def drilldown_items(entries)
         unless version == :all
           entries = entries.select do |record|
-            record.version == version
+            record.version =~ version
           end
         end
 
