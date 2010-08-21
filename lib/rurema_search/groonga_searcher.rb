@@ -691,6 +691,10 @@ module RuremaSearch
             "constant"
             conditions << equal_condition("type", key)
             conditions << equal_condition("name._key", value)
+          when "version"
+            conditions << Proc.new do |record|
+              record.version =~ value
+            end
           else
             conditions << equal_condition(key, value)
           end
