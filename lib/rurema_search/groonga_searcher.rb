@@ -674,19 +674,7 @@ module RuremaSearch
         @parameters.each do |key, value|
           case key
           when "query"
-            conditions << Proc.new do |record|
-              target = record.match_target do |match_record|
-                (match_record["local_name"] * 1000) |
-                  (match_record["name"] * 100) |
-                  (match_record["signature"] * 50) |
-                  (match_record["summary"] * 25) |
-                  (match_record["description"] * 10) |
-                  (match_record["document"])
-              end
-              value.split.collect do |word|
-                target =~ word
-              end
-            end
+            conditions << query_condition(key, value)
           when "instance-method", "singleton-method", "module-function",
             "constant"
             conditions << equal_condition("type", key)
@@ -700,6 +688,39 @@ module RuremaSearch
           end
         end
         conditions
+      end
+
+      def query_condition(key, value)
+        Proc.new do |record|
+          target = record.match_target do |match_record|
+            (match_record["local_name"] * 1000) |
+              (match_record["name"] * 100) |
+              (match_record["signature"] * 50) |
+              (match_record["summary"] * 25) |
+              (match_record["description"] * 10) |
+              (match_record["document"])
+          end
+          conditions = value.split.collect do |word|
+            target =~ word
+          end.inject do |match_conditions, match_condition|
+            match_conditions & match_condition
+          end
+
+          case value
+          when /\A([A-Z][A-Za-z\d]*)[#.]([A-Za-z][A-Za-z\d]*[!?=]?)\z/
+            constant = $1
+            method_name = $2
+            method_name_target = record.match_target do |match_record|
+              match_record["signature"] * 100
+            end
+            signaturre_condition =
+              (((record["class"] == constant) |
+                (record["module"] == constant)) &
+               (method_name_target =~ method_name))
+            conditions |= signaturre_condition
+          end
+          conditions
+        end
       end
 
       def equal_condition(column, value)

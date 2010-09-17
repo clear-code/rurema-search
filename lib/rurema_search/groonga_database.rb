@@ -239,16 +239,23 @@ module RuremaSearch
           table.reference("type", "Types")
         end
 
-        schema.create_table("Terms",
+        schema.create_table("Bigram",
                             :type => :patricia_trie,
                             :key_type => "ShortText",
                             :default_tokenizer => "TokenBigram",
                             :key_normalize => true) do |table|
-          table.index("Entries.label")
-          table.index("Entries.document")
-          table.index("Entries.signature")
-          table.index("Entries.summary")
-          table.index("Entries.description")
+          table.index("Entries.document", :with_position => true)
+          table.index("Entries.summary", :with_position => true)
+          table.index("Entries.description", :with_position => true)
+        end
+
+        schema.create_table("BigramAlphabet",
+                            :type => :patricia_trie,
+                            :key_type => "ShortText",
+                            :default_tokenizer => "TokenBigramSplitSymbolAlphaDigit",
+                            :key_normalize => true) do |table|
+          table.index("Entries.label", :with_position => true)
+          table.index("Entries.signature", :with_position => true)
         end
 
         schema.change_table("Names") do |table|
