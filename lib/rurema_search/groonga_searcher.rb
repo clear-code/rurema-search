@@ -55,7 +55,7 @@ module RuremaSearch
       end
 
       def catch_phrase
-        "Rubyでgroonga使ってRubyのリファレンスマニュアルを全文検索！"
+        "最速Rubyリファレンスマニュアル検索！"
       end
 
       def open_search_description_path
