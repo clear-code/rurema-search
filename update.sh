@@ -29,24 +29,24 @@ if [ "$update_rurema" = "yes" ]; then
     svn up -q ${rubydoc_dir}
 
     for version in 1.8.7 1.8.8 1.9.1 1.9.2; do
-	ruby \
+	ruby1.8 \
 	    -I ${bitclust_dir}/lib \
 	    ${bitclust_dir}/bin/bitclust.rb \
 	    --database ${base_dir}/db-${version} \
 	    init encoding=euc-jp version=${version}
-	ruby \
+	ruby1.8 \
 	    -I ${bitclust_dir}/lib \
 	    ${bitclust_dir}/bin/bitclust.rb \
 	    --database ${base_dir}/db-${version} \
 	    update --stdlibtree ${rubydoc_dir}/refm/api/src
-	ruby \
+	ruby1.8 \
 	    -I ${bitclust_dir}/lib \
 	    ${bitclust_dir}/bin/bitclust.rb \
 	    --database ${base_dir}/db-${version} \
 	    --capi \
 	    update ${rubydoc_dir}/refm/capi/src/**/*.rd
 	rm -rf ${base_dir}/public/${version}.{old,new}
-	ruby \
+	ruby1.8 \
 	    -I ${base_dir}/lib \
 	    -I ${bitclust_dir}/lib \
 	    ${base_dir}/bin/bitclust-generate-static-html \
