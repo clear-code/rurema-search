@@ -143,4 +143,5 @@ if configuration["use_cache"]
 end
 
 use Rack::Lint
+use Rack::Head
 run searcher
