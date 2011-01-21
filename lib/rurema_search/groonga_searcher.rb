@@ -693,11 +693,11 @@ module RuremaSearch
       def query_condition(key, value)
         Proc.new do |record|
           target = record.match_target do |match_record|
-            (match_record["local_name"] * 1000) |
-              (match_record["name"] * 100) |
-              (match_record["signature"] * 50) |
-              (match_record["summary"] * 25) |
-              (match_record["description"] * 10) |
+            (match_record["local_name"] * 10000) |
+              (match_record["name"] * 1000) |
+              (match_record["signature"] * 100) |
+              (match_record["summary"] * 10) |
+              (match_record["description"] * 5) |
               (match_record["document"])
           end
           conditions = value.split.collect do |word|
