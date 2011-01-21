@@ -162,6 +162,8 @@ module RuremaSearch
       extracted_attributes = extract_attributes(attributes[:description])
       attributes = extracted_attributes.merge(attributes)
       attributes[:related_names].concat(related_names)
+      attributes[:name_raw] ||= attributes[:name]
+      attributes[:local_name_raw] ||= attributes[:local_name]
       @database.entries.add(key, attributes)
     end
 

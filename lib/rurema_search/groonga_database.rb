@@ -144,7 +144,7 @@ module RuremaSearch
         end
 
         schema.create_table("LocalNames",
-                            :type => :hash,
+                            :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
         end
 
@@ -217,6 +217,8 @@ module RuremaSearch
                             :key_type => "ShortText") do |table|
           table.reference("name", "Names")
           table.reference("local_name", "LocalNames")
+          table.short_text("name_raw")
+          table.short_text("local_name_raw")
           table.short_text("label")
           table.text("document")
           table.text("signature")
@@ -254,6 +256,8 @@ module RuremaSearch
                             :key_type => "ShortText",
                             :default_tokenizer => "TokenBigramSplitSymbolAlphaDigit",
                             :key_normalize => true) do |table|
+          table.index("Entries.name_raw")
+          table.index("Entries.local_name_raw")
           table.index("Entries.label")
           table.index("Entries.signature")
         end
