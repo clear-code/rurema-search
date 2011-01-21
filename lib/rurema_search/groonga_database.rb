@@ -244,9 +244,9 @@ module RuremaSearch
                             :key_type => "ShortText",
                             :default_tokenizer => "TokenBigram",
                             :key_normalize => true) do |table|
-          table.index("Entries.document", :with_position => true)
-          table.index("Entries.summary", :with_position => true)
-          table.index("Entries.description", :with_position => true)
+          table.index("Entries.document")
+          table.index("Entries.summary")
+          table.index("Entries.description")
         end
 
         schema.create_table("BigramAlphabet",
@@ -254,8 +254,8 @@ module RuremaSearch
                             :key_type => "ShortText",
                             :default_tokenizer => "TokenBigramSplitSymbolAlphaDigit",
                             :key_normalize => true) do |table|
-          table.index("Entries.label", :with_position => true)
-          table.index("Entries.signature", :with_position => true)
+          table.index("Entries.label")
+          table.index("Entries.signature")
         end
 
         schema.change_table("Names") do |table|
