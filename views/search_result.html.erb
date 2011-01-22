@@ -42,7 +42,7 @@
 <%    entries.each do |entry| %>
       <div class="entry-description">
         <span class="entry-version">
-          <%= link_entry(entry, :label => h(entry.version.key)) %>
+          <%= link_version_select(entry.version.key) %>
         </span>
         <%= snippet_description(entry) %>
 	<span class="entry-link">
