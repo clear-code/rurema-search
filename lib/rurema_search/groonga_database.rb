@@ -188,19 +188,19 @@ module RuremaSearch
         end
 
         schema.create_table("Objects",
-                            :type => :hash,
+                            :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
           table.reference("type", "Types")
         end
 
         schema.create_table("NormalizedObjects",
-                            :type => :hash,
+                            :type => :patricia_trie,
                             :key_type => "ShortText",
                             :key_normalize => true) do |table|
         end
 
         schema.create_table("Libraries",
-                            :type => :hash,
+                            :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
           table.reference("type", "Types")
         end
@@ -317,6 +317,10 @@ module RuremaSearch
 
         schema.change_table("NormalizedObjects") do |table|
           table.index("Entries.normalized_object")
+        end
+
+        schema.change_table("Libraries") do |table|
+          table.index("Entries.library")
         end
       end
     end

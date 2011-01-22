@@ -663,6 +663,11 @@ module RuremaSearch
             conditions << Proc.new do |record|
               record.version =~ value
             end
+          when "library"
+            conditions << Proc.new do |record|
+              (record[key].prefix_search(value)) |
+                (record[key] == value)
+            end
           else
             conditions << equal_condition(key, value)
           end
