@@ -206,8 +206,8 @@ module RuremaSearch
         "module" => "モジュール",
         "object" => "オブジェクト",
         "instance-method" => "インスタンスメソッド",
-        "singleton-method" => "シングルトンメソッド",
-        "module-function" => "モジュールファンクション",
+        "singleton-method" => "特異メソッド",
+        "module-function" => "モジュール関数",
         "constant" => "定数",
         "variable" => "変数",
         "document" => "文書",
@@ -243,20 +243,9 @@ module RuremaSearch
         "query" => "クエリ",
         "version" => "バージョン",
         "type" => "種類",
-        "module" => "モジュール",
-        "class" => "クラス",
-        "object" => "オブジェクト",
-        "instance-method" => "インスタンスメソッド",
-        "singleton-method" => "シングルトンメソッド",
-        "module-function" => "モジュールファンクション",
-        "constant" => "定数",
-        "variable" => "変数",
-        "library" => "ライブラリ",
-        "function" => "関数",
-        "macro" => "マクロ",
       }
       def parameter_label(key)
-	PARAMETER_LABELS[key] || key
+	PARAMETER_LABELS[key] || TYPE_LABELS[key] || key
       end
 
       LIBRARY_LABELS = {"_builtin" => "ビルトイン"}
