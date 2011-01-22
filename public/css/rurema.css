@@ -409,7 +409,7 @@ div.drilldown ul.drilldown-items
   margin-bottom: 5px;
 }
 
-div.quick-link-box
+div.leading-link-box
 {
   margin-top: 15px;
   padding-top: 10px;
@@ -419,16 +419,16 @@ div.quick-link-box
   margin-bottom: 15px;
 }
 
-div.quick-link-box h3.quick-link-title
+div.leading-link-box h3.leading-link-title
 {
   padding: 0;
   margin: 0;
   margin-left: 8px;
   padding-left: 30px;
-  background: url(../images/quick-link-icon-medium.png) no-repeat left center;
+  background: url(../images/leading-link-icon-medium.png) no-repeat left center;
 }
 
-div.quick-link-box ol.quick-links
+div.leading-link-box ol.leading-links
 {
   padding-top: 0;
   padding-bottom: 0;

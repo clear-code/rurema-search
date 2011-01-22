@@ -18,9 +18,11 @@
 
 <div class="result">
   <h2>検索結果</h2>
-  <div class="quick-link-box">
-    <h3 class="quick-link-title">先頭<%= @leading_grouped_entries.size %>件</h3>
-    <ol class="quick-links">
+  <div class="leading-link-box">
+    <h3 class="leading-link-title">
+      先頭<%= @leading_grouped_entries.size %>件
+    </h3>
+    <ol class="leading-links">
 <%    @leading_grouped_entries.each_with_index do |(represent_entry, entries), i| %>
     <li><a href="#entry-<%= i %>"><%= entry_label(represent_entry) %></a></li>
 <%    end %>
