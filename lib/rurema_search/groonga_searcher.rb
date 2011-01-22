@@ -458,6 +458,7 @@ module RuremaSearch
         end
 
         prepare_built_in_classes(entries)
+        prepare_built_in_modules(entries)
         prepare_drilldown_items(entries)
 
         @response.write(layout)
@@ -488,26 +489,26 @@ module RuremaSearch
         ""
       end
 
-      def prepare_built_in_classes(entries)
-        built_in_classes = entries.select do |record|
+      def sorted_built_in_objects_by_name(entries, type)
+        built_in_objects = entries.select do |record|
           conditions = []
           conditions << (record.library == "_builtin")
           conditions << (record.version =~ version) unless version == :all
           conditions
-        end.group("class")
+        end.group(type)
 
         sort_and_group = Proc.new do |*args, &block|
-          grouped_classes = built_in_classes.sort(*args).group_by(&block)
-          grouped_classes.sort_by do |(key, classes)|
+          grouped_objects = built_in_objects.sort(*args).group_by(&block)
+          grouped_objects.sort_by do |(key, objects)|
             representing_value, label = key
             representing_value
-          end.collect do |(key, classes)|
+          end.collect do |(key, objects)|
             representing_value, label = key
-            [label, classes]
+            [label, objects]
           end
         end
 
-        sorted_classes = sort_and_group.call(["_key"]) do |record|
+        sort_and_group.call(["_key"]) do |record|
           case record.key.key[0]
           when "A"..."F"
             ["A", "A〜E"]
@@ -521,23 +522,16 @@ module RuremaSearch
             ["U", "U〜Z"]
           end
         end
-        @built_in_classes_sort_by_name = sorted_classes
+      end
 
-        sorted_classes = sort_and_group.call([["_nsubrecs", :descending],
-                                              ["_key"]],
-                                             :limit => 20) do |record|
-          case record.n_sub_records
-          when 0...101
-            [-100, "〜100件"]
-          when 101...201
-            [-200, "〜200件"]
-          when 201...301
-            [-300, "〜300件"]
-          else
-            [-301, "300件〜"]
-          end
-        end
-        @built_in_classes_sort_by_frequency = sorted_classes
+      def prepare_built_in_classes(entries)
+        sorted_classes = sorted_built_in_objects_by_name(entries, "class")
+        @built_in_classes_sort_by_name = sorted_classes
+      end
+
+      def prepare_built_in_modules(entries)
+        sorted_modules = sorted_built_in_objects_by_name(entries, "module")
+        @built_in_modules_sort_by_name = sorted_modules
       end
 
       def prepare_drilldown_items(entries)

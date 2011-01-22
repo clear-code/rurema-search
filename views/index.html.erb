@@ -49,6 +49,23 @@
     </dl>
   </div>
 
+  <div class="drilldown list-box">
+    <h2>組み込みモジュール一覧</h2>
+    <dl>
+    <% @built_in_modules_sort_by_name.each do |(label, modules)| %>
+      <dt><%= h(label) %></dt>
+      <dd>
+	<ol>
+	<% modules.each do |_module| %>
+	  <li><%= link_drilldown_item("module", :label => _module.key.key) %>
+	      (<%= h(_module.n_sub_records) %>)</li>
+	<% end %>
+	</ol>
+      </dd>
+    <% end %>
+    </dl>
+  </div>
+
 <% @drilldown_items.each do |key, item| %>
   <div class="drilldown list-box">
     <h2 class="drilldown-<%= h(key) %>"><%= h(parameter_label(key)) %></h2>
@@ -66,21 +83,4 @@
     </ul>
   </div>
 <% end %>
-
-  <div class="drilldown list-box">
-    <h2>項目数が多い組み込みクラス</h2>
-    <dl>
-    <% @built_in_classes_sort_by_frequency.each do |(label, classes)| %>
-      <dt><%= h(label) %></dt>
-      <dd>
-	<ol>
-	<% classes.each do |klass| %>
-	  <li><%= link_drilldown_item("class", :label => klass.key.key) %>
-	      (<%= h(klass.n_sub_records) %>)</li>
-	<% end %>
-	</ol>
-      </dd>
-    <% end %>
-    </dl>
-  </div>
 </div>
