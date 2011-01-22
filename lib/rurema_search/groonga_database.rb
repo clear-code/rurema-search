@@ -169,16 +169,34 @@ module RuremaSearch
           table.reference("type", "Types")
         end
 
+        schema.create_table("NormalizedClasses",
+                            :type => :patricia_trie,
+                            :key_type => "ShortText",
+                            :key_normalize => true) do |table|
+        end
+
         schema.create_table("Modules",
                             :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
           table.reference("type", "Types")
         end
 
+        schema.create_table("NormalizedModules",
+                            :type => :patricia_trie,
+                            :key_type => "ShortText",
+                            :key_normalize => true) do |table|
+        end
+
         schema.create_table("Objects",
                             :type => :hash,
                             :key_type => "ShortText") do |table|
           table.reference("type", "Types")
+        end
+
+        schema.create_table("NormalizedObjects",
+                            :type => :hash,
+                            :key_type => "ShortText",
+                            :key_normalize => true) do |table|
         end
 
         schema.create_table("Libraries",
@@ -226,8 +244,11 @@ module RuremaSearch
           table.text("description")
           table.reference("type", "Types")
           table.reference("class", "Classes")
+          table.reference("normalized_class", "NormalizedClasses")
           table.reference("module", "Modules")
+          table.reference("normalized_module", "NormalizedModules")
           table.reference("object", "Objects")
+          table.reference("normalized_object", "NormalizedObjects")
           table.reference("library", "Libraries")
           table.reference("version", "Versions")
           table.reference("visibility", "Visibilities")
@@ -272,6 +293,30 @@ module RuremaSearch
 
         schema.change_table("Versions") do |table|
           table.index("Entries.version")
+        end
+
+        schema.change_table("Classes") do |table|
+          table.index("Entries.class")
+        end
+
+        schema.change_table("NormalizedClasses") do |table|
+          table.index("Entries.normalized_class")
+        end
+
+        schema.change_table("Modules") do |table|
+          table.index("Entries.module")
+        end
+
+        schema.change_table("NormalizedModules") do |table|
+          table.index("Entries.normalized_module")
+        end
+
+        schema.change_table("Objects") do |table|
+          table.index("Entries.object")
+        end
+
+        schema.change_table("NormalizedObjects") do |table|
+          table.index("Entries.normalized_object")
         end
       end
     end

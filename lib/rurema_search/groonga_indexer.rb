@@ -164,6 +164,9 @@ module RuremaSearch
       attributes[:related_names].concat(related_names)
       attributes[:name_raw] ||= attributes[:name]
       attributes[:local_name_raw] ||= attributes[:local_name]
+      attributes[:normalized_class] ||= attributes[:class]
+      attributes[:normalized_module] ||= attributes[:module]
+      attributes[:normalized_object] ||= attributes[:object]
       @database.entries.add(key, attributes)
     end
 

@@ -693,8 +693,14 @@ module RuremaSearch
       def query_condition(key, value)
         Proc.new do |record|
           target = record.match_target do |match_record|
-            (match_record["local_name"] * 10000) |
-              (match_record["local_name_raw"] * 5000) |
+            (match_record["local_name"] * 12000) |
+              (match_record["class"] * 12000) |
+              (match_record["module"] * 12000) |
+              (match_record["object"] * 12000) |
+              (match_record["normalized_class"] * 6000) |
+              (match_record["normalized_module"] * 6000) |
+              (match_record["normalized_object"] * 6000) |
+              (match_record["local_name_raw"] * 3000) |
               (match_record["name"] * 1000) |
               (match_record["name_raw"] * 500) |
               (match_record["signature"] * 100) |
