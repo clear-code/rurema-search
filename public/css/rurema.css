@@ -464,72 +464,74 @@ dl.entries dd div.entry-description span.entry-link a
   background: url(../images/document-icon.png) no-repeat right bottom;
 }
 
-dl.entries dd ul.entry-metadata,
-dl.entries dd ul.entry-related-entries
+dl.entries ul.entry-metadata,
+dl.entries ul.entry-related-entries
 {
   margin: 0;
   padding: 0;
 }
 
-dl.entries dd ul.entry-metadata li,
-dl.entries dd ul.entry-related-entries li
+dl.entries ul.entry-metadata li,
+dl.entries ul.entry-related-entries li
 {
   display: inline;
 }
 
-dl.entries dd ul.entry-metadata li.entry-type
+dl.entries ul.entry-metadata li.entry-type
 {
   padding-left: 20px;
   background: url(../images/type-icon.png) no-repeat left 3px;
 }
 
-dl.entries dd ul.entry-metadata li.entry-type span.entry-instance-method,
-dl.entries dd ul.entry-related-entries li.entry-related-entry-instance-method,
+/*
+dl.entries ul.entry-metadata li.entry-type span.entry-instance-method,
+dl.entries ul.entry-related-entries li.entry-related-entry-instance-method,
 div.drilldown ul.drilldown-items li.drilldown-item-instance-method
 {
   padding-left: 20px;
   background: url(../images/instance-method-icon.png) no-repeat left 3px;
 }
 
-dl.entries dd ul.entry-metadata li.entry-type span.entry-class,
-dl.entries dd ul.entry-related-entries li.entry-related-entry-class,
+dl.entries ul.entry-metadata li.entry-type span.entry-class,
+dl.entries ul.entry-related-entries li.entry-related-entry-class,
 div.drilldown ul.drilldown-items li.drilldown-item-class
 {
   padding-left: 20px;
   background: url(../images/class-icon.png) no-repeat left 3px;
 }
 
-dl.entries dd ul.entry-metadata li.entry-type span.entry-function,
-dl.entries dd ul.entry-related-entries li.entry-related-entry-function,
+dl.entries ul.entry-metadata li.entry-type span.entry-function,
+dl.entries ul.entry-related-entries li.entry-related-entry-function,
 div.drilldown ul.drilldown-items li.drilldown-item-function
 {
   padding-left: 20px;
   background: url(../images/function-icon.png) no-repeat left 3px;
 }
 
-dl.entries dd ul.entry-metadata li.entry-type span.entry-module-function,
-dl.entries dd ul.entry-related-entries li.entry-related-entry-module-function,
+dl.entries ul.entry-metadata li.entry-type span.entry-module-function,
+dl.entries ul.entry-related-entries li.entry-related-entry-module-function,
 div.drilldown ul.drilldown-items li.drilldown-item-module-function
 {
   padding-left: 20px;
   background: url(../images/module-function-icon.png) no-repeat left 3px;
 }
 
-dl.entries dd ul.entry-metadata li.entry-type span.entry-library,
-dl.entries dd ul.entry-related-entries li.entry-related-entry-library,
+dl.entries ul.entry-metadata li.entry-type span.entry-library,
+dl.entries ul.entry-related-entries li.entry-related-entry-library,
 div.drilldown ul.drilldown-items li.drilldown-item-library
 {
   padding-left: 20px;
   background: url(../images/library-icon.png) no-repeat left 3px;
 }
 
-dl.entries dd ul.entry-metadata li.entry-type span.entry-module,
-dl.entries dd ul.entry-related-entries li.entry-related-entry-module,
+dl.entries ul.entry-metadata li.entry-type span.entry-module,
+dl.entries ul.entry-related-entries li.entry-related-entry-module,
 div.drilldown ul.drilldown-items li.drilldown-item-module
 {
   padding-left: 20px;
   background: url(../images/module-icon.png) no-repeat left 3px;
 }
+*/
 
 span.score
 {
