@@ -158,7 +158,7 @@ module RuremaSearch
       end
 
       def make_breakable(escaped_string)
-        escaped_string.gsub(/(::|\.|\.?#|\(\|\)|,|_|\$)/, "<wbr />\\1<wbr />")
+        escaped_string.gsub(/(::|\.|\.?#|\(\|\)|,|_|\/|\$)/, "<wbr />\\1<wbr />")
       end
 
       def entry_label(entry)
