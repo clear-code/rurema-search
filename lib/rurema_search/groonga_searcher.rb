@@ -189,10 +189,9 @@ module RuremaSearch
       def drilldown_item(entries, drilldown_column, label_column,
                          options={})
         sort_key = options[:sort_key] || [["_nsubrecs", :descending]]
-        limit = options[:limit] || 10
 
         entries = entries.group(drilldown_column)
-        entries = entries.sort(sort_key, :limit => limit)
+        entries = entries.sort(sort_key)
         entries.collect do |entry|
           label = entry[label_column]
           {
@@ -744,28 +743,26 @@ module RuremaSearch
       def drilldown_items(entries)
         items = []
 
-        if type
-          ["library", "class", "module", "object"].each do |column|
-            next if @parameters[column]
-            drilldown_entries =
-              drilldown_item(entries, column, "_key",
-                             :sort_key => [["_key", :ascending]],
-                             :limit => -1)
-            unless drilldown_entries.empty?
-              items << {:key => column, :entries => drilldown_entries}
-            end
-          end
-        else
+        unless type
           drilldown_entries = drilldown_item(entries, "type", "_key")
           if drilldown_entries.size > 1
             items << {:key => "type", :entries => drilldown_entries}
           end
         end
 
+        ["library", "class", "module", "object"].each do |column|
+          next if @parameters[column]
+          drilldown_entries =
+            drilldown_item(entries, column, "_key",
+                           :sort_key => [["_key", :ascending]])
+          unless drilldown_entries.empty?
+            items << {:key => column, :entries => drilldown_entries}
+          end
+        end
+
         if have_scope_parameter?
           drilldown_entries = drilldown_item(entries, "local_name", "_key",
-                                             :sort_key => [["_key", :ascending]],
-                                             :limit => -1)
+                                             :sort_key => [["_key", :ascending]])
           if drilldown_entries.size > 1
             items << {
               :key => "query",
