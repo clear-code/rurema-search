@@ -134,6 +134,13 @@
        fx="24.44569"
        fy="35.87817"
        r="20.530962" />
+    <inkscape:perspective
+       id="perspective2855"
+       inkscape:persp3d-origin="0.5 : 0.33333333 : 1"
+       inkscape:vp_z="1 : 0.5 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 0.5 : 1"
+       sodipodi:type="inkscape:persp3d" />
   </defs>
   <sodipodi:namedview
      stroke="#ef2929"
@@ -145,8 +152,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="11.313708"
-     inkscape:cx="20.103247"
-     inkscape:cy="11.906588"
+     inkscape:cx="12.635846"
+     inkscape:cy="9.0778227"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:grid-bbox="true"
@@ -173,7 +180,7 @@
         <dc:source>http://jimmac.musichall.cz</dc:source>
         <cc:license
            rdf:resource="http://creativecommons.org/licenses/publicdomain/" />
-        <dc:title></dc:title>
+        <dc:title />
         <dc:subject>
           <rdf:Bag>
             <rdf:li>emblem</rdf:li>
@@ -240,10 +247,21 @@
        y="33.066624"
        rx="1.4409019"
        ry="1.4409019" />
-    <path
-       sodipodi:nodetypes="ccccccc"
-       id="path2177"
-       d="m 3.6359878,42.14494 c 0.149583,-3.850966 3.5806786,-6.830952 7.0161982,-3.211847 l 1.66757,-1.607531 c 0,0 0.0066,5.010756 0.0066,5.010756 l -5.0699924,-0.0074 c 0,0 1.6429688,-1.64297 1.6429688,-1.64297 -2.8763305,-3.014582 -4.6549025,-0.648668 -5.2633928,1.45904 z"
-       style="opacity:0.69886361;color:#000000;fill:#888a85;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.9999997;marker:none;visibility:visible;display:block;overflow:visible" />
+    <rect
+       style="color:#000000;fill:#b9b9b9;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999970000000005;marker:none;visibility:visible;display:block;overflow:visible;enable-background:accumulate"
+       id="rect2845"
+       width="1.6050287"
+       height="11.388059"
+       x="32.851994"
+       y="16.42701"
+       transform="matrix(0.70710678,0.70710678,-0.70710678,0.70710678,0,0)" />
+    <rect
+       transform="matrix(0.70710678,-0.70710678,0.70710678,0.70710678,0,0)"
+       y="27.960478"
+       x="-22.923553"
+       height="11.388059"
+       width="1.6050287"
+       id="rect2868"
+       style="color:#000000;fill:#b9b9b9;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0.99999970000000005;marker:none;visibility:visible;display:block;overflow:visible;enable-background:accumulate" />
   </g>
 </svg>
