@@ -9,6 +9,7 @@ require 'net/smtp'
 require 'etc'
 require 'socket'
 require 'nkf'
+require 'shellwords'
 require 'rack'
 
 module RuremaSearch
@@ -296,6 +297,14 @@ module RuremaSearch
         RuremaSearch::URLMapper.new(:base_url => base_url,
                                     :version => version)
       end
+
+      def default_query_form_value
+        current_query = query
+        if current_query.is_a?(Array)
+          current_query = Shellwords.join(current_query)
+        end
+        h(current_query)
+      end
     end
 
     include Rack::Utils
@@ -324,7 +333,11 @@ module RuremaSearch
           query.force_encoding(encoding)
           query = query.encode("utf-8")
         end
-        request.path_info = "#{path_info}query:#{escape(query)}/"
+        words = split_query(query)
+        words.each do |word|
+          path_info << "query:#{escape(word)}/"
+        end
+        request.path_info = path_info
         response.redirect(request.url.split(/\?/, 2)[0])
       end
       response.to_a
@@ -404,6 +417,10 @@ module RuremaSearch
       SearchPage::PARAMETER_LABELS.keys.collect do |key|
         "/#{key}:"
       end
+    end
+
+    def split_query(query)
+      Shellwords.split(query)
     end
 
     class Dispatcher
@@ -594,9 +611,14 @@ module RuremaSearch
         label = parameter_label(key)
         return false if key == label
         if @parameters.has_key?(key)
-          @parameters[key] << " #{value}" if key == "query"
-          false
+          if key == "query"
+            @parameters[key] << value
+            true
+          else
+            false
+          end
         else
+          value = [value] if key == "query"
           @parameters[key] = value
           true
         end
@@ -675,7 +697,7 @@ module RuremaSearch
         conditions
       end
 
-      def query_condition(key, value)
+      def query_condition(key, words)
         Proc.new do |record|
           target = record.match_target do |match_record|
             (match_record["local_name"] * 12000) |
@@ -693,19 +715,21 @@ module RuremaSearch
               (match_record["description"] * 5) |
               (match_record["document"])
           end
-          conditions = value.split.collect do |word|
+          conditions = words.collect do |word|
             target =~ word
           end.inject do |match_conditions, match_condition|
             match_conditions & match_condition
           end
 
-          case value
-          when /\A([A-Z][A-Za-z\d]*(?:::[A-Z][A-Za-z\d]*)*)
+          words.each do |word|
+            case word
+            when /\A([A-Z][A-Za-z\d]*(?:::[A-Z][A-Za-z\d]*)*)
                   (?:\#|\.|.\#)
                   ([A-Za-z][A-Za-z\d]*[!?=]?)\z/x
-            constant = $1
-            method_name = $2
-            conditions |= ((target =~ constant) & (target =~ method_name))
+              constant = $1
+              method_name = $2
+              conditions |= ((target =~ constant) & (target =~ method_name))
+            end
           end
           conditions
         end

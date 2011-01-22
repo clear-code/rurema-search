@@ -2,7 +2,8 @@
 <div class="description"><%= h(catch_phrase) %></div>
 <div class="search-form">
   <form method="POST" action="./">
-    <input type="text" class="query" name="query" value="<%= h(query) %>" />
+    <input type="text" class="query" name="query"
+           value="<%= default_query_form_value %>" />
     <input type="submit" value="検索" />
   </form>
 </div>
