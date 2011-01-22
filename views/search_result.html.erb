@@ -30,7 +30,9 @@
   <dl class="entries">
 <%  @grouped_entries.each_with_index do |(represent_entry, entries), i| %>
     <dt class="entry-name" id="entry-<%= i %>">
-      <%= link_entry_if(entries.size == 1, represent_entry) %>
+      <span class="signature">
+        <%= link_entry_if(entries.size == 1, represent_entry) %>
+      </span>
       <span class="score">(<%= h(represent_entry.score) %>)</span>
     </dt>
     <dd>

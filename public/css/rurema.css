@@ -429,6 +429,11 @@ dl.entries dt
   padding-left: 15px;
 }
 
+dl.entries dt span.signature
+{
+  font-size: larger;
+}
+
 dl.entries dd
 {
   margin-top: 0.5em;
@@ -513,6 +518,7 @@ div.drilldown ul.drilldown-items li.drilldown-item-module
 span.score
 {
   color: #ccc;
+  font-size: smaller;
 }
 
 span.keyword
