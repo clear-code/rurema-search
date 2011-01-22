@@ -45,6 +45,9 @@
           <%= link_entry(entry, :label => h(entry.version.key)) %>
         </span>
         <%= snippet_description(entry) %>
+	<span class="entry-link">
+	  <%= link_entry(entry, :label => h("全部読む")) %>
+	</span>
       </div>
 <%    end %>
       <ul class="entry-metadata">
