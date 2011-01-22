@@ -17,7 +17,6 @@
 </div>
 
 <div class="result">
-<%= paginate %>
   <h2>検索結果</h2>
   <div class="quick-link-box">
     <h3 class="quick-link-title">先頭<%= @leading_grouped_entries.size %>件</h3>
@@ -27,6 +26,8 @@
 <%    end %>
     </ol>
   </div>
+
+<%= paginate %>
 
   <dl class="entries">
 <%  @grouped_entries.each_with_index do |(represent_entry, entries), i| %>
