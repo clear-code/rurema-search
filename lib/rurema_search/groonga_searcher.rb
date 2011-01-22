@@ -458,7 +458,6 @@ module RuremaSearch
         end
 
         prepare_built_in_objects(entries)
-        prepare_drilldown_items(entries)
 
         @response.write(layout)
       end
@@ -540,25 +539,6 @@ module RuremaSearch
            },
           ]
      end
-
-      def prepare_drilldown_items(entries)
-        @drilldown_items = drilldown_items(entries)
-      end
-
-      def drilldown_items(entries)
-        unless version == :all
-          entries = entries.select do |record|
-            record.version =~ version
-          end
-        end
-
-        result = []
-        ["type"].each do |column|
-          item = drilldown_item(entries, column, "_key")
-          result << [column, item] unless item.empty?
-        end
-        result
-      end
     end
 
     class SearchPage
