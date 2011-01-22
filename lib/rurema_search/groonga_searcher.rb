@@ -935,6 +935,14 @@ module RuremaSearch
             snippet_description = snippets.join("")
           end
         end
+        if snippet_description.nil?
+          description ||= ""
+          if description.size > snippet_width
+            snippet_description = description[0, snippet_width] << "..."
+          else
+            snippet_description = description
+          end
+        end
         tag("div", {:class => "snippets"}, snippet_description)
       end
 
