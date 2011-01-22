@@ -185,14 +185,18 @@ module RuremaSearch
         end
       end
 
-      def drilldown_item(entries, drilldown_column, label_column)
-        result = entries.group(drilldown_column)
-        result = result.sort([["_nsubrecs", :descending]], :limit => 10)
-        result.collect do |record|
-          label = record[label_column]
+      def drilldown_item(entries, drilldown_column, label_column,
+                         options={})
+        sort_key = options[:sort_key] || [["_nsubrecs", :descending]]
+        limit = options[:limit] || 10
+
+        entries = entries.group(drilldown_column)
+        entries = entries.sort(sort_key, :limit => limit)
+        entries.collect do |entry|
+          label = entry[label_column]
           {
             :label => label,
-            :n_records => record.n_sub_records
+            :n_records => entry.n_sub_records
           }
         end
       end
@@ -215,14 +219,14 @@ module RuremaSearch
         TYPE_LABELS[type] || type
       end
 
-      def link_drilldown_item(key, record)
+      def link_drilldown_entry(key, entry)
         if key == "type"
-          link_type_raw(record[:label])
+          link_type_raw(entry[:label])
         else
-          label = record[:label]
+          label = entry[:label]
           label = library_label(label) if key == "library"
           a(make_breakable(h(label)),
-            "./#{parameter_link_href(key, record[:label])}")
+            "./#{parameter_link_href(key, entry[:label])}")
         end
       end
 
@@ -649,6 +653,13 @@ module RuremaSearch
         @parameters["type"]
       end
 
+      def have_scope_parameter?
+        @parameters["class"] or
+          @parameters["module"] or
+          @parameters["object"] or
+          @parameters["library"]
+      end
+
       def create_conditions
         conditions = []
         @parameters.each do |key, value|
@@ -718,18 +729,40 @@ module RuremaSearch
       end
 
       def drilldown_items(entries)
-        result = []
+        items = []
+
         if type
-          ["class", "module", "object", "library"].each do |column|
+          ["library", "class", "module", "object"].each do |column|
             next if @parameters[column]
-            item = drilldown_item(entries, column, "_key")
-            result << [column, item] unless item.empty?
+            drilldown_entries =
+              drilldown_item(entries, column, "_key",
+                             :sort_key => [["_key", :ascending]],
+                             :limit => -1)
+            unless drilldown_entries.empty?
+              items << {:key => column, :entries => drilldown_entries}
+            end
           end
         else
-          item = drilldown_item(entries, "type", "_key")
-          result << ["type", item] if item.size > 1
+          drilldown_entries = drilldown_item(entries, "type", "_key")
+          if drilldown_entries.size > 1
+            items << {:key => "type", :entries => drilldown_entries}
+          end
         end
-        result
+
+        if have_scope_parameter?
+          drilldown_entries = drilldown_item(entries, "local_name", "_key",
+                                             :sort_key => [["_key", :ascending]],
+                                             :limit => -1)
+          if drilldown_entries.size > 1
+            items << {
+              :key => "query",
+              :label => "絞り込み",
+              :entries => drilldown_entries
+            }
+          end
+        end
+
+        items
       end
 
       def group_entries(entries)

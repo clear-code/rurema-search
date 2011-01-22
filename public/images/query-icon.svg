@@ -18,9 +18,9 @@
    width="16"
    inkscape:output_extension="org.inkscape.output.svg.inkscape"
    version="1.1"
-   inkscape:export-filename="/home/kou/work/ruby/rurema-search/public/images/query-icon.png"
-   inkscape:export-xdpi="90"
-   inkscape:export-ydpi="90">
+   inkscape:export-filename="/home/kou/work/ruby/rurema-search/public/images/query-icon-medium.png"
+   inkscape:export-xdpi="135"
+   inkscape:export-ydpi="135">
   <defs
      id="defs3">
     <inkscape:perspective
@@ -191,18 +191,18 @@
   </defs>
   <sodipodi:namedview
      stroke="#3465a4"
-     inkscape:window-y="96"
-     inkscape:window-x="1"
+     inkscape:window-y="153"
+     inkscape:window-x="469"
      inkscape:window-height="754"
-     inkscape:window-width="818"
+     inkscape:window-width="819"
      inkscape:showpageshadow="true"
      inkscape:document-units="px"
      inkscape:grid-bbox="true"
      showgrid="false"
      inkscape:current-layer="layer1"
-     inkscape:cy="24.463136"
-     inkscape:cx="4.2254615"
-     inkscape:zoom="7.9999996"
+     inkscape:cy="-46.282232"
+     inkscape:cx="-37.258389"
+     inkscape:zoom="2"
      inkscape:pageshadow="2"
      inkscape:pageopacity="0.0"
      borderopacity="1"

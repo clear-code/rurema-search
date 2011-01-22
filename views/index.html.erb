@@ -42,7 +42,7 @@
 	<ol>
 	<% objects.each_with_index do |object, i| %>
 	  <li class="<%= i.even? ? 'even' : 'odd' %>">
-            <%= link_drilldown_item(item[:type], :label => object["_key"]) %>
+            <%= link_drilldown_entry(item[:type], :label => object["_key"]) %>
 	    (<%= h(object.n_sub_records) %>)
           </li>
 	<% end %>

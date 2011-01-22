@@ -343,30 +343,32 @@ div.drilldown h2
 {
   margin: 0;
   padding: 0;
+  padding-left: 30px;
 }
 
 div.drilldown h2.drilldown-type
 {
-  padding-left: 30px;
   background: url(../images/type-icon-medium.png) no-repeat left center;
 }
 
 div.drilldown h2.drilldown-class
 {
-  padding-left: 30px;
   background: url(../images/class-icon-medium.png) no-repeat left center;
 }
 
 div.drilldown h2.drilldown-module
 {
-  padding-left: 30px;
   background: url(../images/module-icon-medium.png) no-repeat left center;
 }
 
 div.drilldown h2.drilldown-library
 {
-  padding-left: 30px;
   background: url(../images/library-icon-medium.png) no-repeat left center;
+}
+
+div.drilldown h2.drilldown-query
+{
+  background: url(../images/query-icon-medium.png) no-repeat left center;
 }
 
 div.drilldown ul.drilldown-items,
@@ -375,6 +377,11 @@ div.drilldown ul.drilldown-items li
   display: block;
   margin: 0;
   padding: 0;
+}
+
+div.drilldown ul.drilldown-items li
+{
+  padding-left: 20px;
 }
 
 div.drilldown ul.drilldown-items

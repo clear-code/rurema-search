@@ -1,12 +1,14 @@
 <div class="drilldowns">
-<% @drilldown_items.each do |key, item| %>
+<% @drilldown_items.each do |item| %>
   <div class="drilldown list-box">
-    <h2 class="drilldown-<%= h(key) %>"><%= h(parameter_label(key)) %></h2>
+    <h2 class="drilldown-<%= h(item[:key]) %>">
+       <%= h(item[:label] || parameter_label(item[:key])) %>
+    </h2>
     <ul class="drilldown-items">
-  <% item.each do |record| %>
-      <li class="drilldown-item-<%= h(record[:label]) %>">
-        <%= link_drilldown_item(key, record) %>
-        (<%= h(record[:n_records]) %>)
+  <% item[:entries].each do |entry| %>
+      <li class="drilldown-item-<%= h(entry[:label]) %>">
+        <%= link_drilldown_entry(item[:key], entry) %>
+        (<%= h(entry[:n_records]) %>)
       </li>
   <% end %>
     </ul>
