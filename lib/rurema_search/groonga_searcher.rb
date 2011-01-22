@@ -695,17 +695,12 @@ module RuremaSearch
           end
 
           case value
-          when /\A([A-Z][A-Za-z\d]*)(?:#|\.|.#)([A-Za-z][A-Za-z\d]*[!?=]?)\z/
+          when /\A([A-Z][A-Za-z\d]*(?:::[A-Z][A-Za-z\d]*)*)
+                  (?:\#|\.|.\#)
+                  ([A-Za-z][A-Za-z\d]*[!?=]?)\z/x
             constant = $1
             method_name = $2
-            method_name_target = record.match_target do |match_record|
-              match_record["signature"] * 100
-            end
-            signaturre_condition =
-              (((record["class"] == constant) |
-                (record["module"] == constant)) &
-               (method_name_target =~ method_name))
-            conditions |= signaturre_condition
+            conditions |= ((target =~ constant) & (target =~ method_name))
           end
           conditions
         end
