@@ -28,7 +28,7 @@ done
 if [ "$update_rurema" = "yes" ]; then
     svn up -q ${rubydoc_dir}
 
-    for version in 1.8.7 1.8.8 1.9.1 1.9.2; do
+    for version in 1.8.7 1.9.1 1.9.2; do
 	ruby1.8 \
 	    -I ${bitclust_dir}/lib \
 	    ${bitclust_dir}/bin/bitclust.rb \
