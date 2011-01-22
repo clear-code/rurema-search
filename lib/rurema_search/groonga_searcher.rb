@@ -695,7 +695,7 @@ module RuremaSearch
           end
 
           case value
-          when /\A([A-Z][A-Za-z\d]*)[#.]([A-Za-z][A-Za-z\d]*[!?=]?)\z/
+          when /\A([A-Z][A-Za-z\d]*)(?:#|\.|.#)([A-Za-z][A-Za-z\d]*[!?=]?)\z/
             constant = $1
             method_name = $2
             method_name_target = record.match_target do |match_record|
