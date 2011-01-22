@@ -185,10 +185,14 @@ div.content div.top-page-drilldowns div.drilldown dl dt
   text-align: center;
   background-color: #abf562;
   padding: 0;
-  margin: 0 25px;
+  margin: 0 24px;
   font-size: smaller;
   color: #468c00;
   font-weight: bold;
+  border: 1px solid #d8ffb2;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
 }
 
 div.content div.top-page-drilldowns div.drilldown dl dd
