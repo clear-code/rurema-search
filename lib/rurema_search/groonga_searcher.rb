@@ -457,8 +457,7 @@ module RuremaSearch
           @version_n_entries << version.n_sub_records
         end
 
-        prepare_built_in_classes(entries)
-        prepare_built_in_modules(entries)
+        prepare_built_in_objects(entries)
         prepare_drilldown_items(entries)
 
         @response.write(layout)
@@ -524,15 +523,23 @@ module RuremaSearch
         end
       end
 
-      def prepare_built_in_classes(entries)
+      def prepare_built_in_objects(entries)
         sorted_classes = sorted_built_in_objects_by_name(entries, "class")
-        @built_in_classes_sort_by_name = sorted_classes
-      end
-
-      def prepare_built_in_modules(entries)
         sorted_modules = sorted_built_in_objects_by_name(entries, "module")
-        @built_in_modules_sort_by_name = sorted_modules
-      end
+        @built_in_object_drilldown_items =
+          [
+           {
+             :label => "組み込みクラス一覧",
+             :type => "class",
+             :objects => sorted_classes,
+           },
+           {
+             :label => "組み込みモジュール一覧",
+             :type => "module",
+             :objects => sorted_modules,
+           },
+          ]
+     end
 
       def prepare_drilldown_items(entries)
         @drilldown_items = drilldown_items(entries)

@@ -19,9 +19,14 @@ a:visited
   color: #9191ec;
 }
 
+hr.separator
+{
+  visibility: hidden;
+  clear: both;
+}
+
 div.list-box
 {
-  padding: 5px;
   margin-bottom: 15px;
   background: #d8ffb2;
   border: 1px solid #abf562;
@@ -146,12 +151,8 @@ div.content div.top-search-form table.version-select td span
 
 div.content div.top-page-drilldowns div.drilldown
 {
-  margin: 30px auto;
   width: 40em;
-}
-
-div.content div.top-page-drilldowns div.drilldown
-{
+  margin: 30px auto;
   margin-bottom: 50px;
 }
 
@@ -160,15 +161,13 @@ div.content div.top-page-drilldowns div.drilldown h2
   font-size: larger;
   text-align: center;
   margin: 0;
-  padding: 0;
+  padding: 5px 0;
 }
 
 div.content div.top-page-drilldowns div.drilldown h2.drilldown-type
 {
-  float: left;
-  margin-top: 5px;
-  padding-left: 30px;
-  text-align: left;
+  margin-left: 15em;
+  margin-right: 15em;
   background-position: left top;
 }
 
@@ -181,14 +180,17 @@ div.content div.top-page-drilldowns div.drilldown dl
 div.content div.top-page-drilldowns div.drilldown dl dt
 {
   clear: both;
-  float: left;
-  width: 5em;
+  text-align: center;
+  width: 100%;
+  background: #c1ff84;
+  padding: 0;
 }
 
 div.content div.top-page-drilldowns div.drilldown dl dd
 {
-  margin-left: 5em;
+  margin: 0;
   padding: 0;
+  padding-bottom: 5px;
 }
 
 div.content div.top-page-drilldowns div.drilldown ol
@@ -199,7 +201,10 @@ div.content div.top-page-drilldowns div.drilldown ol
 
 div.content div.top-page-drilldowns div.drilldown ol li
 {
-  display: inline;
+  display: block;
+  float: left;
+  width: 17em;
+  padding-left: 3em;
 }
 
 div.content div.top-page-drilldowns div.drilldown ul
