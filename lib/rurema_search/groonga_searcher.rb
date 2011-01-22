@@ -497,9 +497,8 @@ module RuremaSearch
         end.group("class")
 
         sort_and_group = Proc.new do |*args, &block|
-          built_in_classes.sort(*args).select do |record|
-            record.n_sub_records > 25
-          end.group_by(&block).sort_by do |(key, classes)|
+          grouped_classes = built_in_classes.sort(*args).group_by(&block)
+          grouped_classes.sort_by do |(key, classes)|
             representing_value, label = key
             representing_value
           end.collect do |(key, classes)|
