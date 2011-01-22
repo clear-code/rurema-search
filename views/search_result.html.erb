@@ -16,9 +16,18 @@
 
 <div class="result">
 <%= paginate %>
+  <div class="quick-link-box list-box">
+    <h2 class="quick-link-title">クイックリンク</h2>
+    <ol class="quick-links">
+<%    @grouped_entries[0, 5].each_with_index do |(represent_entry, entries), i| %>
+    <li><a href="#entry-<%= i %>"><%= entry_label(represent_entry) %></a></li>
+<%    end %>
+    </ol>
+  </div>
+
   <dl class="entries">
 <%  @grouped_entries.each_with_index do |(represent_entry, entries), i| %>
-    <dt class="entry-name">
+    <dt class="entry-name" id="entry-<%= i %>">
       <%= link_entry_if(entries.size == 1, represent_entry) %>
       <span class="score">(<%= h(represent_entry.score) %>)</span>
     </dt>
