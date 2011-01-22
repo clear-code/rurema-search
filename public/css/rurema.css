@@ -221,7 +221,9 @@ div.content div.search-header div.version-select
 {
   margin: 0;
   padding: 0;
-  margin-bottom: -2px;
+  padding-bottom: 2px;
+  margin-top: 5px;
+  margin-bottom: -1px;
   border-bottom: 1px solid #c1c1ec;
 }
 
@@ -247,6 +249,8 @@ div.content div.search-header div.version-select ul li a
 {
   padding-left: 0.5em;
   padding-right: 0.5em;
+  padding-top: 2px;
+  padding-bottom: 2px;
   border: 1px solid #c1c1ec;
   border-bottom-color: #e9e9f8;
   -moz-border-radius: 5px 5px 0 0;
@@ -283,6 +287,7 @@ div.content div.statistics
   text-align: right;
   background-color: #e9e9f8;
   border-bottom: 1px solid #c1c1ec;
+  padding-bottom: 3px;
   margin-bottom: 1em;
   text-shadow: 0.075em 0.075em 0.075em rgb(100, 100, 100);
   -moz-box-shadow: 0 0.1em 0.5em rgb(100, 100, 100);
@@ -314,6 +319,7 @@ div.topic-path a.drop-condition img
 div.search-result
 {
   position: relative;
+  margin-top: 15px;
 }
 
 div.result,
@@ -328,14 +334,14 @@ div.no-result
 
 div.result
 {
-  margin-left: 190px;
+  margin-left: 200px;
 }
 
 div.drilldowns
 {
   position: absolute;
   left: 10px;
-  width: 180px;
+  width: 190px;
   font-size: smaller;
 }
 
@@ -343,32 +349,35 @@ div.drilldown h2
 {
   margin: 0;
   padding: 0;
-  padding-left: 30px;
+  padding-left: 20px;
+  margin-top: 6px;
+  margin-left: 7.5px;
+  font-size: medium;
 }
 
 div.drilldown h2.drilldown-type
 {
-  background: url(../images/type-icon-medium.png) no-repeat left center;
+  background: url(../images/type-icon.png) no-repeat left center;
 }
 
 div.drilldown h2.drilldown-class
 {
-  background: url(../images/class-icon-medium.png) no-repeat left center;
+  background: url(../images/class-icon.png) no-repeat left center;
 }
 
 div.drilldown h2.drilldown-module
 {
-  background: url(../images/module-icon-medium.png) no-repeat left center;
+  background: url(../images/module-icon.png) no-repeat left center;
 }
 
 div.drilldown h2.drilldown-library
 {
-  background: url(../images/library-icon-medium.png) no-repeat left center;
+  background: url(../images/library-icon.png) no-repeat left center;
 }
 
 div.drilldown h2.drilldown-query
 {
-  background: url(../images/query-icon-medium.png) no-repeat left center;
+  background: url(../images/query-icon.png) no-repeat left center;
 }
 
 div.drilldown ul.drilldown-items,
@@ -381,7 +390,7 @@ div.drilldown ul.drilldown-items li
 
 div.drilldown ul.drilldown-items li
 {
-  padding-left: 20px;
+  padding-left: 7.5px;
 }
 
 div.drilldown ul.drilldown-items
@@ -392,10 +401,12 @@ div.drilldown ul.drilldown-items
 
 div.quick-link-box
 {
-    margin-top: 10px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #c1c1ec;
 }
 
-div.quick-link-box h2.quick-link-title
+div.quick-link-box h3.quick-link-title
 {
   padding: 0;
   margin: 0;
@@ -412,6 +423,14 @@ div.quick-link-box ol.quick-links
   margin-bottom: 5px;
 }
 
+div.result h2
+{
+  margin: 0;
+  padding: 0;
+  padding-left: 15px;
+  display: none;
+}
+
 dl.entries
 {
   border-collapse: separate;
@@ -424,14 +443,15 @@ dl.entries
 dl.entries dt
 {
   border-top: 1px solid #c1c1ec;
-  padding-top: 0.15em;
+  padding-top: 10px;
   padding-bottom: 0.25em;
   padding-left: 15px;
 }
 
-dl.entries dt span.signature
+dl.entries dt h3
 {
-  font-size: larger;
+  margin: 0;
+  padding: 0;
 }
 
 dl.entries dd

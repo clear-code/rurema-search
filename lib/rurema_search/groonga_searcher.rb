@@ -577,6 +577,7 @@ module RuremaSearch
                                    :page => ensure_page(result.size),
                                    :size => n_entries_per_page)
         @grouped_entries = group_entries(@entries)
+        @leading_grouped_entries = @grouped_entries[0, 5]
         @versions = @database.versions
         @elapsed_time = Time.now.to_f - start
         @response.write(layout)

@@ -18,10 +18,11 @@
 
 <div class="result">
 <%= paginate %>
-  <div class="quick-link-box list-box">
-    <h2 class="quick-link-title">クイックリンク</h2>
+  <h2>検索結果</h2>
+  <div class="quick-link-box">
+    <h3 class="quick-link-title">先頭<%= @leading_grouped_entries.size %>件</h3>
     <ol class="quick-links">
-<%    @grouped_entries[0, 5].each_with_index do |(represent_entry, entries), i| %>
+<%    @leading_grouped_entries.each_with_index do |(represent_entry, entries), i| %>
     <li><a href="#entry-<%= i %>"><%= entry_label(represent_entry) %></a></li>
 <%    end %>
     </ol>
@@ -30,17 +31,21 @@
   <dl class="entries">
 <%  @grouped_entries.each_with_index do |(represent_entry, entries), i| %>
     <dt class="entry-name" id="entry-<%= i %>">
-      <span class="signature">
-        <%= entry_label(represent_entry) %>
-      </span>
-      <span class="score">(<%= h(represent_entry.score) %>)</span>
-      <ul class="entry-metadata">
-        <li class="entry-type">
-          <span class="entry-<%= h(represent_entry.type.key) %>">
-            <%= link_type(represent_entry) %>
-          </span>
-        </li>
-      </ul>
+      <div>
+        <h3>
+	  <span class="signature">
+	    <%= entry_label(represent_entry) %>
+	  </span>
+	  <span class="score">(<%= h(represent_entry.score) %>)</span>
+	</h3>
+	<ul class="entry-metadata">
+	  <li class="entry-type">
+	    <span class="entry-<%= h(represent_entry.type.key) %>">
+	      <%= link_type(represent_entry) %>
+	    </span>
+	  </li>
+	</ul>
+      </div>
     </dt>
     <dd>
       <div class="entry-summary">
@@ -72,8 +77,8 @@
 <%    if ((i + 1) % 5).zero? %>
       <p class="jump-to-top"><a href="#top">絞り込み条件を変える</a></p>
 <%    end %>
-<%  end %>
     </dd>
+<%  end %>
   </dl>
 <%= paginate %>
 </div>
