@@ -515,10 +515,10 @@ module RuremaSearch
             ["F", "F〜J"]
           when "K"..."P"
             ["K", "K〜O"]
-          when "P"..."U"
-            ["P", "P〜T"]
+          when "P"..."T"
+            ["P", "P〜S"]
           else
-            ["U", "U〜Z"]
+            ["T", "T〜Z"]
           end
         end
       end
