@@ -134,7 +134,7 @@ module RuremaSearch
     private
     def populate(path)
       escaped_path = Shellwords.escape(path)
-      command = "/tmp/local/bin/groonga-suggest-create-dataset #{escaped_path} rurema"
+      command = "groonga-suggest-create-dataset #{escaped_path} rurema"
       result = `#{command}`
       unless $?.success?
         raise "failed to create suggest dataset: <#{command}>: <#{result}>"
