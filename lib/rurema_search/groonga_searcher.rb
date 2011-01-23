@@ -1125,6 +1125,7 @@ module RuremaSearch
 
       def prepare_corrections
         @corrections = []
+        return if query.nil? or query.empty?
 
         query.each do |word|
           corrections = @suggest_database.corrections(word)
