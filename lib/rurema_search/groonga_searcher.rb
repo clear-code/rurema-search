@@ -333,7 +333,7 @@ module RuremaSearch
       if query.empty?
         dispatch(request, response)
       else
-        path_info = request.path_info.gsub(/\/query:.+?\//, '/')
+        path_info = request.path_info.gsub(/\/query:[^\/]+/, '')
         encoding = request['encoding']
         if encoding
           query.force_encoding(encoding)
