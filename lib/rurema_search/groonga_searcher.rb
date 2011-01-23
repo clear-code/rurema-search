@@ -547,7 +547,7 @@ module RuremaSearch
              :objects => sorted_modules,
            },
           ]
-     end
+      end
     end
 
     class SearchPage
