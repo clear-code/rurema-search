@@ -24,7 +24,34 @@ require 'rurema_search'
 require 'pp'
 require 'optparse'
 
-def main(database_path)
+def update_suggest_database(database, suggest_database_path, reset)
+  suggest_database = RuremaSearch::GroongaSuggestDatabase.new
+  suggest_database.open(suggest_database_path) do
+    suggest_database.purge if reset
+    database.entries.each do |entry|
+      local_name = entry.local_name
+      next if local_name.nil?
+
+      local_name = local_name.key
+      suggest_database.register_keyword(local_name)
+
+      related_names = []
+      ["class", "module", "object", "library"].each do |column_name|
+        related_names << entry[column_name].key if entry[column_name]
+      end
+      entry.related_names.each do |name|
+        next if name.nil?
+        name = name.key
+        related_names << name
+        splited_names = name.split(/(?:::|.|#|.#|\$|\/)/)
+        related_names.concat(splited_names) if splited_names.size > 1
+      end
+      suggest_database.register_related_keywords(local_name, related_names)
+    end
+  end
+end
+
+def main(database_path, suggest_database_path)
   reset = false
   parser = OptionParser.new
   parser.banner += " bitclust-database1,..."
@@ -32,6 +59,11 @@ def main(database_path)
             'groonga database path.',
             "(#{database_path})") do |path|
     database_path = path
+  end
+  parser.on('--suggest-database=PATH',
+            'groonga suggest database path.',
+            "(#{suggest_database_path})") do |path|
+    suggest_database_path = path
   end
   parser.on('--[no-]reset',
             'reset groonga database before indexing.',
@@ -58,7 +90,9 @@ def main(database_path)
       indexer.index
     end
     database.purge_old_records(base_time)
+    update_suggest_database(database, suggest_database_path, reset)
   end
 end
 
-main((base_dir + "groonga-database").to_s)
+main((base_dir + "groonga-database").to_s,
+     (base_dir + "var" + "lib" + "suggest").to_s)

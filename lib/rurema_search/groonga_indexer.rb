@@ -208,7 +208,7 @@ module RuremaSearch
         compile(src)
         {
           :summary => src.split(/\n\n/, 2).first,
-          :related_names => @related_names
+          :related_names => @related_names.compact.uniq,
         }
       end
 

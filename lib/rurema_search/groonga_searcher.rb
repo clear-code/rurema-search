@@ -357,7 +357,8 @@ module RuremaSearch
 
     private
     def dispatch(request, response)
-      dispatcher = Dispatcher.new(@database, request, response)
+      dispatcher = Dispatcher.new(@database, @suggest_database,
+                                  request, response)
       page = dispatcher.dispatch
       page.extend(@view)
       page.process
@@ -432,8 +433,9 @@ module RuremaSearch
     class Dispatcher
       include PageUtils
 
-      def initialize(database, request, response)
+      def initialize(database, suggest_database, request, response)
         @database = database
+        @suggest_database = suggest_database
         @request = request
         @response = response
       end
@@ -447,7 +449,7 @@ module RuremaSearch
             version = $1
             IndexPage.new(@database, version, @request, @response)
           else
-            SearchPage.new(@database, @request, @response)
+            SearchPage.new(@database, @suggest_database, @request, @response)
           end
         end
       end
@@ -560,8 +562,9 @@ module RuremaSearch
     class SearchPage
       include PageUtils
 
-      def initialize(database, request, response)
+      def initialize(database, suggest_database, request, response)
         @database = database
+        @suggest_database = suggest_database
         @request = request
         @response = response
         @url_mappers = {}
@@ -586,6 +589,7 @@ module RuremaSearch
         @grouped_entries = group_entries(@entries)
         @leading_grouped_entries = @grouped_entries[0, 5]
         @versions = @database.versions
+        prepare_suggestions
         @elapsed_time = Time.now.to_f - start
         @response.write(layout)
       end
@@ -1110,6 +1114,23 @@ module RuremaSearch
           end
         end
         path
+      end
+
+      def prepare_suggestions
+        @suggestions = []
+        @corrections = []
+        @completions = []
+
+        query.each do |word|
+          suggestions = @suggest_database.suggest(word)
+          @suggestions.concat(suggestions["suggest"])
+          @corrections.concat(suggestions["correct"])
+          @completions.concat(suggestions["complete"])
+        end
+
+        @suggestions.sort_by! {|suggestion| -suggestion[:score]}
+        @corrections.sort_by! {|correction| -correction[:score]}
+        @completions.sort_by! {|completion| -completion[:score]}
       end
     end
 
