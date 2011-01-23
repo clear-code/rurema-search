@@ -309,8 +309,9 @@ module RuremaSearch
     include Rack::Utils
     include Utils
 
-    def initialize(database, base_dir, options={})
+    def initialize(database, suggest_database, base_dir, options={})
       @database = database
+      @suggest_database = suggest_database
       @base_dir = base_dir
       @options = options
       setup_view

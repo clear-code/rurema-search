@@ -49,6 +49,10 @@ module RuremaSearchTestUtils
       @database ||= ensure_database
     end
 
+    def suggest_database
+      @suggest_database ||= ensure_suggest_database
+    end
+
     private
     def ensure_database
       updated = ensure_bitclust_database
@@ -113,6 +117,13 @@ module RuremaSearchTestUtils
       end
       archive_dir
     end
+
+    def ensure_suggest_database
+      database_dir = test_dir + "suggest-database"
+      _database = RuremaSearch::GroongaSuggestDatabase.new
+      _database.open(database_dir.to_s)
+      _database
+    end
   end
 
   def setup_tmp_dir
@@ -128,7 +139,7 @@ module RuremaSearchTestUtils
   end
 
   def app
-    RuremaSearch::GroongaSearcher.new(database, base_dir)
+    RuremaSearch::GroongaSearcher.new(database, suggest_database, base_dir)
   end
 
   private
@@ -154,6 +165,10 @@ module RuremaSearchTestUtils
 
   def database
     RuremaSearchTestUtils.database
+  end
+
+  def suggest_database
+    RuremaSearchTestUtils.suggest_database
   end
 
   def host

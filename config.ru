@@ -46,6 +46,9 @@ require 'rurema_search/groonga_searcher'
 database = RuremaSearch::GroongaDatabase.new
 database.open((base_dir + "groonga-database").to_s, "utf-8")
 
+suggest_database = RuremaSearch::GroongaSuggestDatabase.new
+suggest_database.open((base_dir + "var" + "lib" + "suggest").to_s)
+
 environment = ENV["RACK_ENV"] || "development"
 
 searcher_options = {}
@@ -73,6 +76,7 @@ load_searcher_option.call(:document, "document.yaml")
 configuration = load_yaml.call("#{environment}.yaml") || {}
 
 searcher = RuremaSearch::GroongaSearcher.new(database,
+                                             suggest_database,
                                              base_dir.to_s,
                                              searcher_options)
 case environment
