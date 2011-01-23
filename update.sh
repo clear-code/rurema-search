@@ -65,6 +65,7 @@ if [ "$update_index" = "yes" ]; then
     indexer_arguments=
     if [ "$reset_index" = "yes" ]; then
 	rm -rf ${base_dir}/groonga-database
+	rm -rf ${base_dir}/var/lib/suggest/
 	indexer_arguments="${indexer_arguments} --reset"
     fi
     ruby1.9.1 \
