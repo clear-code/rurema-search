@@ -6,6 +6,7 @@
 /test/db-*
 /test/fixtures/ruby-refm-*
 /test/groonga-database
+/test/suggest-database
 /test/.test-result
 /document.yaml
 /smtp.yaml
