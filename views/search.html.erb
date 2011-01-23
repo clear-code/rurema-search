@@ -29,7 +29,7 @@
 
 <% unless @corrections.empty? %>
 <div class="corrections">
-  <h2>もしかして</h2>
+  <h2>他のキーワード</h2>
   <ol>
 <% @corrections.each do |item| %>
     <li><%= link_related_entry(:key => item[:key], :type => "query") %></li>
