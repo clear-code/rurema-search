@@ -21,14 +21,20 @@
   <h2><%= h(catch_phrase) %></h2>
   <form method="POST" action="./">
     <p class="input-form">
-      <input id="query-input" type="text" class="query" name="query"
+      <input id="query-input" type="text" class="query ui-autocomplete-input"
+             name="query"
              value="<%= default_query_form_value %>" />
     </p>
     <p class="button">
       <input type="submit" value="検索" />
     </p>
   </form>
-  <script type="text/javascript">$("#query-input").focus();</script>
+  <script type="text/javascript">
+    $("#query-input").focus();
+    $("#query-input").autocomplete({
+      source: <%= auto_complete_api_path.to_json %>
+    });
+  </script>
 </div>
 
 <div class="top-page-drilldowns">

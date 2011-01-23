@@ -2,8 +2,14 @@
 <div class="description"><%= h(catch_phrase) %></div>
 <div class="search-form">
   <form method="POST" action="./">
-    <input type="text" class="query" name="query"
+    <input id="query-input" type="text" class="query ui-autocomplete-input"
+           name="query"
            value="<%= default_query_form_value %>" />
     <input type="submit" value="検索" />
   </form>
+  <script type="text/javascript">
+    $("#query-input").autocomplete({
+      source: <%= auto_complete_api_path.to_json %>
+    });
+  </script>
 </div>

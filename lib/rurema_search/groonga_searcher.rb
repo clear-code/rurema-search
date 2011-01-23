@@ -86,6 +86,10 @@ module RuremaSearch
         full_path
       end
 
+      def auto_complete_api_path
+        full_path("api:internal", "auto-complete") + "/"
+      end
+
       def image_path(*components)
         full_path("images", *components)
       end
@@ -443,6 +447,9 @@ module RuremaSearch
       def dispatch
         if open_search_description_path?(@request.path_info)
           OpenSearchDescriptionPage.new(@request, @response)
+        elsif @request.path == auto_complete_api_path
+          API::Internal::AutoComplete.new(@database, @suggest_database,
+                                          @request, @response)
         else
           case @request.path_info
           when /\A\/(?:version:([^\/]+)\/)?\z/
@@ -1137,6 +1144,33 @@ module RuremaSearch
             word_length + 2 < key_length
         end
         items[0, 5]
+      end
+    end
+
+    module API
+      module Internal
+        class AutoComplete
+          def initialize(database, suggest_database, request, response)
+            @database = database
+            @suggest_database = suggest_database
+            @request = request
+            @response = response
+          end
+
+          def process
+            term = (@request["term"] || "").strip
+            if term.empty?
+              completions = []
+            else
+              completions = @suggest_database.completions(term)
+              completions = completions.collect do |item|
+                item[:key]
+              end
+            end
+            @response["Content-Type"] = "application/json; charset=UTF-8"
+            @response.write(JSON.generate(completions))
+          end
+        end
       end
     end
 
