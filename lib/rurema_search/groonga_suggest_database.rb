@@ -20,7 +20,7 @@ module RuremaSearch
       path = File.join(base_path, "suggest.db")
       unless File.exist?(path)
         FileUtils.mkdir_p(base_path)
-        pupulate(path)
+        populate(path)
       end
       @context = Groonga::Context.new(:encoding => :utf8)
       @database = @context.open_database(path)
@@ -72,7 +72,7 @@ module RuremaSearch
     private
     def populate(path)
       escaped_path = Shellwords.escape(path)
-      comamnd = "groonga-suggest-create-dataset #{escapeed_path} rurema"
+      command = "groonga-suggest-create-dataset #{escaped_path} rurema"
       result = `#{command}`
       unless $?.success?
         raise "failed to create suggest dataset: <#{command}>: <#{result}>"
