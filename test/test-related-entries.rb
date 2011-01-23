@@ -22,10 +22,10 @@ class RelatedEnetriesTest < Test::Unit::TestCase
   end
 
   def test_remove_same_type_drilldown
-    visit "/singleton-method:File.ftype/"
-    links = related_entry_links("/singleton-method:File.lstat/")
-    assert_equal(["File.lstat"],
-                 links.collect {|link| link.text})
+    visit "/query:File.lstat/"
+    links = related_entry_links("/query:File.stat/")
+    assert_equal(["File.stat"],
+                 links.collect {|link| link.text}.uniq)
   end
 
   private

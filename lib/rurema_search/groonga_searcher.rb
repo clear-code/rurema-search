@@ -202,21 +202,14 @@ module RuremaSearch
       end
 
       TYPE_LABELS = {
-        "class" => "クラス",
-        "module" => "モジュール",
-        "object" => "オブジェクト",
-        "instance-method" => "インスタンスメソッド",
-        "singleton-method" => "特異メソッド",
-        "module-function" => "モジュール関数",
-        "constant" => "定数",
-        "variable" => "変数",
-        "document" => "文書",
-        "library" => "ライブラリ",
         "function" => "関数",
         "macro" => "マクロ",
+        "document" => "文書",
+        "constant" => "定数",
+        "variable" => "変数",
       }
       def type_label(type)
-        TYPE_LABELS[type] || type
+        TYPE_LABELS[type] || PARAMETER_LABELS[type] || type
       end
 
       def link_drilldown_entry(key, entry)
@@ -243,6 +236,13 @@ module RuremaSearch
         "query" => "クエリ",
         "version" => "バージョン",
         "type" => "種類",
+        "class" => "クラス",
+        "module" => "モジュール",
+        "object" => "オブジェクト",
+        "instance-method" => "インスタンスメソッド",
+        "singleton-method" => "特異メソッド",
+        "module-function" => "モジュール関数",
+        "library" => "ライブラリ",
       }
       def parameter_label(key)
 	PARAMETER_LABELS[key] || TYPE_LABELS[key] || key
@@ -300,7 +300,13 @@ module RuremaSearch
       def default_query_form_value
         current_query = query
         if current_query.is_a?(Array)
-          current_query = Shellwords.join(current_query)
+          current_query = current_query.collect do |word|
+            if /[ "]/ =~ word
+              escaped_word = word.gsub(/"/, "\\\"")
+              word = "\"#{escaped_word}\""
+            end
+            word
+          end.join(" ")
         end
         h(current_query)
       end
@@ -611,6 +617,7 @@ module RuremaSearch
       def parse_parameter(key, value)
         label = parameter_label(key)
         return false if key == label
+        value.force_encoding("UTF-8") if key == "query"
         if @parameters.has_key?(key)
           if key == "query"
             @parameters[key] << value
@@ -626,9 +633,9 @@ module RuremaSearch
       end
 
       def unescape_value(value)
-        unescaped_value = URI.unescape(value)
-        unescaped_value = URI.unescape(unescaped_value) if thin?
-        unescaped_value.gsub(/\+/, ' ').strip
+        unescaped_value = Rack::Utils.unescape(value)
+        unescaped_value = Rack::Utils.unescape(unescaped_value) if thin?
+        unescaped_value.strip
       end
 
       def n_entries_per_page
