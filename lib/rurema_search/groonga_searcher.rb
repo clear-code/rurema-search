@@ -780,16 +780,19 @@ module RuremaSearch
           end
         end
 
-        if have_scope_parameter?
-          drilldown_entries = drilldown_item(entries, "local_name", "_key",
-                                             :sort_key => [["_key", :ascending]])
-          if drilldown_entries.size > 1
-            items << {
-              :key => "query",
-              :label => "絞り込み",
-              :entries => drilldown_entries
-            }
+        drilldown_entries = drilldown_item(entries, "local_name", "_key",
+                                           :sort_key => [["_key", :ascending]])
+        if query and !query.empty?
+          drilldown_entries = drilldown_entries.reject do |entry|
+            query.include?(entry[:label])
           end
+        end
+        if drilldown_entries.size > 1
+          items << {
+            :key => "query",
+            :label => "キーワード",
+            :entries => drilldown_entries
+          }
         end
 
         items
