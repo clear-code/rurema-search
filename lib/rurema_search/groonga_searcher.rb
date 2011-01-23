@@ -589,7 +589,7 @@ module RuremaSearch
         @grouped_entries = group_entries(@entries)
         @leading_grouped_entries = @grouped_entries[0, 5]
         @versions = @database.versions
-        prepare_suggestions
+        prepare_corrections
         @elapsed_time = Time.now.to_f - start
         @response.write(layout)
       end
@@ -1020,7 +1020,7 @@ module RuremaSearch
 
       def link_related_entry(related_entry)
         key = related_entry[:key]
-        label = related_entry[:label]
+        label = related_entry[:label] || key
         type = related_entry[:type]
         if @parameters[type]
           href = "/"
@@ -1116,21 +1116,27 @@ module RuremaSearch
         path
       end
 
-      def prepare_suggestions
-        @suggestions = []
+      def prepare_corrections
         @corrections = []
-        @completions = []
 
         query.each do |word|
-          suggestions = @suggest_database.suggest(word)
-          @suggestions.concat(suggestions["suggest"])
-          @corrections.concat(suggestions["correct"])
-          @completions.concat(suggestions["complete"])
+          corrections = @suggest_database.corrections(word)
+          @corrections.concat(remove_garbage_suggestions(word, corrections))
+          break
         end
+      end
 
-        @suggestions.sort_by! {|suggestion| -suggestion[:score]}
-        @corrections.sort_by! {|correction| -correction[:score]}
-        @completions.sort_by! {|completion| -completion[:score]}
+      def remove_garbage_suggestions(word, items)
+        word_length = word.length
+        items = items.uniq {|item| item[:key]}
+        items = items.reject do |item|
+          key = item[:key]
+          key_length = key.length
+          key == word or
+            key_length < word_length - 2 or
+            word_length + 2 < key_length
+        end
+        items[0, 5]
       end
     end
 

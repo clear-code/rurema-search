@@ -56,7 +56,7 @@ module RuremaSearch
           "sequence" => id,
           "time" => timestamp,
         }
-        values.last["type"] = "submit" if pattern == keyword
+        value["type"] = "submit" if pattern == keyword
         values << value
       end
       @context.send("load " +
@@ -100,19 +100,26 @@ module RuremaSearch
       @context.receive
     end
 
-    def suggest(query)
+    def corrections(query)
       @context.send("/d/suggest?" +
                     "table=item_#{@dataset_name}&" +
                     "column=kana&" +
                     "limit=20&" +
-                    "types=complete|suggest|correct&" +
+                    "types=correct&" +
                     "query=#{Rack::Utils.escape(query)}")
       id, json = @context.receive
-      normalized_suggestions = {}
-      JSON.parse(json).each do |key, value|
-        normalized_suggestions[key] = normalize_suggest_entries(value)
-      end
-      normalized_suggestions
+      normalize_suggest_entries(JSON.parse(json)["correct"])
+    end
+
+    def completions(query)
+      @context.send("/d/suggest?" +
+                    "table=item_#{@dataset_name}&" +
+                    "column=kana&" +
+                    "limit=10&" +
+                    "types=complete&" +
+                    "query=#{Rack::Utils.escape(query)}")
+      id, json = @context.receive
+      normalize_suggest_entries(JSON.parse(json)["complete"])
     end
 
     def close
@@ -160,10 +167,6 @@ module RuremaSearch
 
     def keyword_input_patterns(keyword)
       patterns = []
-      keyword.chars.to_a.combination(keyword.size - 1).each do |chars|
-        patterns << chars.join("")
-        patterns << keyword
-      end
       partial_keyword = ""
       keyword.each_char do |char|
         partial_keyword << char

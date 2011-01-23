@@ -27,6 +27,17 @@
   </div>
 </div>
 
+<% unless @corrections.empty? %>
+<div class="corrections">
+  <h2>もしかして</h2>
+  <ol>
+<% @corrections.each do |item| %>
+    <li><%= link_related_entry(:key => item[:key], :type => "query") %></li>
+<%   end %>
+  </ol>
+</div>
+<% end %>
+
 <div class="search-result">
 <% if @entries.n_records.zero? %>
 <%= search_no_result %>

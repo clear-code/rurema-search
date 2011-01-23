@@ -326,6 +326,34 @@ div.topic-path a.drop-condition img
   border: none;
 }
 
+div.corrections
+{
+  margin-top: 5px;
+  margin-left: 230px;
+}
+
+div.corrections h2
+{
+  display: inline;
+  font-size: medium;
+  padding: 0;
+  margin: 0;
+  margin-right: 5px;
+}
+
+div.corrections ol,
+div.corrections ol li
+{
+  display: inline;
+  padding: 0;
+  margin: 0;
+}
+
+div.corrections ol li
+{
+  margin-left: 5px;
+}
+
 div.search-result
 {
   position: relative;
@@ -336,10 +364,9 @@ div.result,
 div.no-result
 {
   clear: both;
-  padding-left: 1em;
-  padding-right: 1em;
+  padding-left: 20px;
+  padding-right: 20px;
   margin-bottom: 1em;
-  margin-top: 7.5px;
 }
 
 div.result
