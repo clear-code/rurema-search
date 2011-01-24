@@ -47,6 +47,11 @@
 	      <%= link_type(represent_entry) %>
 	    </span>
 	  </li>
+<%    entries.each do |entry| %>
+	  <li class="entry-version">
+            <%= link_version_select(entry.version.key) %>
+          </li>
+<%    end %>
 	</ul>
       </div>
     </dt>
@@ -55,14 +60,13 @@
         <p><%= h(remove_markup(represent_entry.summary)) %></p>
       </div>
 <%    entries.each do |entry| %>
-      <div class="entry-description">
-        <span class="entry-version">
-          <%= link_version_select(entry.version.key) %>
-        </span>
-        <%= snippet_description(entry) %>
+      <div class="entry-document">
 	<span class="entry-link">
-	  <%= link_entry(entry, :label => h("全部読む")) %>
+	  <%= link_entry(entry, :label => h(entry.version.key)) %>
 	</span>
+        <div class="entry-description">
+          <%= snippet_description(entry) %>
+        </div>
       </div>
 <%    end %>
       <ul class="entry-related-entries">

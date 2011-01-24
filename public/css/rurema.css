@@ -507,21 +507,16 @@ dl.entries dd div.entry-description
   margin-bottom: 20px;
 }
 
-dl.entries dd div.entry-description span.entry-version
+dl.entries ul.entry-metadata li.entry-version
 {
   padding-left: 20px;
   background: url(../images/version-icon.png) no-repeat left bottom;
 }
 
-dl.entries dd div.entry-description span.entry-link
+dl.entries dd div.entry-document span.entry-link a
 {
   padding-left: 20px;
-}
-
-dl.entries dd div.entry-description span.entry-link a
-{
-  padding-right: 20px;
-  background: url(../images/document-icon.png) no-repeat right bottom;
+  background: url(../images/document-icon.png) no-repeat left bottom;
 }
 
 dl.entries ul.entry-metadata,
