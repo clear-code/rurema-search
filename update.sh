@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 base_dir=$(dirname $0)
 bitclust_dir=${base_dir}/../bitclust
@@ -66,7 +66,7 @@ if [ "$update_index" = "yes" ]; then
     if [ "$reset_index" = "yes" ]; then
 	rm -rf ${base_dir}/groonga-database
 	rm -rf ${base_dir}/var/lib/suggest/
-	indexer_arguments="${indexer_arguments} --reset"
+	indexer_arguments="--reset"
     fi
     ruby1.9.1 \
 	${base_dir}/bin/bitclust-indexer \
