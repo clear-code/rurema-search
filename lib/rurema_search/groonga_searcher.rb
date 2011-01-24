@@ -498,7 +498,7 @@ module RuremaSearch
 
       def title
         if version == :all
-          "Rubyリファレンスマニュアル全文検索 | #{site_title}"
+          "#{catch_phrase} | #{site_title}"
         else
           "Ruby #{version} | #{site_title}"
         end
