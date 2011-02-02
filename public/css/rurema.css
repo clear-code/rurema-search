@@ -326,13 +326,15 @@ div.topic-path a.drop-condition img
   border: none;
 }
 
-div.corrections
+div.corrections,
+div.suggestions
 {
   margin-top: 5px;
   margin-left: 230px;
 }
 
-div.corrections h2
+div.corrections h2,
+div.suggestions h2
 {
   display: inline;
   font-size: medium;
@@ -342,14 +344,17 @@ div.corrections h2
 }
 
 div.corrections ol,
-div.corrections ol li
+div.corrections ol li,
+div.suggestions ol,
+div.suggestions ol li
 {
   display: inline;
   padding: 0;
   margin: 0;
 }
 
-div.corrections ol li
+div.corrections ol li,
+div.suggestions ol li
 {
   margin-left: 5px;
 }

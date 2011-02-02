@@ -597,6 +597,7 @@ module RuremaSearch
         @leading_grouped_entries = @grouped_entries[0, 5]
         @versions = @database.versions
         prepare_corrections
+        prepare_suggestions
         @elapsed_time = Time.now.to_f - start
         @response.write(layout)
       end
@@ -723,6 +724,7 @@ module RuremaSearch
               (match_record["class"] * 12000) |
               (match_record["module"] * 12000) |
               (match_record["object"] * 12000) |
+              (match_record["library"] * 8000) |
               (match_record["normalized_class"] * 6000) |
               (match_record["normalized_module"] * 6000) |
               (match_record["normalized_object"] * 6000) |
@@ -1130,24 +1132,24 @@ module RuremaSearch
         @corrections = []
         return if query.nil? or query.empty?
 
-        query.each do |word|
-          corrections = @suggest_database.corrections(word)
-          @corrections.concat(remove_garbage_suggestions(word, corrections))
-          break
+        word = query.join(" ")
+        corrections = @suggest_database.corrections(word, :limit => 5)
+        corrections.each do |correction|
+          next if correction[:key] == word
+          @corrections << correction
         end
       end
 
-      def remove_garbage_suggestions(word, items)
-        word_length = word.length
-        items = items.uniq {|item| item[:key]}
-        items = items.reject do |item|
-          key = item[:key]
-          key_length = key.length
-          key == word or
-            key_length < word_length - 2 or
-            word_length + 2 < key_length
+      def prepare_suggestions
+        @suggestions = []
+        return if query.nil? or query.empty?
+
+        word = query.join(" ")
+        suggestions = @suggest_database.suggestions(word, :limit => 5)
+        suggestions.each do |suggestion|
+          suggestion[:key].gsub!(/\A#{Regexp.escape(word)}\s*/, '')
+          @suggestions << suggestion
         end
-        items[0, 5]
       end
     end
 

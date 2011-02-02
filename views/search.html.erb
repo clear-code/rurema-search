@@ -29,10 +29,21 @@
 
 <% unless @corrections.empty? %>
 <div class="corrections">
-  <h2>他のキーワード</h2>
+  <h2>別のキーワード</h2>
   <ol>
 <% @corrections.each do |item| %>
     <li><%= link_related_entry(:key => item[:key], :type => "query") %></li>
+<%   end %>
+  </ol>
+</div>
+<% end %>
+
+<% unless @suggestions.empty? %>
+<div class="suggestions">
+  <h2>関連するキーワード</h2>
+  <ol>
+<% @suggestions.each do |item| %>
+    <li><%= link_drilldown_entry("query", :label => item[:key]) %></li>
 <%   end %>
   </ol>
 </div>

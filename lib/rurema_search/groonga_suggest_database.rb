@@ -100,26 +100,16 @@ module RuremaSearch
       @context.receive
     end
 
-    def corrections(query)
-      @context.send("/d/suggest?" +
-                    "table=item_#{@dataset_name}&" +
-                    "column=kana&" +
-                    "limit=20&" +
-                    "types=correct&" +
-                    "query=#{Rack::Utils.escape(query)}")
-      id, json = @context.receive
-      normalize_suggest_entries(JSON.parse(json)["correct"])
+    def corrections(query, options={})
+      suggest("correct", query, options)
     end
 
-    def completions(query)
-      @context.send("/d/suggest?" +
-                    "table=item_#{@dataset_name}&" +
-                    "column=kana&" +
-                    "limit=10&" +
-                    "types=complete&" +
-                    "query=#{Rack::Utils.escape(query)}")
-      id, json = @context.receive
-      normalize_suggest_entries(JSON.parse(json)["complete"])
+    def suggestions(query, options={})
+      suggest("suggest", query, options)
+    end
+
+    def completions(query, options={})
+      suggest("complete", query, options)
     end
 
     def close
@@ -177,6 +167,17 @@ module RuremaSearch
 
     def table_name(name)
       "#{name}_#{@dataset_name}"
+    end
+
+    def suggest(type, query, options={})
+      @context.send("/d/suggest?" +
+                    "table=item_#{@dataset_name}&" +
+                    "column=kana&" +
+                    "limit=#{(options[:limit] || 10).to_i}&" +
+                    "types=#{Rack::Utils.escape(type)}&" +
+                    "query=#{Rack::Utils.escape(query)}")
+      id, json = @context.receive
+      normalize_suggest_entries(JSON.parse(json)[type])
     end
   end
 end
