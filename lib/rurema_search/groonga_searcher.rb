@@ -1032,19 +1032,28 @@ module RuremaSearch
 
       def link_related_entry(related_entry)
         key = related_entry[:key]
-        label = related_entry[:label] || key
+        label = related_entry[:label]
         type = related_entry[:type]
+
+        parameter_values = key
+        unless parameter_values.is_a?(Array)
+          parameter_values = [parameter_values]
+        end
+        label ||= parameter_values.join(" ")
+        parameter_hrefs = parameter_values.collect do |parameter_value|
+          parameter_link_href(type, parameter_value)
+        end
+
         if @parameters[type]
-          href = "/"
+          base_href = "/"
           @ordered_parameters.each do |_key, _value|
             next if _key == type
-            href << parameter_link_href(_key, _value)
+            base_href << parameter_link_href(_key, _value)
           end
-          href << parameter_link_href(type, key)
-          a(label, href)
         else
-          a(label, "./#{parameter_link_href(type, key)}")
+          href = "./"
         end
+        a(label, "#{base_href}#{parameter_hrefs.join('')}")
       end
 
       def link_type_raw(linked_type)
@@ -1135,7 +1144,9 @@ module RuremaSearch
         word = query.join(" ")
         corrections = @suggest_database.corrections(word, :limit => 5)
         corrections.each do |correction|
-          next if correction[:key] == word
+          correction_word = correction[:key]
+          next if correction_word == word
+          correction[:key] = Shellwords.split(correction_word)
           @corrections << correction
         end
       end
