@@ -221,9 +221,16 @@ module RuremaSearch
           link_type_raw(entry[:label])
         else
           label = entry[:label]
+          if label.is_a?(Array)
+            href = label.collect do |parameter_value|
+              parameter_link_href(key, parameter_value)
+            end.join("")
+            label = label.join(" ")
+          else
+            href = parameter_link_href(key, label)
+          end
           label = library_label(label) if key == "library"
-          a(make_breakable(h(label)),
-            "./#{parameter_link_href(key, entry[:label])}")
+          a(make_breakable(h(label)), "./#{href}")
         end
       end
 
@@ -1146,7 +1153,7 @@ module RuremaSearch
         corrections.each do |correction|
           correction_word = correction[:key]
           next if correction_word == word
-          correction[:key] = Shellwords.split(correction_word)
+          correction[:key] = correction_word.split
           @corrections << correction
         end
       end
@@ -1158,7 +1165,9 @@ module RuremaSearch
         word = query.join(" ")
         suggestions = @suggest_database.suggestions(word, :limit => 5)
         suggestions.each do |suggestion|
-          suggestion[:key].gsub!(/\A#{Regexp.escape(word)}\s*/, '')
+          suggestion_words = suggestion[:key].split - query
+          next if suggestion_words.empty?
+          suggestion[:key] = suggestion_words
           @suggestions << suggestion
         end
       end
