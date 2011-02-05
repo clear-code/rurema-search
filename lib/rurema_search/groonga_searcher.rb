@@ -1244,6 +1244,7 @@ module RuremaSearch
       end
 
       def process
+        @version_names = [:all]
         @response.write(layout)
         @response.to_a
       end
