@@ -46,8 +46,13 @@ module RuremaSearch
       include Utils
 
       module_function
-      def site_title
-        "るりまサーチ"
+      def site_title(version_name=nil)
+        version_name ||= version || :all
+        if version_name == :all
+          "るりまサーチ"
+        else
+          "るりまサーチ (Ruby #{version_name})"
+        end
       end
 
       def site_description
@@ -58,12 +63,12 @@ module RuremaSearch
         "最速Rubyリファレンスマニュアル検索！"
       end
 
-      def open_search_description_path
-        _version = version
-        if _version
-          full_path("version:#{_version}", open_search_description_base_name)
-        else
+      def open_search_description_path(version_name=nil)
+        version_name ||= version || :all
+        if version_name == :all
           full_path(open_search_description_base_name)
+        else
+          full_path("version:#{version_name}", open_search_description_base_name)
         end
       end
 
@@ -484,7 +489,7 @@ module RuremaSearch
         @version_names = [:all]
         @version_n_entries = [entries.size]
         @versions.each do |version|
-          @version_names << version.key.key
+          @version_names << version["_key"]
           @version_n_entries << version.n_sub_records
         end
 
@@ -601,7 +606,11 @@ module RuremaSearch
                                    :size => n_entries_per_page)
         @grouped_entries = group_entries(@entries)
         @leading_grouped_entries = @grouped_entries[0, 5]
-        @versions = @database.versions
+        @versions = @database.versions.sort(["_key"], :limit => -1)
+        @version_names = [:all]
+        @versions.each do |version|
+          @version_names << version["_key"]
+        end
         prepare_corrections
         prepare_suggestions
         @elapsed_time = Time.now.to_f - start

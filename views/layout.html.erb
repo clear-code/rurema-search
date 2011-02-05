@@ -5,10 +5,12 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
   <title><%= title %></title>
+<% @version_names.each do |version_name| %>
   <link rel="search"
         type="<%= h(open_search_description_mime_type) %>"
-        title="<%= h(site_title) %>"
-        href="<%= h(open_search_description_path) %>" />
+        title="<%= h(site_title(version_name)) %>"
+        href="<%= h(open_search_description_path(version_name)) %>" />
+<% end %>
   <link rel="stylesheet" href="<%= full_path('css', 'rurema.css') %>"
         type="text/css" media="all" />
   <link rel="stylesheet"

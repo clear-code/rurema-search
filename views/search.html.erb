@@ -1,12 +1,9 @@
 <div class="search-header">
   <div class="version-select">
     <ul>
-      <li class="version-select<%= version.nil? ? '-current' : '' %>">
-	<%= link_version_select(:all) %>
-      </li>
-  <% @versions.sort(["_key"], :limit => -1).each do |_version| %>
-      <li class="version-select<%= version == _version.key ? '-current' : '' %>">
-	<%= link_version_select(_version.key) %>
+  <% @version_names.each do |_version| %>
+      <li class="version-select<%= version == _version ? '-current' : '' %>">
+	<%= link_version_select(_version) %>
       </li>
   <% end %>
     </ul>
