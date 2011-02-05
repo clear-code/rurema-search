@@ -5,7 +5,6 @@
 # License: LGPLv3+
 
 require 'erb'
-require 'net/smtp'
 require 'etc'
 require 'socket'
 require 'nkf'
