@@ -62,7 +62,8 @@
 <%    entries.each do |entry| %>
       <div class="entry-document">
 	<span class="entry-link">
-	  <%= link_entry(entry, :label => h(entry.version.key)) %>
+	  <%= link_entry(entry,
+                         :label => h("#{entry.version.key}のドキュメント")) %>
 	</span>
         <div class="entry-description">
           <%= snippet_description(entry) %>
