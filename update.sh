@@ -25,40 +25,48 @@ for argument in $*; do
     esac
 done
 
+update_rurema()
+{
+    local version=$1
+
+    ruby1.8 \
+	-I ${bitclust_dir}/lib \
+	${bitclust_dir}/bin/bitclust.rb \
+	--database ${base_dir}/db-${version} \
+	init encoding=euc-jp version=${version}
+    ruby1.8 \
+	-I ${bitclust_dir}/lib \
+	${bitclust_dir}/bin/bitclust.rb \
+	--database ${base_dir}/db-${version} \
+	update --stdlibtree ${rubydoc_dir}/refm/api/src
+    ruby1.8 \
+	-I ${bitclust_dir}/lib \
+	${bitclust_dir}/bin/bitclust.rb \
+	--database ${base_dir}/db-${version} \
+	--capi \
+	update ${rubydoc_dir}/refm/capi/src/**/*.rd
+    rm -rf ${base_dir}/public/${version}.{old,new}
+    ruby1.8 \
+	-I ${base_dir}/lib \
+	-I ${bitclust_dir}/lib \
+	${base_dir}/bin/bitclust-generate-static-html \
+	${bitclust_dir}/tools/bc-tohtmlpackage.rb \
+	--quiet \
+	--fs-casesensitive \
+	--database ${base_dir}/db-${version} \
+	--outputdir ${base_dir}/public/${version}.new
+    mv ${base_dir}/public/${version}{,.old}
+    mv ${base_dir}/public/${version}{.new,}
+    rm -rf ${base_dir}/public/${version}.old
+}
+
 if [ "$update_rurema" = "yes" ]; then
     svn up -q ${rubydoc_dir}
 
     for version in 1.8.7 1.9.1 1.9.2; do
-	ruby1.8 \
-	    -I ${bitclust_dir}/lib \
-	    ${bitclust_dir}/bin/bitclust.rb \
-	    --database ${base_dir}/db-${version} \
-	    init encoding=euc-jp version=${version}
-	ruby1.8 \
-	    -I ${bitclust_dir}/lib \
-	    ${bitclust_dir}/bin/bitclust.rb \
-	    --database ${base_dir}/db-${version} \
-	    update --stdlibtree ${rubydoc_dir}/refm/api/src
-	ruby1.8 \
-	    -I ${bitclust_dir}/lib \
-	    ${bitclust_dir}/bin/bitclust.rb \
-	    --database ${base_dir}/db-${version} \
-	    --capi \
-	    update ${rubydoc_dir}/refm/capi/src/**/*.rd
-	rm -rf ${base_dir}/public/${version}.{old,new}
-	ruby1.8 \
-	    -I ${base_dir}/lib \
-	    -I ${bitclust_dir}/lib \
-	    ${base_dir}/bin/bitclust-generate-static-html \
-	    ${bitclust_dir}/tools/bc-tohtmlpackage.rb \
-	    --quiet \
-	    --fs-casesensitive \
-	    --database ${base_dir}/db-${version} \
-	    --outputdir ${base_dir}/public/${version}.new
-	mv ${base_dir}/public/${version}{,.old}
-	mv ${base_dir}/public/${version}{.new,}
-	rm -rf ${base_dir}/public/${version}.old
+	update_rurema $version &
     done
+    wait
 fi
 
 if [ "$update_index" = "yes" ]; then
