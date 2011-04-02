@@ -449,7 +449,7 @@ module RuremaSearch
     end
 
     def path_split_keys
-      SearchPage::PARAMETER_LABELS.keys.collect do |key|
+      (SearchPage::PARAMETER_LABELS.keys + ["api"]).collect do |key|
         "/#{key}:"
       end
     end
