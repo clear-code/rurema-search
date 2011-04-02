@@ -614,10 +614,11 @@ module RuremaSearch
         end
 
         def api_result_versions
-          @version_names.collect do |_version|
+          current_version = version || :all
+          @version_names.collect do |version_name|
             {
-              :name => _version,
-              :selected => version == _version,
+              :name => version_name,
+              :selected => current_version == version_name,
             }
           end
         end
