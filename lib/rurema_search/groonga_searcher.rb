@@ -86,6 +86,10 @@ module RuremaSearch
         "#{base_path}#{components.join('/')}"
       end
 
+      def full_url(*components)
+        "#{base_url}#{components.join('/')}"
+      end
+
       def top_path
         full_path
       end
@@ -94,8 +98,13 @@ module RuremaSearch
         full_path("api:internal", "auto-complete") + "/"
       end
 
+      IMAGES_DIRECTORY = "images"
       def image_path(*components)
-        full_path("images", *components)
+        full_path(IMAGES_DIRECTORY, *components)
+      end
+
+      def image_url(*components)
+        full_url(IMAGES_DIRECTORY, *components)
       end
 
       def base_url
@@ -192,6 +201,10 @@ module RuremaSearch
         else
           "/#{entry.type.key}"
         end
+      end
+
+      def entry_url(entry)
+        full_url(entry_href(entry).sub(/\A\//, ''))
       end
 
       def drilldown_item(entries, drilldown_column, label_column,
@@ -578,7 +591,132 @@ module RuremaSearch
     end
 
     class SearchPage
+      # FIXME
+      module JSONWriter
+        def write_json
+          @response["Content-Type"] = "application/json; charset=UTF-8"
+          @response.write(JSON.generate(api_result))
+        end
+
+        def api_path
+          "api:v1"
+        end
+
+        def api_result
+          {
+            :versions => api_result_versions,
+            :statistics => api_result_statistics,
+            :conditions => api_result_conditions,
+            :corrections => api_result_corrections,
+            :suggestions => api_result_suggestions,
+            :entries => api_result_entries,
+          }
+        end
+
+        def api_result_versions
+          @version_names.collect do |_version|
+            {
+              :name => _version,
+              :selected => version == _version,
+            }
+          end
+        end
+
+        def api_result_statistics
+          {
+            :total => @entries.n_records,
+            :start_offset => @entries.start_offset,
+            :end_offset => @entries.end_offset,
+            :elapsed_time => @elapsed_time,
+          }
+        end
+
+        def api_result_conditions
+          @ordered_parameters.collect do |(key, value)|
+            condition_info = {
+              :name => key,
+              :value => value,
+            }
+            if ICON_AVAILABLE_PARAMETERS.include?(key)
+              condition_info[:icon_uri] = image_url("#{key}-icon.png")
+            end
+            condition_info
+          end
+        end
+
+        def api_result_corrections
+          @corrections.collect do |item|
+            {
+              :value => item[:key].join(" "),
+              :score => item[:score],
+            }
+          end
+        end
+
+        def api_result_suggestions
+          @suggestions.collect do |item|
+            {
+              :value => item[:key].join(" "),
+              :score => item[:score],
+            }
+          end
+        end
+
+        def api_result_entries
+          @grouped_entries.collect do |represent_entry, entries|
+            {
+              :signature => represent_entry.label,
+              :score => represent_entry.score,
+              :metadata => {
+                :type => represent_entry.type.key,
+                :versions => entries.collect {|entry| entry.version.key},
+              },
+              :summary => api_result_clean_text(represent_entry.summary),
+              :documents => entries.collect do |entry|
+                api_result_entry(entry)
+              end,
+              :related_entries => api_result_related_entries(entries),
+            }
+          end
+        end
+
+        def api_result_entry(entry)
+          description = api_result_clean_text(entry.description)
+          snippets = nil
+          if description
+            @snippet ||= create_snippet
+            snippets = @snippet.execute(description) if @snippet
+          end
+          {
+            :version => entry.version.key,
+            :url => entry_url(entry),
+            :description => description,
+            :snippets => snippets || [],
+          }
+        end
+
+        def api_result_related_entries(entries)
+          collect_related_entries(entries).collect do |related_entry|
+            info = related_entry_link_info(related_entry)
+            {
+              :key => info[:key],
+              :label => info[:label],
+              :type => info[:type],
+              :url => full_url(api_path, *info[:parameter_hrefs]),
+            }
+          end
+        end
+
+        def api_result_clean_text(text)
+          return nil if text.nil?
+          cleaned_text = remove_markup(text).strip
+          return nil if cleaned_text.empty?
+          cleaned_text
+        end
+      end
+
       include PageUtils
+      include JSONWriter # FIXME
 
       def initialize(database, suggest_database, request, response)
         @database = database
@@ -589,6 +727,17 @@ module RuremaSearch
       end
 
       def process
+        process_query
+        case @request.path_info
+        when /\A\/#{Regexp.escape(api_path)}\//
+          write_json
+        else
+          write_html
+        end
+      end
+
+      private
+      def process_query
         start = Time.now.to_f
         _, *parameters = @request.path_info.split(/\//)
         conditions = parse_parameters(parameters)
@@ -614,10 +763,12 @@ module RuremaSearch
         prepare_corrections
         prepare_suggestions
         @elapsed_time = Time.now.to_f - start
+      end
+
+      def write_html
         @response.write(layout)
       end
 
-      private
       def header
         search_header
       end
@@ -1045,7 +1196,7 @@ module RuremaSearch
         entries
       end
 
-      def link_related_entry(related_entry)
+      def related_entry_link_info(related_entry)
         key = related_entry[:key]
         label = related_entry[:label]
         type = related_entry[:type]
@@ -1066,9 +1217,20 @@ module RuremaSearch
             base_href << parameter_link_href(_key, _value)
           end
         else
-          href = "./"
+          base_href = "./"
         end
-        a(label, "#{base_href}#{parameter_hrefs.join('')}")
+        {
+          :key => key,
+          :label => label,
+          :type => type,
+          :base_href => base_href,
+          :parameter_hrefs => parameter_hrefs,
+        }
+      end
+
+      def link_related_entry(related_entry)
+        info = related_entry_link_info(related_entry)
+        a(info[:label], "#{info[:base_href]}#{info[:parameter_hrefs].join('')}")
       end
 
       def link_type_raw(linked_type)
