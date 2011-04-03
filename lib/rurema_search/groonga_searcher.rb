@@ -639,7 +639,7 @@ module RuremaSearch
               :value => value,
             }
             if ICON_AVAILABLE_PARAMETERS.include?(key)
-              condition_info[:icon_uri] = image_url("#{key}-icon.png")
+              condition_info[:icon_url] = image_url("#{key}-icon.png")
             end
             condition_info
           end
