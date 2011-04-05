@@ -353,6 +353,8 @@ module RuremaSearch
 
     def call(env)
       env[PageUtils::DOCUMENT_OPTIONS_KEY] = @options[:document]
+      env["RAW_PATH_INFO"] = env["PATH_INFO"]
+      env["RAW_REQUEST_URI"] = env["REQUEST_URI"]
       request = Rack::Request.new(normalize_environment(env))
       response = Rack::Response.new
       response["Content-Type"] = "text/html; charset=UTF-8"
@@ -469,9 +471,10 @@ module RuremaSearch
       end
 
       def dispatch
+        raw_path = @request.script_name + @request["RAW_PATH_INFO"]
         if open_search_description_path?(@request.path_info)
           OpenSearchDescriptionPage.new(@request, @response)
-        elsif @request.path == auto_complete_api_path
+        elsif raw_path == auto_complete_api_path
           API::Internal::AutoComplete.new(@database, @suggest_database,
                                           @request, @response)
         else
