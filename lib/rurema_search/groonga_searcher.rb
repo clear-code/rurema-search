@@ -471,7 +471,7 @@ module RuremaSearch
       end
 
       def dispatch
-        raw_path = @request.script_name + @request["RAW_PATH_INFO"]
+        raw_path = @request.script_name + @request.env["RAW_PATH_INFO"]
         if open_search_description_path?(@request.path_info)
           OpenSearchDescriptionPage.new(@request, @response)
         elsif raw_path == auto_complete_api_path
