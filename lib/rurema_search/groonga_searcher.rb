@@ -1358,17 +1358,19 @@ module RuremaSearch
           end
 
           def process
-            term = (@request["term"] || "").strip
-            if term.empty?
-              completions = []
+            term = (@request["term"] || "").lstrip
+            completions = @suggest_database.completions(term)
+            if completions.empty? and / / !~ term
+              corrections = @suggest_database.corrections(term)
+              candidates = corrections
             else
-              completions = @suggest_database.completions(term)
-              completions = completions.collect do |item|
-                item[:key]
-              end
+              candidates = completions
+            end
+            candidates = candidates.collect do |candidate|
+              candidate[:key]
             end
             @response["Content-Type"] = "application/json; charset=UTF-8"
-            @response.write(JSON.generate(completions))
+            @response.write(JSON.generate(candidates))
           end
         end
       end
