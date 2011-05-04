@@ -32,9 +32,6 @@ def update_suggest_database(database, suggest_database_path, reset)
       local_name = entry.local_name
       next if local_name.nil?
 
-      local_name = local_name.key
-      suggest_database.register_keyword(local_name)
-
       related_names = []
       ["class", "module", "object", "library"].each do |column_name|
         related_names << entry[column_name].key if entry[column_name]
@@ -46,7 +43,18 @@ def update_suggest_database(database, suggest_database_path, reset)
         splited_names = name.split(/(?:::|.|#|.#|\$|\/)/)
         related_names.concat(splited_names) if splited_names.size > 1
       end
-      suggest_database.register_related_keywords(local_name, related_names)
+
+      type = entry.type.key
+      case type
+      when "class", "module", "object", "library"
+        related_entries = database.entries.select do |record|
+          record[type] =~ entry["name._key"]
+        end
+        related_entries.each do |related_entry|
+          related_names << related_entry.local_name.key
+        end
+      end
+      suggest_database.register_keyword(local_name.key, related_names)
     end
   end
 end

@@ -43,60 +43,32 @@ module RuremaSearch
       populate(path)
     end
 
-    def register_keyword(keyword)
+    def register_keyword(keyword, related_keywords)
       return if keyword.nil? or keyword.empty?
-      id = next_id
-      values = []
-      patterns = keyword_input_patterns(keyword)
-      patterns.each do |pattern|
-        now = Time.now
-        timestamp = now.sec * 1000 + now.usec
-        value = {
-          "item" => pattern,
-          "sequence" => id,
-          "time" => timestamp,
-        }
-        value["type"] = "submit" if pattern == keyword
-        values << value
+      related_keywords = related_keywords.reject do |related_keyword|
+        related_keyword.empty?
+      end
+
+      event_values = []
+      event_values.concat(generate_input_event_values(next_id, keyword))
+      related_keywords.each do |related_keyword|
+        keywords = [keyword, related_keyword]
+        event_values.concat(generate_input_event_values(next_id, *keywords))
       end
       @context.send("load " +
                     "--table #{table_name('event')} " +
                     "--each 'suggest_preparer(_id, type, item, " +
                     "sequence, time, #{table_name('pair')})'")
-      @context.send(JSON.generate(values))
+      @context.send(JSON.generate(event_values))
       @context.receive
 
-      @context.send("load --table #{table_name('item')}")
-      value = {
-        "_key" => keyword,
-        "boost" => 100,
-      }
-      @context.send(JSON.generate([value]))
-      @context.receive
-    end
-
-    def register_related_keywords(keyword, related_keywords)
-      return if keyword.nil? or keyword.empty?
-      id = next_id
-      values = []
+      item_values = []
+      item_values << {"_key" => keyword, "boost" => 100}
       related_keywords.each do |related_keyword|
-        next if related_keyword.empty?
-        now = Time.now
-        timestamp = now.sec * 1000 + now.usec
-        value = {
-          "item" => "#{keyword} #{related_keyword}",
-          "sequence" => id,
-          "time" => timestamp,
-          "type" => "submit",
-        }
-        values << value
+        item_values << {"_key" => related_keyword, "boost" => 100}
       end
-      return if values.empty?
-      @context.send("load " +
-                    "--table event_#{@dataset_name} " +
-                    "--each 'suggest_preparer(_id, type, item, " +
-                    "sequence, time, pair_#{@dataset_name})'")
-      @context.send(JSON.generate(values))
+      @context.send("load --table #{table_name('item')}")
+      @context.send(JSON.generate(item_values))
       @context.receive
     end
 
@@ -165,6 +137,23 @@ module RuremaSearch
       patterns
     end
 
+    def generate_input_event_values(id, *keywords)
+      values = []
+      (keywords + [keywords.join(" ")]).each do |keyword|
+        now = Time.now
+        timestamp = now.sec * 1000 + now.usec
+        value = {
+          "item" => keyword,
+          "kana" => keyword,
+          "sequence" => id,
+          "time" => timestamp,
+          "type" => "submit"
+        }
+        values << value
+      end
+      values
+    end
+
     def table_name(name)
       "#{name}_#{@dataset_name}"
     end
@@ -175,6 +164,7 @@ module RuremaSearch
                     "column=kana&" +
                     "limit=#{(options[:limit] || 10).to_i}&" +
                     "types=#{Rack::Utils.escape(type)}&" +
+                    # "threshold=1&" +
                     "query=#{Rack::Utils.escape(query)}")
       id, json = @context.receive
       normalize_suggest_entries(JSON.parse(json)[type])
