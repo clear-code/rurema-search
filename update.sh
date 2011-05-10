@@ -85,3 +85,5 @@ fi
 if [ "$clear_cache" = "yes" ]; then
     ruby1.9.1 ${base_dir}/bin/rurema-search-clear-cache
 fi
+
+touch ${base_dir}/tmp/restart.txt
