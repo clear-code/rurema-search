@@ -30,18 +30,21 @@ module RuremaSearch
         ENV["RACK_ENV"] == "production"
       end
 
-      def passenger?
-        ENV["PASSENGER_CONNECT_PASSWORD"] or
-          ENV["PASSENGER_ENVIRONMENT"] or
-          /Phusion_Passenger/ =~ ENV["SERVER_SOFTWARE"].to_s
+      def passenger?(environment=nil)
+        environment ||= ENV
+        environment["PASSENGER_CONNECT_PASSWORD"] or
+          environment["PASSENGER_ENVIRONMENT"] or
+          /Phusion_Passenger/ =~ environment["SERVER_SOFTWARE"].to_s
       end
 
-      def apache?
-        /Apache/ =~ ENV["SERVER_SOFTWARE"].to_s
+      def apache?(environment=nil)
+        environment ||= ENV
+        /Apache/ =~ environment["SERVER_SOFTWARE"].to_s
       end
 
-      def thin?
-        /\bthin\b/ =~ ENV["SERVER_SOFTWARE"].to_s
+      def thin?(environment=nil)
+        environment ||= ENV
+        /\bthin\b/ =~ environment["SERVER_SOFTWARE"].to_s
       end
 
       def open_search_description_base_name
@@ -832,7 +835,7 @@ module RuremaSearch
 
       def unescape_value(value)
         unescaped_value = Rack::Utils.unescape(value)
-        if thin? or passenger?
+        if thin?(@request.env) or passenger?(@request.env)
           unescaped_value = Rack::Utils.unescape(unescaped_value)
         end
         unescaped_value.strip
