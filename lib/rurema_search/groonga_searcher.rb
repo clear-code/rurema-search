@@ -31,7 +31,8 @@ module RuremaSearch
       end
 
       def passenger?
-        ENV["PASSENGER_ENVIRONMENT"] or
+        ENV["PASSENGER_CONNECT_PASSWORD"] or
+          ENV["PASSENGER_ENVIRONMENT"] or
           /Phusion_Passenger/ =~ ENV["SERVER_SOFTWARE"].to_s
       end
 
@@ -831,7 +832,9 @@ module RuremaSearch
 
       def unescape_value(value)
         unescaped_value = Rack::Utils.unescape(value)
-        unescaped_value = Rack::Utils.unescape(unescaped_value) if thin?
+        if thin? or passenger?
+          unescaped_value = Rack::Utils.unescape(unescaped_value)
+        end
         unescaped_value.strip
       end
 
