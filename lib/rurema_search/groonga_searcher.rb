@@ -41,7 +41,7 @@ module RuremaSearch
       end
 
       def thin?
-        /\bthin\b/ =~ (ENV["SERVER_SOFTWARE"] || "")
+        /\bthin\b/ =~ ENV["SERVER_SOFTWARE"].to_s
       end
 
       def open_search_description_base_name
