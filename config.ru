@@ -87,11 +87,12 @@ when "production"
     def initialize(app, options={})
       @app = app
       @searcher = options[:searcher]
+      @target_exception = options[:target_exception] || Exception
     end
 
     def call(env)
       @app.call(env)
-    rescue Exception => exception
+    rescue @target_exception => exception
       @searcher.error_page(env, exception)
     end
   end
@@ -100,6 +101,12 @@ when "production"
   load_searcher_option.call(:smtp, "smtp.yaml")
   notifiers = [Racknga::ExceptionMailNotifier.new(searcher_options[:smtp])]
   use Racknga::Middleware::ExceptionNotifier, :notifiers => notifiers
+
+  options = {
+    :searcher => searcher,
+    :target_exception => RuremaSearch::GroongaSearcher::ClientError,
+  }
+  use show_error_page, options
 end
 
 if configuration["use_log"]
