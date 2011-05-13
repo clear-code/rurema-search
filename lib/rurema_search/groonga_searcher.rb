@@ -13,6 +13,17 @@ require 'rack'
 
 module RuremaSearch
   class GroongaSearcher
+    class Error < StandardError
+    end
+
+    class ClientError < Error
+      attr_reader :status
+      def initialize(status, message)
+        @status = status
+        super(message)
+      end
+    end
+
     module Utils
       module_function
       def production?
@@ -788,6 +799,10 @@ module RuremaSearch
         parameters.each do |parameter|
           parameter = parameter.force_encoding("UTF-8")
           key, value = parameter.split(/:/, 2)
+          if value.nil?
+            message = "キー<#{key.inspect}>の値がありません。"
+            raise ClientError.new(400, message)
+          end
           unescaped_value = unescape_value(value)
           # TODO: raise unless unescaped_value.valid_encoding?
           next unless parse_parameter(key, unescaped_value)
@@ -1408,7 +1423,7 @@ module RuremaSearch
         @request = Rack::Request.new(env)
         @response = Rack::Response.new
         @response["Content-Type"] = "text/html; charset=UTF-8"
-        @response.status = 500
+        @response.status = http_status
       end
 
       def process
@@ -1436,6 +1451,18 @@ module RuremaSearch
 
       def body
         error
+      end
+
+      def client_error?
+        @exception.is_a?(ClientError)
+      end
+
+      def http_status
+        if client_error?
+          @exception.status
+        else
+          500
+        end
       end
     end
   end
