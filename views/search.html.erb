@@ -28,7 +28,7 @@
 <div class="corrections">
   <h2>別のキーワード</h2>
   <ol>
-<% @corrections.each do |item| %>
+<%   @corrections.each do |item| %>
     <li><%= link_related_entry(:key => item[:key], :type => "query") %></li>
 <%   end %>
   </ol>
@@ -39,7 +39,7 @@
 <div class="suggestions">
   <h2>関連するキーワード</h2>
   <ol>
-<% @suggestions.each do |item| %>
+<%   @suggestions.each do |item| %>
     <li><%= link_drilldown_entry("query", :label => item[:key]) %></li>
 <%   end %>
   </ol>
