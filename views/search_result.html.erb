@@ -37,7 +37,7 @@
       <div>
         <h3>
 	  <span class="signature">
-	    <%= entry_label(represent_entry) %>
+	    <%= link_entry_if(entries.size == 1, represent_entry) %>
 	  </span>
 	  <span class="score">(<%= h(represent_entry.score) %>)</span>
 	</h3>
