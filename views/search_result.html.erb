@@ -49,7 +49,7 @@
 	  </li>
 <%    entries.each do |entry| %>
 	  <li class="entry-version">
-            <%= link_version_select(entry.version.key) %>
+            <%= link_entry(entry, :label => h(entry.version.key)) %>
           </li>
 <%    end %>
 	</ul>
@@ -62,8 +62,7 @@
 <%    entries.each do |entry| %>
       <div class="entry-document">
 	<span class="entry-link">
-	  <%= link_entry(entry,
-                         :label => h("#{entry.version.key}のドキュメント")) %>
+	  <%= link_entry(entry, :label => h(entry.version.key)) %>
 	</span>
         <div class="entry-description">
           <%= snippet_description(entry) %>
