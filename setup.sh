@@ -17,8 +17,8 @@ set -x
 run ${RUBY} -S gem install --user-install rack
 
 run cd ${base_dir}/..
-run svn http://jp.rubyist.net/svn/rurema/bitclust/trunk bitclust
-run svn http://jp.rubyist.net/svn/rurema/doctree/trunk rubydoc
+run svn co http://jp.rubyist.net/svn/rurema/bitclust/trunk bitclust
+run svn co http://jp.rubyist.net/svn/rurema/doctree/trunk rubydoc
 
 run git clone git://github.com/groonga/groonga.git
 run cd groonga
