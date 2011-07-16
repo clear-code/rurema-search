@@ -1,6 +1,6 @@
 #!/bin/sh
 
-base_dir=$(dirname $0)
+base_dir=$( cd "$( dirname "$0" )" && pwd )
 : ${RUBY:=ruby1.9.1}
 
 run()
