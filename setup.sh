@@ -30,7 +30,8 @@ run cd -
 
 run git clone git://github.com/ranguba/rroonga.git
 run cd rroonga
-run PKG_CONFIG_PATH=${base_dir}/lib/pkgconfig ${RUBY} extconf.rb
+run export PKG_CONFIG_PATH=${base_dir}/local/lib/pkgconfig
+run ${RUBY} extconf.rb
 run make
 run cd -
 
