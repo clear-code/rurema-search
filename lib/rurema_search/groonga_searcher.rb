@@ -374,7 +374,9 @@ module RuremaSearch
       response = Rack::Response.new
       response["Content-Type"] = "text/html; charset=UTF-8"
 
-      query = request['query'] || referrer_query(request) || ''
+      query = request['query']
+      query ||= referrer_query(request) unless /\/query:/ =~ request.path_info
+      query ||= ''
       if query.empty?
         dispatch(request, response)
       else
