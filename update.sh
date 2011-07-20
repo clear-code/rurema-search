@@ -1,6 +1,8 @@
 #!/bin/zsh
 
 base_dir=$(dirname $0)
+: ${RUBY18:=ruby1.8.7}
+: ${RUBY19:=ruby1.9.1}
 bitclust_dir=${base_dir}/../bitclust
 rubydoc_dir=${base_dir}/../rubydoc
 
@@ -29,24 +31,24 @@ update_rurema()
 {
     local version=$1
 
-    ruby1.8 \
+    ${RUBY18} \
 	-I ${bitclust_dir}/lib \
 	${bitclust_dir}/bin/bitclust.rb \
 	--database ${base_dir}/db-${version} \
 	init encoding=euc-jp version=${version}
-    ruby1.8 \
+    ${RUBY18} \
 	-I ${bitclust_dir}/lib \
 	${bitclust_dir}/bin/bitclust.rb \
 	--database ${base_dir}/db-${version} \
 	update --stdlibtree ${rubydoc_dir}/refm/api/src
-    ruby1.8 \
+    ${RUBY18} \
 	-I ${bitclust_dir}/lib \
 	${bitclust_dir}/bin/bitclust.rb \
 	--database ${base_dir}/db-${version} \
 	--capi \
 	update ${rubydoc_dir}/refm/capi/src/**/*.rd
     rm -rf ${base_dir}/public/${version}.{old,new}
-    ruby1.8 \
+    ${RUBY18} \
 	-I ${base_dir}/lib \
 	-I ${bitclust_dir}/lib \
 	${base_dir}/bin/bitclust-generate-static-html \
@@ -76,14 +78,14 @@ if [ "$update_index" = "yes" ]; then
 	rm -rf ${base_dir}/var/lib/suggest/
 	indexer_arguments="--reset"
     fi
-    ruby1.9.1 \
+    ${RUBY19} \
 	${base_dir}/bin/bitclust-indexer \
 	${indexer_arguments} \
 	${base_dir}/db-*
 fi
 
 if [ "$clear_cache" = "yes" ]; then
-    ruby1.9.1 ${base_dir}/bin/rurema-search-clear-cache
+    ${RUBY19} ${base_dir}/bin/rurema-search-clear-cache
 fi
 
 touch ${base_dir}/tmp/restart.txt
