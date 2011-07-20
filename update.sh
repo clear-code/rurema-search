@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 base_dir=$(dirname $0)
-: ${RUBY18:=ruby1.8.7}
+: ${RUBY18:=ruby1.8}
 : ${RUBY19:=ruby1.9.1}
 bitclust_dir=${base_dir}/../bitclust
 rubydoc_dir=${base_dir}/../rubydoc
