@@ -374,7 +374,7 @@ module RuremaSearch
       response = Rack::Response.new
       response["Content-Type"] = "text/html; charset=UTF-8"
 
-      query = request['query'] || ''
+      query = request['query'] || referrer_query(request) || ''
       if query.empty?
         dispatch(request, response)
       else
@@ -473,6 +473,14 @@ module RuremaSearch
 
     def split_query(query)
       Shellwords.split(query)
+    end
+
+    def referrer_query(request)
+      referrer = request.referrer
+      return nil if referrer.nil?
+      referrer_query = URI(referrer).query
+      referrer_parameters = Rack::Utils.parse_nested_query(referrer_query)
+      referrer_parameters["q"]
     end
 
     class Dispatcher
