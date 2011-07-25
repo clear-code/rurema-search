@@ -14,7 +14,7 @@ run()
 
 set -x
 
-run ${RUBY19} -S gem install --user-install rack pkg-config
+run ${RUBY19} -S gem install rack pkg-config
 
 run cd ${base_dir}/..
 run svn co http://jp.rubyist.net/svn/rurema/bitclust/trunk bitclust
