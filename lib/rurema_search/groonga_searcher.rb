@@ -757,6 +757,7 @@ module RuremaSearch
 
       def process
         process_query
+        @response.status = 404 if @entries.empty?
         case @request.path_info
         when /\A\/#{Regexp.escape(api_path)}\//
           write_json
