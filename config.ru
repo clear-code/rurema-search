@@ -80,8 +80,6 @@ searcher = RuremaSearch::GroongaSearcher.new(database,
                                              base_dir.to_s,
                                              searcher_options)
 case environment
-when "development"
-  use Rack::ShowExceptions
 when "production"
   show_error_page = Class.new do
     def initialize(app, options={})
@@ -112,11 +110,6 @@ end
 if configuration["use_log"]
   log_database_path = base_dir + "var" + "log" + "db"
   use Racknga::Middleware::Log, :database_path => log_database_path.to_s
-end
-
-case environment
-when "development"
-  use Rack::CommonLogger
 end
 
 use Rack::Runtime
