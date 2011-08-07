@@ -146,6 +146,7 @@ end
 use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
 
 use Racknga::Middleware::Deflater
+use Rack::Head
 use Rack::ConditionalGet
 
 use Racknga::Middleware::JSONP
@@ -156,5 +157,4 @@ if configuration["use_cache"]
 end
 
 use Rack::Lint
-use Rack::Head
 run searcher
