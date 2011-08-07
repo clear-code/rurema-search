@@ -1,0 +1,109 @@
+#!/usr/bin/env ruby
+#
+# Copyright (c) 2011 Kouhei Sutou <kou@clear-code.com>
+#
+# License: GPLv3+
+
+require 'pathname'
+
+base_dir = Pathname.new(__FILE__).dirname.parent.cleanpath.realpath
+
+rroonga_dir = base_dir.parent + "rroonga"
+rroonga_lib_dir = rroonga_dir + "lib"
+rroonga_ext_dir = rroonga_dir + "ext" + "groonga"
+racknga_dir = base_dir.parent + "racknga"
+racknga_lib_dir = racknga_dir + "lib"
+
+$LOAD_PATH.unshift(rroonga_ext_dir.to_s)
+$LOAD_PATH.unshift(rroonga_lib_dir.to_s)
+$LOAD_PATH.unshift(racknga_lib_dir.to_s)
+
+require "json"
+require "cgi"
+require "racknga"
+require "rurema_search"
+begin
+  require "MeCab"
+rescue LoadError
+end
+
+def print_events(id, entry, keyword, events)
+  return if events.nil?
+  events << {:item => keyword,
+             :time => entry.time_local,
+             :type => "submit"}
+  events.each do |event|
+    puts(",")
+    time = event[:time]
+    time = time.to_i * 1_000_000 + time.usec
+    print(JSON.generate([id, time, event[:item], event[:type]]))
+  end
+end
+
+if defined?(MeCab::Tagger)
+  @tagger = MeCab::Tagger.new("-Oyomi")
+  def katakana(string)
+    @tagger.parse(string).force_encoding("UTF-8").strip
+  end
+else
+  def katakana(string)
+    NKF.nkf("-w -katakana", string)
+  end
+end
+
+dataset = RuremaSearch::GroongaSuggestDatabase::DATASET
+
+puts("load " +
+     "--table event_#{dataset} " +
+     "--each 'suggest_preparer(_id, type, item, sequence, time, pair_#{dataset})'")
+puts("[")
+print("[\"sequence\", \"time\", \"item\", \"type\"]")
+parser = Racknga::NginxAccessLogParser.new(ARGF.each_line)
+events = {}
+posts = {}
+keywords = []
+parser.each do |entry|
+  id = [entry.remote_address, entry.http_user_agent].join(" ")
+  case entry.request
+  when /\AGET \/api:internal\/auto-complete\/\?term=(.+) HTTP\/1\.\d\z/
+    input = $1
+    events[id] ||= []
+    events[id] << {:item => CGI.unescape(input),
+                   :time => entry.time_local}
+  when /\APOST (.+) HTTP\/1\.\d\z/
+    posts[id] = true
+  when /\AGET (.+) HTTP\/1\.\d\z/
+    path = $1
+    next unless posts[id]
+    posts[id] = false
+    if entry.status == 200
+      queries = []
+      path.split(/\//).each do |component|
+        key, value = component.split(/:/, 2)
+        queries << CGI.unescape(value) if key == "query"
+      end
+      unless queries.empty?
+        print_events(id, entry, queries.join(" "), events[id])
+        keywords.concat(queries)
+      end
+    end
+    events[id].clear if events[id]
+  end
+end
+puts
+puts("]")
+
+puts("load --table item_#{dataset}")
+puts("[")
+print("[\"_key\", \"kana\"]")
+keywords.uniq.each do |keyword|
+  puts(",")
+  if keyword.ascii_only?
+    keyword_in_katakana = keyword
+  else
+    keyword_in_katakana = katakana(keyword)
+  end
+  print(JSON.generate([keyword, keyword_in_katakana]))
+end
+puts
+puts("]")
