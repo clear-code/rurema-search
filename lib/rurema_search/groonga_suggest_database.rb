@@ -8,9 +8,11 @@ require 'groonga'
 
 module RuremaSearch
   class GroongaSuggestDatabase
+    DATASET = "rurema"
+
     def initialize
       @database = nil
-      @dataset_name = "rurema"
+      @dataset_name = DATASET
       @id = 0
     end
 
@@ -52,8 +54,9 @@ module RuremaSearch
       event_values = []
       event_values.concat(generate_input_event_values(next_id, keyword))
       related_keywords.each do |related_keyword|
-        keywords = [keyword, related_keyword]
-        event_values.concat(generate_input_event_values(next_id, *keywords))
+        combined_keyword = [keyword, related_keyword].join(" ")
+        event_values.concat(generate_input_event_values(next_id,
+                                                        combined_keyword))
       end
       @context.send("load " +
                     "--table #{table_name('event')} " +
@@ -63,9 +66,9 @@ module RuremaSearch
       @context.receive
 
       item_values = []
-      item_values << {"_key" => keyword, "boost" => 100}
+      item_values << {"_key" => keyword, "kana" => keyword}
       related_keywords.each do |related_keyword|
-        item_values << {"_key" => related_keyword, "boost" => 100}
+        item_values << {"_key" => related_keyword, "kana" => related_keyword}
       end
       @context.send("load --table #{table_name('item')}")
       @context.send(JSON.generate(item_values))
@@ -103,17 +106,6 @@ module RuremaSearch
       end
 
       @database = @context.open_database(path)
-      Groonga::Schema.define(:context => @context) do |schema|
-        schema.remove_table("bigram")
-
-        schema.create_table("bigram_alphabet",
-                            :type => :patricia_trie,
-                            :key_type => "ShortText",
-                            :default_tokenizer => "TokenBigramSplitSymbolAlphaDigit",
-                            :key_normalize => true) do |table|
-          table.index("item_#{@dataset_name}._key")
-        end
-      end
     end
 
     def normalize_suggest_entries(entries)
@@ -137,20 +129,26 @@ module RuremaSearch
       patterns
     end
 
-    def generate_input_event_values(id, *keywords)
+    def generate_input_event_values(id, keyword)
       values = []
-      (keywords + [keywords.join(" ")]).each do |keyword|
-        now = Time.now
-        timestamp = now.sec * 1000 + now.usec
+      now = Time.now
+      time_stamp = now.to_i * 1_000_000 + now.usec
+      keyword_input_patterns(keyword).each do |partial_keyword|
         value = {
-          "item" => keyword,
-          "kana" => keyword,
+          "item" => partial_keyword,
           "sequence" => id,
-          "time" => timestamp,
-          "type" => "submit"
+          "time" => time_stamp,
         }
         values << value
+        time_stamp += 1
       end
+      values << {
+        "item" => keyword,
+        "kana" => keyword,
+        "sequence" => id,
+        "time" => time_stamp,
+        "type" => "submit"
+      }
       values
     end
 
