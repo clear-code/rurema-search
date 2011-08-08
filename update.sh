@@ -11,6 +11,7 @@ PATH=${base_dir}/local/bin:$PATH
 update_rurema=yes
 update_index=yes
 reset_index=no
+load_data=yes
 clear_cache=yes
 for argument in $*; do
     case "$argument" in
@@ -22,6 +23,9 @@ for argument in $*; do
 	    ;;
 	"--reset-index")
 	    reset_index=yes
+	    ;;
+	"--no-load-data")
+	    load_data=no
 	    ;;
 	"--no-clear-cache")
 	    clear_cache=no
@@ -74,15 +78,20 @@ if [ "$update_rurema" = "yes" ]; then
 fi
 
 if [ "$update_index" = "yes" ]; then
-    indexer_arguments=
+    reset_argument=
+    load_data_argument=
     if [ "$reset_index" = "yes" ]; then
 	rm -rf ${base_dir}/groonga-database
 	rm -rf ${base_dir}/var/lib/suggest/
-	indexer_arguments="--reset"
+	reset_argument="--reset"
+    fi
+    if [ "$load_data" != "yes" ]; then
+	load_data_argument="--no-load-data"
     fi
     ${RUBY19} \
 	${base_dir}/bin/bitclust-indexer \
-	${indexer_arguments} \
+	${reset_argument} \
+	${load_data_argument} \
 	${base_dir}/db-*
 fi
 

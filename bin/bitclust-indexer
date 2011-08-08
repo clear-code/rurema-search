@@ -24,43 +24,62 @@ require 'rurema_search'
 require 'pp'
 require 'optparse'
 
-def update_suggest_database(database, suggest_database_path, reset)
+def load_bitclust_data(database, bitclust_database_paths)
+  base_time = Time.now
+  bitclust_database_paths.each do |bitclust_database_path|
+    method_database = BitClust::MethodDatabase.new(bitclust_database_path)
+    function_database = BitClust::FunctionDatabase.new(bitclust_database_path)
+    indexer = RuremaSearch::GroongaIndexer.new(database,
+                                               method_database,
+                                               function_database)
+    indexer.base_time = base_time
+    indexer.index
+  end
+  database.purge_old_records(base_time)
+end
+
+def load_suggest_data(database, suggest_database)
+  database.entries.each do |entry|
+    local_name = entry.local_name
+    next if local_name.nil?
+
+    related_names = []
+    ["class", "module", "object", "library"].each do |column_name|
+      related_names << entry[column_name].key if entry[column_name]
+    end
+    entry.related_names.each do |name|
+      next if name.nil?
+      name = name.key
+      related_names << name
+      splited_names = name.split(/(?:::|.|#|.#|\$|\/)/)
+      related_names.concat(splited_names) if splited_names.size > 1
+    end
+
+    type = entry.type.key
+    case type
+    when "class", "module", "object", "library"
+      related_entries = database.entries.select do |record|
+        record[type] =~ entry["name._key"]
+      end
+      related_entries.each do |related_entry|
+        related_names << related_entry.local_name.key
+      end
+    end
+    suggest_database.register_keyword(local_name.key, related_names)
+  end
+end
+
+def update_suggest_database(database, suggest_database_path, reset, load_data)
   suggest_database = RuremaSearch::GroongaSuggestDatabase.new
   suggest_database.open(suggest_database_path) do
     suggest_database.purge if reset
-    database.entries.each do |entry|
-      local_name = entry.local_name
-      next if local_name.nil?
-
-      related_names = []
-      ["class", "module", "object", "library"].each do |column_name|
-        related_names << entry[column_name].key if entry[column_name]
-      end
-      entry.related_names.each do |name|
-        next if name.nil?
-        name = name.key
-        related_names << name
-        splited_names = name.split(/(?:::|.|#|.#|\$|\/)/)
-        related_names.concat(splited_names) if splited_names.size > 1
-      end
-
-      type = entry.type.key
-      case type
-      when "class", "module", "object", "library"
-        related_entries = database.entries.select do |record|
-          record[type] =~ entry["name._key"]
-        end
-        related_entries.each do |related_entry|
-          related_names << related_entry.local_name.key
-        end
-      end
-      suggest_database.register_keyword(local_name.key, related_names)
-    end
+    load_suggest_data(database, suggest_database) if load_data
   end
 end
 
 def main(database_path, suggest_database_path)
   reset = false
+  load_data = true
   parser = OptionParser.new
   parser.banner += " bitclust-database1,..."
   parser.on('-d', '--database=PATH',
@@ -78,6 +97,11 @@ def main(database_path, suggest_database_path)
             "(#{reset})") do |boolean|
     reset = boolean
   end
+  parser.on('--[no-]load-data',
+            'load data after creating database.',
+            "(#{load_data})") do |boolean|
+    load_data = boolean
+  end
   parser.on('--help', 'Prints this message and quit.') do
     puts(parser)
     exit(true)
@@ -87,18 +111,8 @@ def main(database_path, suggest_database_path)
   database = RuremaSearch::GroongaDatabase.new
   database.open(database_path, "utf-8") do
     database.purge if reset
-    base_time = Time.now
-    bitclust_database_paths.each do |bitclust_database_path|
-      method_database = BitClust::MethodDatabase.new(bitclust_database_path)
-      function_database = BitClust::FunctionDatabase.new(bitclust_database_path)
-      indexer = RuremaSearch::GroongaIndexer.new(database,
-                                                 method_database,
-                                                 function_database)
-      indexer.base_time = base_time
-      indexer.index
-    end
-    database.purge_old_records(base_time)
-    update_suggest_database(database, suggest_database_path, reset)
+    load_bitclust_data(database, bitclust_database_paths) if load_data
+    update_suggest_database(database, suggest_database_path, reset, load_data)
   end
 end
 
