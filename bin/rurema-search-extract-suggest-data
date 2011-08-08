@@ -54,9 +54,7 @@ def print_events(id, entry, keyword, events)
              :type => "submit"}
   events.each do |event|
     puts(",")
-    time = event[:time]
-    time = time.to_i * 1_000_000 + time.usec
-    print(JSON.generate([id, time, event[:item], event[:type]]))
+    print(JSON.generate([id, event[:time].to_f, event[:item], event[:type]]))
   end
 end
 

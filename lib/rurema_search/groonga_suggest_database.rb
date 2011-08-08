@@ -132,12 +132,12 @@ module RuremaSearch
     def generate_input_event_values(id, keyword)
       values = []
       now = Time.now
-      time_stamp = now.to_i * 1_000_000 + now.usec
+      time_stamp = now + 1
       keyword_input_patterns(keyword).each do |partial_keyword|
         value = {
           "item" => partial_keyword,
           "sequence" => id,
-          "time" => time_stamp,
+          "time" => time_stamp.to_f,
         }
         values << value
         time_stamp += 1
@@ -146,7 +146,7 @@ module RuremaSearch
         "item" => keyword,
         "kana" => keyword,
         "sequence" => id,
-        "time" => time_stamp,
+        "time" => time_stamp.to_f,
         "type" => "submit"
       }
       values
