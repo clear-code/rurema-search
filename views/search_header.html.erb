@@ -1,7 +1,7 @@
 <h1><%= h1 %></h1>
 <div class="description"><%= h(catch_phrase) %></div>
 <div class="search-form">
-  <form method="GET" action="./">
+  <form method="POST" action="./">
     <input id="query-input" type="text" class="query ui-autocomplete-input"
            name="query" autocomplete="off"
            value="<%= default_query_form_value %>" />
