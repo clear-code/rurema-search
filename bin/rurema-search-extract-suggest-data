@@ -93,6 +93,8 @@ end
 puts
 puts("]")
 
+puts
+
 puts("load --table item_#{dataset}")
 puts("[")
 print("[\"_key\", \"kana\"]")
