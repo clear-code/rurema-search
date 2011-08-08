@@ -1143,34 +1143,42 @@ module RuremaSearch
         end
       end
 
+      def grouped_entries_description_snippets(entries)
+        snippets = []
+        entries.each do |entry|
+          snippets.concat(entry_description_snippets(entry))
+        end
+        snippets.uniq
+      end
+
       def snippet_width
         300
       end
 
-      def snippet_description(entry)
+      def entry_description_snippets(entry)
         @snippet ||= create_snippet
         description = remove_markup(entry.description)
-        snippet_description = nil
+        snippets = []
         if @snippet and description
-          snippets = @snippet.execute(description)
-          unless snippets.empty?
-            separator = tag("span", {:class => "separator"}, "...")
-            snippets = snippets.collect do |snippet|
-              tag("div", {:class => "snippet"},
-                  "#{separator}#{snippet}#{separator}")
-            end
-            snippet_description = snippets.join("")
+          snippets.concat(@snippet.execute(description))
+          separator = tag("span", {:class => "separator"}, "...")
+          snippets = snippets.collect do |snippet|
+            "#{separator}#{snippet.strip}#{separator}"
           end
         end
-        if snippet_description.nil?
+        if snippets.empty?
           description ||= ""
           if description.size > snippet_width
-            snippet_description = description[0, snippet_width] << "..."
+            description_snippet = description[0, snippet_width] << "..."
           else
-            snippet_description = description
+            description_snippet = description
           end
+          description_snippet = description_snippet.strip
+          snippets << description_snippet unless description_snippet.empty?
         end
-        tag("div", {:class => "snippets"}, snippet_description)
+        snippets.collect do |snippet|
+          tag("div", {:class => "snippet"}, snippet.gsub(/\n/, "<br />"))
+        end
       end
 
       def create_snippet

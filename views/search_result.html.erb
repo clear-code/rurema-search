@@ -59,16 +59,13 @@
       <div class="entry-summary">
         <p><%= h(remove_markup(represent_entry.summary)) %></p>
       </div>
-<%    entries.each do |entry| %>
       <div class="entry-document">
-	<span class="entry-link">
-	  <%= link_entry(entry, :label => h(entry.version.key)) %>
-	</span>
-        <div class="entry-description">
-          <%= snippet_description(entry) %>
+<%    grouped_entries_description_snippets(entries).each do |snippet| %>
+        <div class="entry-snippets">
+          <%= snippet %>
         </div>
-      </div>
 <%    end %>
+      </div>
       <ul class="entry-related-entries">
 <%    collect_related_entries(entries).each_with_index do |related_entry, j| %>
 <%      if j < 20 %>

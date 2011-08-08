@@ -524,6 +524,24 @@ dl.entries dd div.entry-document span.entry-link a
   background: url(../images/document-icon.png) no-repeat left bottom;
 }
 
+dl.entries dd div.entry-document div.entry-snippets
+{
+  margin-bottom: 30px;
+  background: white;
+  border: 1px solid #c1c1ec;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-box-shadow: 0.2em 0.2em 0.5em rgb(100, 100, 100);
+  -webkit-box-shadow: 0.2em 0.2em 0.5em rgb(100, 100, 100);
+  box-shadow: 0.2em 0.2em 0.5em rgb(100, 100, 100);
+  padding: 10px;
+}
+
+dl.entries dd div.entry-document div.entry-snippets div.snippet
+{
+}
+
 dl.entries ul.entry-metadata,
 dl.entries ul.entry-related-entries
 {
