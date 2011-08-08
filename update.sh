@@ -11,6 +11,7 @@ PATH=${base_dir}/local/bin:$PATH
 update_rurema=yes
 update_index=yes
 reset_index=no
+reset_suggest=no
 load_data=yes
 clear_cache=yes
 for argument in $*; do
@@ -23,6 +24,9 @@ for argument in $*; do
 	    ;;
 	"--reset-index")
 	    reset_index=yes
+	    ;;
+	"--reset-suggest")
+	    reset_suggest=yes
 	    ;;
 	"--no-load-data")
 	    load_data=no
@@ -82,8 +86,11 @@ if [ "$update_index" = "yes" ]; then
     load_data_argument=
     if [ "$reset_index" = "yes" ]; then
 	rm -rf ${base_dir}/groonga-database
-	rm -rf ${base_dir}/var/lib/suggest/
+	rm -rf ${base_dir}/var/lib/suggest
 	reset_argument="--reset"
+    fi
+    if [ "$reset_suggest" = "yes" ]; then
+	rm -rf ${base_dir}/var/lib/suggest
     fi
     if [ "$load_data" != "yes" ]; then
 	load_data_argument="--no-load-data"
