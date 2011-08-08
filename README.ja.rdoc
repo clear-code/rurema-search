@@ -67,3 +67,4 @@ http://redmine.ruby-lang.org/wiki/rurema/MailingList
 == 感謝
 
 * okkezさん: バグを報告してくれました。
+* sora_hさん: 検索結果のソート順について意見をくれました。
