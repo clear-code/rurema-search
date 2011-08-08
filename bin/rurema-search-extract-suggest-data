@@ -85,33 +85,38 @@ parser = Racknga::NginxAccessLogParser.new(ARGF.each_line)
 events = {}
 posts = {}
 keywords = []
-parser.each do |entry|
-  id = generate_id(entry)
-  case entry.request
-  when /\AGET \/api:internal\/auto-complete\/\?term=(.+) HTTP\/1\.\d\z/
-    input = $1
-    events[id] ||= []
-    events[id] << {:item => CGI.unescape(input),
-                   :time => entry.time_local}
-  when /\APOST (.+) HTTP\/1\.\d\z/
-    posts[id] = true
-  when /\AGET (.+) HTTP\/1\.\d\z/
-    path = $1
-    next unless posts[id]
-    posts[id] = false
-    if entry.status == 200
-      queries = []
-      path.split(/\//).each do |component|
-        key, value = component.split(/:/, 2)
-        queries << CGI.unescape(value) if key == "query"
+begin
+  parser.each do |entry|
+    id = generate_id(entry)
+    case entry.request
+    when /\AGET \/api:internal\/auto-complete\/\?term=(.+) HTTP\/1\.\d\z/
+      input = $1
+      events[id] ||= []
+      events[id] << {:item => CGI.unescape(input),
+                     :time => entry.time_local}
+    when /\APOST (.+) HTTP\/1\.\d\z/
+      posts[id] = true
+    when /\AGET (.+) HTTP\/1\.\d\z/
+      path = $1
+      next unless posts[id]
+      posts[id] = false
+      if entry.status == 200
+        queries = []
+        path.split(/\//).each do |component|
+          key, value = component.split(/:/, 2)
+          queries << CGI.unescape(value) if key == "query"
+        end
+        unless queries.empty?
+          print_events(id, entry, queries.join(" "), events[id])
+          keywords.concat(queries)
+        end
       end
-      unless queries.empty?
-        print_events(id, entry, queries.join(" "), events[id])
-        keywords.concat(queries)
-      end
+      events[id].clear if events[id]
     end
-    events[id].clear if events[id]
   end
+rescue Racknga::NginxAccessLogParser::FormatError
+  puts $!
+  retry
 end
 puts
 puts("]")
