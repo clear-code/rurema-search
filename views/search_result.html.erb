@@ -34,28 +34,28 @@
   <dl class="entries">
 <%  @grouped_entries.each_with_index do |(represent_entry, entries), i| %>
     <dt class="entry-name" id="entry-<%= i %>">
-      <div>
-        <h3>
-	  <span class="signature">
-	    <%= link_entry_if(entries.size == 1, represent_entry) %>
-	  </span>
-	  <span class="score">(<%= h(represent_entry.score) %>)</span>
-	</h3>
-	<ul class="entry-metadata">
-	  <li class="entry-type">
-	    <span class="entry-<%= h(represent_entry.type.key) %>">
-	      <%= link_type(represent_entry) %>
-	    </span>
-	  </li>
-<%    entries.each do |entry| %>
-	  <li class="entry-version">
-            <%= link_entry(entry, :label => h(entry.version.key)) %>
-          </li>
-<%    end %>
-	</ul>
-      </div>
+      <h3>
+        <span class="signature">
+          <%= link_entry_if(entries.size == 1, represent_entry) %>
+        </span>
+        <span class="score">(<%= h(represent_entry.score) %>)</span>
+      </h3>
     </dt>
     <dd>
+      <ul class="entry-links">
+<%    entries.each do |entry| %>
+        <li class="entry-version">
+          <%= link_entry(entry, :label => h(entry.version.key)) %>
+        </li>
+<%    end %>
+      </ul>
+      <ul class="entry-metadata">
+        <li class="entry-type">
+          <span class="entry-<%= h(represent_entry.type.key) %>">
+            <%= link_type(represent_entry) %>
+          </span>
+        </li>
+      </ul>
       <div class="entry-summary">
         <p><%= h(remove_markup(represent_entry.summary)) %></p>
       </div>
