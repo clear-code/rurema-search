@@ -162,7 +162,7 @@ module RuremaSearch
                     "column=kana&" +
                     "limit=#{(options[:limit] || 10).to_i}&" +
                     "types=#{Rack::Utils.escape(type)}&" +
-                    "threshold=1&" +
+                    "threshold=0&" +
                     "query=#{Rack::Utils.escape(query)}")
       id, json = @context.receive
       normalize_suggest_entries(JSON.parse(json)[type])
