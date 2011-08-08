@@ -87,10 +87,12 @@ if [ "$update_index" = "yes" ]; then
     if [ "$reset_index" = "yes" ]; then
 	rm -rf ${base_dir}/groonga-database
 	rm -rf ${base_dir}/var/lib/suggest
+	touch ${base_dir}/tmp/restart.txt
 	reset_argument="--reset"
     fi
     if [ "$reset_suggest" = "yes" ]; then
 	rm -rf ${base_dir}/var/lib/suggest
+	touch ${base_dir}/tmp/restart.txt
     fi
     if [ "$load_data" != "yes" ]; then
 	load_data_argument="--no-load-data"
