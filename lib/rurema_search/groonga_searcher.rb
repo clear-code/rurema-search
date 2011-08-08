@@ -922,7 +922,7 @@ module RuremaSearch
       def query_condition(key, words)
         Proc.new do |record|
           target = record.match_target do |match_record|
-            (match_record["name"] * 12000) |
+            (match_record["name"] * 20000) |
               (match_record["local_name"] * 12000) |
               (match_record["class"] * 12000) |
               (match_record["module"] * 12000) |
