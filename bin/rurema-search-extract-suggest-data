@@ -8,12 +8,15 @@ require 'pathname'
 
 base_dir = Pathname.new(__FILE__).dirname.parent.cleanpath.realpath
 
+bitclust_dir = base_dir.parent + "bitclust"
+bitclust_lib_dir = bitclust_dir + "lib"
 rroonga_dir = base_dir.parent + "rroonga"
 rroonga_lib_dir = rroonga_dir + "lib"
 rroonga_ext_dir = rroonga_dir + "ext" + "groonga"
 racknga_dir = base_dir.parent + "racknga"
 racknga_lib_dir = racknga_dir + "lib"
 
+$LOAD_PATH.unshift(bitclust_lib_dir.to_s)
 $LOAD_PATH.unshift(rroonga_ext_dir.to_s)
 $LOAD_PATH.unshift(rroonga_lib_dir.to_s)
 $LOAD_PATH.unshift(racknga_lib_dir.to_s)
