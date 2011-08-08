@@ -20,11 +20,31 @@ $LOAD_PATH.unshift(racknga_lib_dir.to_s)
 
 require "json"
 require "cgi"
+require "optparse"
 require "racknga"
 require "rurema_search"
+require "digest"
 begin
   require "MeCab"
 rescue LoadError
+end
+
+@hide_individual_data = true
+
+option_parser = OptionParser.new
+option_parser.on("--[no-]hide-individual-data",
+                 "Hide individual data for each request",
+                 "(#{@hide_individual_data})") do |boolean|
+  @hide_individual_data = boolean
+end
+option_parser.parse!
+
+def generate_id(entry)
+  id = [entry.remote_address, entry.http_user_agent].join(" ")
+  if @hide_individual_data
+    id = Digest::SHA1.hexdigest(id).force_encoding("UTF-8")
+  end
+  id
 end
 
 def print_events(id, entry, keyword, events)
@@ -63,7 +83,7 @@ events = {}
 posts = {}
 keywords = []
 parser.each do |entry|
-  id = [entry.remote_address, entry.http_user_agent].join(" ")
+  id = generate_id(entry)
   case entry.request
   when /\AGET \/api:internal\/auto-complete\/\?term=(.+) HTTP\/1\.\d\z/
     input = $1
