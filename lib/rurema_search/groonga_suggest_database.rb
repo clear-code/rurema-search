@@ -13,7 +13,6 @@ module RuremaSearch
     def initialize
       @database = nil
       @dataset_name = DATASET
-      @id = 0
     end
 
     def open(base_path)
@@ -116,7 +115,7 @@ module RuremaSearch
     end
 
     def next_id
-      @id += 1
+      Time.now.to_f.to_s
     end
 
     def keyword_input_patterns(keyword)
