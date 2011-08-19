@@ -23,7 +23,7 @@ run svn co http://jp.rubyist.net/svn/rurema/doctree/trunk rubydoc
 run git clone git://github.com/groonga/groonga.git
 run cd groonga
 run ./autogen.sh
-run ./configure --prefix=${base_dir}/local
+run ./configure --prefix=${base_dir}/local --disable-document
 run make
 run make install
 run cd -
