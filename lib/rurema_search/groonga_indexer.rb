@@ -15,15 +15,19 @@ module RuremaSearch
     def index
       @method_database.classes.each do |klass|
         index_class(klass)
+        klass.unload
       end
       @method_database.docs.each do |doc|
         index_document(doc)
+        doc.unload
       end
       @method_database.libraries.each do |library|
         index_library(library)
+        libraries.unload
       end
       @function_database.functions.each do |function|
         index_function(function)
+        function.unload
       end
     end
 
