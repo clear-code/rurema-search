@@ -124,4 +124,4 @@ fi
 
 echo "@daily nice /home/$user/rurema-search/update.sh" | run crontab -u $user -
 
-run sudo -u rurema -H ./update.sh
+run sudo -u rurema -H nice ./update.sh
