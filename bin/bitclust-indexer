@@ -39,7 +39,8 @@ def load_bitclust_data(database, bitclust_database_paths)
 end
 
 def load_suggest_data(database, suggest_database)
-  database.entries.each do |entry|
+  entries = database.entries
+  entries.each do |entry|
     local_name = entry.local_name
     next if local_name.nil?
 
@@ -58,7 +59,7 @@ def load_suggest_data(database, suggest_database)
     type = entry.type.key
     case type
     when "class", "module", "object", "library"
-      related_entries = database.entries.select do |record|
+      related_entries = entries.select do |record|
         record[type] =~ entry["name._key"]
       end
       related_entries.each do |related_entry|
@@ -66,6 +67,7 @@ def load_suggest_data(database, suggest_database)
       end
     end
     suggest_database.register_keyword(local_name.key, related_names)
+    entry.unload
   end
 end
 
