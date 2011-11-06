@@ -67,7 +67,6 @@ def load_suggest_data(database, suggest_database)
       end
     end
     suggest_database.register_keyword(local_name.key, related_names)
-    entry.unload
   end
 end
 
