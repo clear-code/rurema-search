@@ -30,7 +30,9 @@ license/lgpl-3.0.txtを見てください。
 
 == インストール
 
-Debian GNU/Linuxの場合。
+=== 個人利用の場合
+
+==== Debian GNU/Linux
 
   % mkdir rurema
   % cd rurema
@@ -40,7 +42,7 @@ Debian GNU/Linuxの場合。
   % ruby1.9.1 rackup
   % www-browser http://localhost:9292/
 
-Mac OSX で rvm を使用している場合。
+==== Mac OS X + rvm
 
   % rvm use 1.9.2
   % gem install rack pkg-config
@@ -52,7 +54,23 @@ Mac OSX で rvm を使用している場合。
   % rackup
   % open -a /Applications/Firefox.app http://localhost:9292/
 
-TODO: Passengerの設定方法
+=== サーバ利用の場合
+
+==== Debian GNU/Linux squeeze
+
+インストーラをダウンロードします。
+
+  % wget https://raw.github.com/kou/rurema-search/master/setup-squeeze.sh
+
+以下のようにroot権限でインストーラを実行します。（実行前に中身を確認して実行しても問題ないことを確認すること。）
+
+  % sudo sh setup-squeeze.sh ホスト名
+
+「ホスト名」にはサーバのホスト名を指定します。例えば、http://rurema.example.org/でアクセスしたい場合は以下のようにします。
+
+  % sudo sh setup-squeeze.sh rurema.example.org
+
+これで「rurema」ユーザが作られ、「~rurema/rurema-search/」以下にるりまサーチがセットアップされます。cronも設定するので毎日定期的に最新版にアップデートされます。
 
 == ドキュメント
 
