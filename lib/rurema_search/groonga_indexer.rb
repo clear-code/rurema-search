@@ -23,7 +23,7 @@ module RuremaSearch
       end
       @method_database.libraries.each do |library|
         index_library(library)
-        libraries.unload
+        library.unload
       end
       @function_database.functions.each do |function|
         index_function(function)
