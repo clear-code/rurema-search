@@ -122,6 +122,6 @@ use_cache:
 EOF
 fi
 
-echo "@daily /home/$user/rurema-search/update.sh" | run crontab -
+echo "@daily nice /home/$user/rurema-search/update.sh" | run crontab -u $user -
 
 run sudo -u rurema -H ./update.sh
