@@ -373,6 +373,7 @@ module RuremaSearch
       request = Rack::Request.new(normalize_environment(env))
       response = Rack::Response.new
       response["Content-Type"] = "text/html; charset=UTF-8"
+      response["Connection"] = "close"
 
       query = request['query']
       query ||= referrer_query(request) unless /\/query:/ =~ request.path_info
