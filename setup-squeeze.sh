@@ -38,8 +38,9 @@ run apt-get install -y aptitude
 run aptitude -V -r -D install -y \
     sudo subversion git build-essential \
     groonga libgroonga-dev \
-    ruby ruby1.9.1-full \
-    apache2 apache2-threaded-dev libcurl4-gnutls-dev
+    ruby rubygems ruby1.9.1-full \
+    apache2 apache2-threaded-dev libcurl4-gnutls-dev \
+    munin-node
 
 run gem1.9.1 install --no-ri --no-rdoc rack rroonga racknga passenger
 
@@ -90,6 +91,21 @@ EOF
     run a2ensite rurema
     run service apache2 restart
 fi
+
+munin_plugin_conf=/etc/munin/plugin-conf.d/rurema-search
+if [ ! -f $munin_plugin_conf ]; then
+    run cat <<EOF > $munin_plugin_conf
+[passenger_*]
+  user root
+  env.ruby /usr/bin/ruby1.9.1
+  env.GEM_HOME /var/lib/gems/1.9.1
+EOF
+    munin-node-configure \
+	--libdir $(dirname $(dirname $(gem1.9.1 which racknga)))/munin/plugins \
+	--shell | sh
+    run service munin-node restart
+fi
+
 
 cd ~rurema
 
