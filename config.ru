@@ -149,7 +149,7 @@ if configuration["use_cache"]
   use Racknga::Middleware::Cache, :database_path => cache_database_path.to_s
 end
 
-use Racknga::Middleware::InstanceName
+use Racknga::Middleware::InstanceName, :application_name => "Rurema Search"
 
 use Rack::Lint
 run searcher
