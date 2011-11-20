@@ -24,3 +24,6 @@ require 'racknga/cache_database'
 cache_database_path = base_dir + "var" + "cache" + "db"
 cache_database = Racknga::CacheDatabase.new(cache_database_path.to_s)
 cache_database.purge_old_responses
+
+# TODO: remove me.
+`groonga #{cache_database_path} defrag`
