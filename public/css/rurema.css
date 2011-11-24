@@ -81,6 +81,12 @@ div.content
   clear: both;
 }
 
+div.content div.top-page-drilldowns,
+div.content div.search-result
+{
+  line-height: 140%;
+}
+
 div.content div.top-search-form
 {
   width: 40em;
