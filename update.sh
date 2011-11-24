@@ -41,24 +41,24 @@ update_rurema()
 {
     local version=$1
 
-    ${RUBY18} \
+    ${RUBY19} \
 	-I ${bitclust_dir}/lib \
 	${bitclust_dir}/bin/bitclust.rb \
 	--database ${base_dir}/db-${version} \
 	init encoding=euc-jp version=${version}
-    ${RUBY18} \
+    ${RUBY19} \
 	-I ${bitclust_dir}/lib \
 	${bitclust_dir}/bin/bitclust.rb \
 	--database ${base_dir}/db-${version} \
 	update --stdlibtree ${rubydoc_dir}/refm/api/src
-    ${RUBY18} \
+    ${RUBY19} \
 	-I ${bitclust_dir}/lib \
 	${bitclust_dir}/bin/bitclust.rb \
 	--database ${base_dir}/db-${version} \
 	--capi \
 	update ${rubydoc_dir}/refm/capi/src/**/*.rd
     rm -rf ${base_dir}/public/${version}.{old,new}
-    ${RUBY18} \
+    ${RUBY19} \
 	-I ${base_dir}/lib \
 	-I ${bitclust_dir}/lib \
 	${base_dir}/bin/bitclust-generate-static-html \
