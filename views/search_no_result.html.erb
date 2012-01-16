@@ -2,11 +2,11 @@
   <p>見つかりませんでした。検索条件を変えてみませんか？</p>
   <ul>
 <% if @ordered_parameters.size <= 1 %>
-    <li><a href="/">トップページ</a></li>
+    <li><a href="<%= top_path %>">トップページ</a></li>
 <% else %>
 <%   @ordered_parameters.each do |key, value| %>
     <li>
-      <a href="/<%= parameter_link_href(key, value) %>">
+      <a href="<%= full_path(parameter_link_href(key, value)) %>">
           「<%= h(parameter_link_label(key, value)) %>」だけで検索
       </a>
     </li>
