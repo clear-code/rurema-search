@@ -1,9 +1,10 @@
 <div class="search-header">
   <div class="version-select">
     <ul>
-  <% @version_names.each do |_version| %>
+  <% @version_names.each_with_index do |_version, i| %>
       <li class="version-select<%= version == _version ? '-current' : '' %>">
-	<%= link_version_select(_version) %>
+	<%= link_version_select(_version,
+                                :label_suffix => h("(#{@version_n_entries[i]})")) %>
       </li>
   <% end %>
     </ul>

@@ -150,8 +150,9 @@ module RuremaSearch
         tag("a", attributes.merge(:href => href), label)
       end
 
-      def link_version_select(select_version)
+      def link_version_select(select_version, options={})
         label = h(select_version == :all ? "すべて" : select_version)
+        label << options[:label_suffix] if options[:label_suffix]
         if (version == select_version) or
             (version.nil? and select_version == :all)
           tag("span", {:class => "version-select-text"}, label)
@@ -771,12 +772,19 @@ module RuremaSearch
       def process_query
         start = Time.now.to_f
         _, *parameters = @request.path_info.split(/\//)
-        conditions = parse_parameters(parameters)
+        parse_parameters(parameters)
         entries = @database.entries
-        result = entries.select do |record|
-          conditions.collect do |condition|
+        result_without_version_condition = entries.select do |record|
+          create_conditions_without_version.collect do |condition|
             condition.call(record)
           end.flatten
+        end
+        if @version_condition
+          result = result_without_version_condition.select do |record|
+            @version_condition.call(record)
+          end
+        else
+          result = result_without_version_condition
         end
         @expression = result.expression
         @drilldown_items = drilldown_items(result)
@@ -786,10 +794,13 @@ module RuremaSearch
                                    :size => n_entries_per_page)
         @grouped_entries = group_entries(@entries)
         @leading_grouped_entries = @grouped_entries[0, 5]
-        @versions = @database.versions.sort(["_key"], :limit => -1)
+        @versions = result_without_version_condition.group("version")
+        @versions = @versions.sort(["_key"], :limit => -1)
         @version_names = [:all]
+        @version_n_entries = [result_without_version_condition.size]
         @versions.each do |version|
           @version_names << version["_key"]
+          @version_n_entries << version.n_sub_records
         end
         prepare_corrections
         prepare_suggestions
@@ -812,6 +823,7 @@ module RuremaSearch
         @parameters = {}
         @ordered_parameters = []
         @instance_method = nil
+        @have_version_condition = false
         parameters.each do |parameter|
           parameter = parameter.force_encoding("UTF-8")
           key, value = parameter.split(/:/, 2)
@@ -824,7 +836,6 @@ module RuremaSearch
           next unless parse_parameter(key, unescaped_value)
           @ordered_parameters << [key, unescaped_value]
         end
-        create_conditions
       end
 
       def parse_parameter(key, value)
@@ -894,8 +905,9 @@ module RuremaSearch
           @parameters["library"]
       end
 
-      def create_conditions
+      def create_conditions_without_version
         conditions = []
+        @version_condition = nil
         @parameters.each do |key, value|
           case key
           when "query"
@@ -905,8 +917,9 @@ module RuremaSearch
             conditions << equal_condition("type", key)
             conditions << equal_condition("name._key", value)
           when "version"
-            conditions << Proc.new do |record|
-              record.version =~ value
+            # don't register version condition.
+            @version_condition = Proc.new do |record|
+              record.version == value
             end
           when "library"
             conditions << Proc.new do |record|
