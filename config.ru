@@ -119,24 +119,15 @@ urls = ["/favicon.", "/css/", "/images/", "/javascripts/", "/1.8.", "/1.9."]
 
 case environment
 when "development"
-  class DirectoryIndex
-    def initialize(app, options={})
-      @app = app
-      @urls = options[:urls]
-    end
-
-    def call(env)
-      path = env["PATH_INFO"]
-      can_serve = @urls.any? { |url| path.index(url) == 0 }
-      env["PATH_INFO"] += "index.html" if can_serve and /\/\z/ =~ path
-      @app.call(env)
+  # For Rack 1.4.0. 1.4.1 will fix it.
+  class NoImplicitIndexStatic < Rack::Static
+    def initialize(*args, &block)
+      super
+      @index = nil
     end
   end
-
-  use DirectoryIndex, :urls => urls
+  use NoImplicitIndexStatic, :urls => urls, :root => (base_dir + "public").to_s
 end
-
-use Rack::Static, :urls => urls, :root => (base_dir + "public").to_s
 
 use Racknga::Middleware::Deflater
 use Rack::Head
