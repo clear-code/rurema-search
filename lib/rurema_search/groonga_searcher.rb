@@ -1175,7 +1175,7 @@ module RuremaSearch
             description_snippet = description
           end
           description_snippet = description_snippet.strip
-          snippets << description_snippet unless description_snippet.empty?
+          snippets << h(description_snippet) unless description_snippet.empty?
         end
         snippets.collect do |snippet|
           tag("div", {:class => "snippet"}, snippet.gsub(/\n/, "<br />"))
