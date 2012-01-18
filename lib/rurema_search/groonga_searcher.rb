@@ -783,6 +783,9 @@ module RuremaSearch
           result = result_without_version_condition.select do |record|
             @version_condition.call(record)
           end
+          result.each do |record|
+            record.score += record.key.score
+          end
         else
           result = result_without_version_condition
         end
