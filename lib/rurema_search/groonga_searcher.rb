@@ -823,7 +823,6 @@ module RuremaSearch
         @parameters = {}
         @ordered_parameters = []
         @instance_method = nil
-        @have_version_condition = false
         parameters.each do |parameter|
           parameter = parameter.force_encoding("UTF-8")
           key, value = parameter.split(/:/, 2)
