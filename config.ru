@@ -130,6 +130,7 @@ when "development"
 end
 
 use Racknga::Middleware::Deflater
+use Rack::Lint
 use Rack::Head
 use Rack::ConditionalGet
 
@@ -142,5 +143,4 @@ end
 
 use Racknga::Middleware::InstanceName, :application_name => "Rurema Search"
 
-use Rack::Lint
 run searcher
