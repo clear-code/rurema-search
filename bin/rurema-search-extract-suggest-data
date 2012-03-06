@@ -81,7 +81,7 @@ puts("load " +
      "--each 'suggest_preparer(_id, type, item, sequence, time, pair_#{dataset})'")
 puts("[")
 print("[\"sequence\", \"time\", \"item\", \"type\"]")
-parser = Racknga::NginxAccessLogParser.new(ARGF.each_line)
+parser = Racknga::AccessLogParser.new(ARGF.each_line)
 events = {}
 posts = {}
 keywords = []
@@ -114,7 +114,7 @@ begin
       events[id].clear if events[id]
     end
   end
-rescue Racknga::NginxAccessLogParser::FormatError
+rescue Racknga::AccessLogParser::FormatError
   puts $!
   retry
 end
