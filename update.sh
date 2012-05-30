@@ -45,7 +45,7 @@ update_rurema()
 	-I ${bitclust_dir}/lib \
 	${bitclust_dir}/bin/bitclust \
 	--database ${base_dir}/db-${version} \
-	init encoding=euc-jp version=${version}
+	init encoding=utf-8 version=${version}
     nice ${RUBY19} \
 	-I ${bitclust_dir}/lib \
 	${bitclust_dir}/bin/bitclust \
