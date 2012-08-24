@@ -75,7 +75,7 @@ update_rurema()
 if [ "$update_rurema" = "yes" ]; then
     svn up -q ${rubydoc_dir}
 
-    for version in 1.8.7 1.9.2 1.9.3; do
+    for version in 1.8.7 1.9.3; do
 	update_rurema $version
     done
     wait
