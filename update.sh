@@ -66,7 +66,8 @@ update_rurema()
 	--quiet \
 	--fs-casesensitive \
 	--database ${base_dir}/db-${version} \
-	--outputdir ${base_dir}/public/${version}.new
+	--outputdir ${base_dir}/public/${version}.new \
+	--catalog ${bitclust_dir}/data/bitclust/catalog
     mv ${base_dir}/public/${version}{,.old}
     mv ${base_dir}/public/${version}{.new,}
     rm -rf ${base_dir}/public/${version}.old
