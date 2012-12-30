@@ -586,7 +586,7 @@ module RuremaSearch
         end
 
         sort_and_group.call(["_key"]) do |record|
-          case record.key.key[0]
+          case record["_key"][0]
           when "A"..."F"
             ["A", "A〜E"]
           when "F"..."K"
