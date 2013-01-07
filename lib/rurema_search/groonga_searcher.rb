@@ -1022,7 +1022,6 @@ module RuremaSearch
         grouped_entries = []
         previous_entry = nil
         entries.each do |entry|
-          entry = entry.value # TODO: remove me when rroonga 2.1.2 is released.
           if previous_entry.nil? or previous_entry.label != entry.label
             grouped_entries << [entry, [entry]]
           else
