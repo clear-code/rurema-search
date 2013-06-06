@@ -74,7 +74,7 @@ update_rurema()
 }
 
 if [ "$update_rurema" = "yes" ]; then
-    svn up -q ${rubydoc_dir}
+    (cd ${rubydoc_dir} && git pull --rebase)
 
     for version in 1.8.7 1.9.3 2.0.0; do
 	update_rurema $version
