@@ -117,17 +117,17 @@ else
 fi
 
 if [ -d bitclust ]; then
-    run sudo -u rurema -H svn up bitclust
+    (cd bitclust && run sudo -u rurema -H git pull --rebase)
 else
-    run sudo -u rurema -H svn co \
-	http://jp.rubyist.net/svn/rurema/bitclust/trunk bitclust
+    run sudo -u rurema -H git clone \
+        git://github.com/rurema/bitclust.git bitclust
 fi
 
 if [ -d rubydoc ]; then
-    run sudo -u rurema -H svn up rubydoc
+    (cd rubydoc && run sudo -u rurema -H git pull --rebase)
 else
-    run sudo -u rurema -H svn co \
-	http://jp.rubyist.net/svn/rurema/doctree/trunk rubydoc
+    run sudo -u rurema -H git clone \
+        git://github.com/rurema/doctree.git rubydoc
 fi
 
 cd rurema-search
