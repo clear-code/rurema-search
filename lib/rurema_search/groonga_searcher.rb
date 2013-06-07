@@ -289,7 +289,7 @@ module RuremaSearch
         "library" => "ライブラリ",
       }
       def parameter_label(key)
-	PARAMETER_LABELS[key] || TYPE_LABELS[key] || key
+        PARAMETER_LABELS[key] || TYPE_LABELS[key] || key
       end
 
       LIBRARY_LABELS = {"_builtin" => "ビルトイン"}
