@@ -19,9 +19,9 @@ class QueryParameterTest < Test::Unit::TestCase
   include ERB::Util
 
   def test_post_euc_jp
-    visit "/", :post,
-               :query => "クラス変数".encode("euc-jp"),
-               :encoding => "euc-jp"
+    page.driver.post("/",
+                     :query => "クラス変数".encode("euc-jp"),
+                     :encoding => "euc-jp")
     assert_equal("#{host}/query:#{u('クラス変数')}/", current_url)
   end
 
