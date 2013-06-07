@@ -19,6 +19,8 @@ source "http://rubygems.org/"
 
 gem "rroonga"
 gem "racknga"
+gem "bitclust-core"
+gem "bitclust-dev"
 
 group :development, :test do
   gem "test-unit"
