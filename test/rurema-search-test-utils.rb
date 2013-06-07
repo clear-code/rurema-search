@@ -84,12 +84,15 @@ module RuremaSearchTestUtils
       source_dir = rubydoc_dir + "refm/api/src"
       ["1.8.7", "1.9.1"].each do |version|
         bitclust_database_dir = test_dir + "db-#{version}"
-        system("bundle", "exec",
-               "bitclust", "--database", bitclust_database_dir.to_s,
-               "init", "encoding=utf-8", "version=#{version}")
-        system("bundle", "exec",
-               "bitclust", "--database", bitclust_database_dir.to_s,
-               "update", "--stdlibtree", source_dir.to_s)
+        if !bitclust_database_dir.exist? or
+            bitclust_database_dir.mtime < rubydoc_dir.mtime
+          system("bundle", "exec",
+                 "bitclust", "--database", bitclust_database_dir.to_s,
+                 "init", "encoding=utf-8", "version=#{version}")
+          system("bundle", "exec",
+                 "bitclust", "--database", bitclust_database_dir.to_s,
+                 "update", "--stdlibtree", source_dir.to_s)
+        end
       end
     end
 
