@@ -82,10 +82,11 @@ module RuremaSearchTestUtils
       ensure_rubydoc
       rubydoc_dir = fixtures_dir + "rubydoc"
       source_dir = rubydoc_dir + "refm/api/src"
+      rubydoc_git_dir = rubydoc_dir + ".git"
       ["1.8.7", "1.9.1"].each do |version|
         bitclust_database_dir = test_dir + "db-#{version}"
         if !bitclust_database_dir.exist? or
-            bitclust_database_dir.mtime < rubydoc_dir.mtime
+            bitclust_database_dir.mtime < rubydoc_git_dir.mtime
           system("bundle", "exec",
                  "bitclust", "--database", bitclust_database_dir.to_s,
                  "init", "encoding=utf-8", "version=#{version}")
