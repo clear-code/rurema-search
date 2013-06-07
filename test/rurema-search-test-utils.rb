@@ -173,7 +173,7 @@ module RuremaSearchTestUtils
   end
 
   def host
-    Rack::Test::DEFAULT_HOST
+    Capybara.default_host
   end
 
   module_function

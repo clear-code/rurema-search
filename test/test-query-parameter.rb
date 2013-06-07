@@ -22,11 +22,11 @@ class QueryParameterTest < Test::Unit::TestCase
     visit "/", :post,
                :query => "クラス変数".encode("euc-jp"),
                :encoding => "euc-jp"
-    assert_equal("http://#{host}/query:#{u('クラス変数')}/", current_url)
+    assert_equal("#{host}/query:#{u('クラス変数')}/", current_url)
   end
 
   def test_get
     visit "/?query=#{u("クラス変数")}"
-    assert_equal("http://#{host}/query:#{u('クラス変数')}/", current_url)
+    assert_equal("#{host}/query:#{u('クラス変数')}/", current_url)
   end
 end

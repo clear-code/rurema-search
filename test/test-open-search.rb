@@ -20,12 +20,12 @@ class OpenSearchTest < Test::Unit::TestCase
 
   def test_top_level_open_search_description
     visit "/open_search_description.xml"
-    assert_open_search_description("http://#{host}/")
+    assert_open_search_description("#{host}/")
   end
 
   def test_versioned_open_search_description
     visit "/version:1.8.8/open_search_description.xml"
-    assert_open_search_description("http://#{host}/version:1.8.8/")
+    assert_open_search_description("#{host}/version:1.8.8/")
   end
 
   private
