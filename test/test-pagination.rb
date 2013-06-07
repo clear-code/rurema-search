@@ -48,14 +48,18 @@ class PaginateTest < Test::Unit::TestCase
 
   private
   def assert_paginate(expected)
-    paginate = current_dom.xpath("//div[@class='paginate']")[0]
-    if paginate
-      actual = paginate.xpath("span").collect do |node|
-        a = node.xpath("a")[0]
-        [node["class"], a ? a["href"] : nil, node.text]
+    actual = nil
+    # There are 2 paginate div on top and bottom
+    paginate = page.all(:xpath, "//div[@class='paginate']")
+    unless paginate.empty?
+      actual = paginate.first.all(:css, "span").collect do |node|
+        a = node.all(:css, "a")
+        if a.empty?
+          [node["class"], nil, node.text]
+        else
+          [node["class"], a.first["href"], a.first.text]
+        end
       end
-    else
-      actual = nil
     end
     assert_equal(expected, actual)
   end
