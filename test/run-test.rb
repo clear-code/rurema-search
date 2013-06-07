@@ -27,13 +27,6 @@ bitclust_lib_dir = File.join(bitclust_dir, "lib")
 lib_dir = File.join(base_dir, "lib")
 test_dir = File.join(base_dir, "test")
 
-unless File.exist?(test_unit_dir)
-  test_unit_repository = "http://test-unit.rubyforge.org/svn/trunk/"
-  system("svn co #{test_unit_repository} #{test_unit_dir}") or exit(false)
-end
-
-$LOAD_PATH.unshift(test_unit_lib_dir)
-
 require 'test/unit'
 
 ARGV.unshift("--priority-mode")
