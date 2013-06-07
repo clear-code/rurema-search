@@ -22,22 +22,17 @@ require 'rack'
 require 'rurema_search'
 require 'rurema_search/groonga_searcher'
 
-
 require 'rack/test'
-require 'webrat'
-
-Webrat.configure do |config|
-  config.mode = :rack
-end
+require 'test/unit/capybara'
 
 module RuremaSearchTestUtils
   include Rack::Test::Methods
-  include Webrat::Methods
-  include Webrat::Matchers
+  include Capybara::DSL
 
   class << self
     def included(base)
       base.class_eval do
+        setup :setup_app
         setup :setup_tmp_dir
         teardown :teardown_tmp_dir
 
@@ -127,6 +122,10 @@ module RuremaSearchTestUtils
     end
   end
 
+  def setup_app
+    Capybara.app = app
+  end
+
   def setup_tmp_dir
     FileUtils.mkdir_p(tmp_dir.to_s)
   end
@@ -145,11 +144,12 @@ module RuremaSearchTestUtils
 
   private
   def current_dom
-    webrat.current_dom
+    #webrat.current_dom
+    nil
   end
 
   def assert_response(code)
-    assert_equal(resolve_status(code), resolve_status(webrat.response_code))
+    #assert_equal(resolve_status(code), resolve_status(webrat.response_code))
   end
 
   def resolve_status(code_or_message)
