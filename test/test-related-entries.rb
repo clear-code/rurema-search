@@ -30,8 +30,7 @@ class RelatedEnetriesTest < Test::Unit::TestCase
 
   private
   def related_entry_links(href=nil)
-    xpath = "//ul[@class='entry-related-entries']/li/a"
-    links = current_dom.xpath(xpath)
+    links = page.all(:xpath, "//ul[@class='entry-related-entries']/li/a")
     return links if href.nil?
     links.find_all do |link|
       link["href"] == href
