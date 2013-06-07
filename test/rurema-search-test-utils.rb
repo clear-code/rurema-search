@@ -91,6 +91,18 @@ module RuremaSearchTestUtils
       FileUtils.rm_rf(archive_dir) if archive_dir
     end
 
+    def ensure_rubydoc
+      rubydoc_dir = fixtures_dir + "rubydoc"
+      if rubydoc_dir.exist?
+        system("git", "pull", "--rebase",
+               :err => :out, :chdir => rubydoc_dir.to_s)
+      else
+        system("git", "clone", "--depth", "10",
+               "git://github.com/rurema/doctree.git", rubydoc_dir.to_s,
+               :err => :out)
+      end
+    end
+
     def ensure_bitclust_archive
       base_name = "ruby-refm-1.9.1-dynamic-20100629.tar.bz2"
       path = fixtures_dir + base_name
