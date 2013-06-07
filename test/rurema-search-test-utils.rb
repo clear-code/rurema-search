@@ -79,16 +79,18 @@ module RuremaSearchTestUtils
     end
 
     def ensure_bitclust_database
-      archive_dir = nil
-      [[1, 8, 7], [1, 9, 1]].each do |version|
-        bitclust_database_dir = test_dir + "db-#{version.join('.')}"
-        unless bitclust_database_dir.exist?
-          archive_dir ||= ensure_bitclust_archive
-          FileUtils.cp_r((archive_dir + "db-#{version.join('_')}").to_s,
-                         bitclust_database_dir.to_s)
-        end
+      ensure_rubydoc
+      rubydoc_dir = fixtures_dir + "rubydoc"
+      source_dir = rubydoc_dir + "refm/api/src"
+      ["1.8.7", "1.9.1"].each do |version|
+        bitclust_database_dir = test_dir + "db-#{version}"
+        system("bundle", "exec",
+               "bitclust", "--database", bitclust_database_dir.to_s,
+               "init", "encoding=utf-8", "version=#{version}")
+        system("bundle", "exec",
+               "bitclust", "--database", bitclust_database_dir.to_s,
+               "update", "--stdlibtree", source_dir.to_s)
       end
-      FileUtils.rm_rf(archive_dir) if archive_dir
     end
 
     def ensure_rubydoc
