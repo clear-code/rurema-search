@@ -108,29 +108,6 @@ module RuremaSearchTestUtils
       end
     end
 
-    def ensure_bitclust_archive
-      base_name = "ruby-refm-1.9.1-dynamic-20100629.tar.bz2"
-      path = fixtures_dir + base_name
-      fixtures_dir.mkpath unless fixtures_dir.exist?
-      unless path.exist?
-        url = "http://doc.ruby-lang.org/archives/201006/#{base_name}"
-        print("downloading #{url}...")
-        open(url, "rb") do |input|
-          path.open("wb") do |output|
-            output.print(input.read)
-          end
-        end
-        puts("done.")
-      end
-      archive_dir = fixtures_dir + base_name.gsub(/\.tar\.bz2\z/, '')
-      unless archive_dir.exist?
-        unless system("tar", "xjf", path.to_s, "-C", fixtures_dir.to_s)
-          raise "failed to extract #{path}."
-        end
-      end
-      archive_dir
-    end
-
     def ensure_suggest_database
       database_dir = test_dir + "suggest-database"
       _database = RuremaSearch::GroongaSuggestDatabase.new
