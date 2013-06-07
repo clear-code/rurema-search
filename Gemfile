@@ -25,6 +25,4 @@ group :development, :test do
   gem "test-unit-notify"
   gem "test-unit-capybara"
   gem "rake"
-  gem "jeweler"
-  gem "yard"
 end
