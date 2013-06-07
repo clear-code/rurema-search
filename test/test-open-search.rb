@@ -30,9 +30,10 @@ class OpenSearchTest < Test::Unit::TestCase
 
   private
   def assert_open_search_description(expected_template)
+    content_type = page.response_headers["Content-Type"]
     assert_equal("application/opensearchdescription+xml",
-                 webrat.response.content_type)
-    xml = Nokogiri::XML(response_body)
+                 content_type)
+    xml = Nokogiri::XML(page.source)
     url = xml.xpath("//node()[name()='Url']")[0]
     assert_equal(expected_template, url["template"])
   end
