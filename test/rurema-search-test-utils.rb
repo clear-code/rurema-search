@@ -99,6 +99,7 @@ module RuremaSearchTestUtils
     def ensure_bitclust_archive
       base_name = "ruby-refm-1.9.1-dynamic-20100629.tar.bz2"
       path = fixtures_dir + base_name
+      fixtures_dir.mkpath unless fixtures_dir.exist?
       unless path.exist?
         url = "http://www.ruby-lang.org/ja/man/archive/#{base_name}"
         print("downloading #{url}...")
