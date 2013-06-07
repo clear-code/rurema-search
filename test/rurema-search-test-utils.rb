@@ -101,7 +101,7 @@ module RuremaSearchTestUtils
       path = fixtures_dir + base_name
       fixtures_dir.mkpath unless fixtures_dir.exist?
       unless path.exist?
-        url = "http://www.ruby-lang.org/ja/man/archive/#{base_name}"
+        url = "http://doc.ruby-lang.org/archives/201006/#{base_name}"
         print("downloading #{url}...")
         open(url, "rb") do |input|
           path.open("wb") do |output|
