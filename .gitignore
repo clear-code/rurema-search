@@ -12,3 +12,5 @@
 /document.yaml
 /smtp.yaml
 /var/
+/Gemfile.lock
+/.bundle/config
