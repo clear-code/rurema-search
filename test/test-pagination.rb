@@ -31,8 +31,9 @@ class PaginateTest < Test::Unit::TestCase
     assert_paginate([["paginate-text", nil, "<<"],
                      ["paginate-current", nil, "1"],
                      ["paginate-link", "?page=2", "2"],
+                     ["paginate-link", "?page=3", "3"],
                      ["paginate-link", "?page=2", ">"],
-                     ["paginate-link", "?page=2", ">>"]])
+                     ["paginate-link", "?page=3", ">>"]])
   end
 
   def test_border_hits
@@ -43,7 +44,7 @@ class PaginateTest < Test::Unit::TestCase
                      ["paginate-link", "?page=3;n_entries=10", "3"],
                      ["paginate-text", nil, "..."],
                      ["paginate-link", "?page=2;n_entries=10", ">"],
-                     ["paginate-link", "?page=223;n_entries=10", ">>"]])
+                     ["paginate-link", "?page=239;n_entries=10", ">>"]])
   end
 
   private
