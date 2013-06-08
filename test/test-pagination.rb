@@ -44,7 +44,7 @@ class PaginateTest < Test::Unit::TestCase
                      ["paginate-link", "?page=3;n_entries=10", "3"],
                      ["paginate-text", nil, "..."],
                      ["paginate-link", "?page=2;n_entries=10", ">"],
-                     ["paginate-link", "?page=239;n_entries=10", ">>"]])
+                     ["paginate-link", "?page=238;n_entries=10", ">>"]])
   end
 
   private
