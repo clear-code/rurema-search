@@ -18,6 +18,7 @@ require 'webrick/httpstatus'
 
 require 'rubygems'
 require 'rack'
+require 'time'
 
 require 'rurema_search'
 require 'rurema_search/groonga_searcher'
@@ -85,7 +86,7 @@ module RuremaSearchTestUtils
       ["1.8.7", "1.9.1"].each do |version|
         bitclust_database_dir = test_dir + "db-#{version}"
         if !bitclust_database_dir.exist? or
-            bitclust_database_dir.mtime < rubydoc_dir.mtime
+            bitclust_database_dir.mtime < last_commit_time
           system("bundle", "exec",
                  "bitclust", "--database", bitclust_database_dir.to_s,
                  "init", "encoding=utf-8", "version=#{version}")
@@ -113,6 +114,15 @@ module RuremaSearchTestUtils
       _database = RuremaSearch::GroongaSuggestDatabase.new
       _database.open(database_dir.to_s)
       _database
+    end
+
+    def last_commit_time
+      commit_time = nil
+      rubydoc_dir = fixtures_dir + "rubydoc"
+      Dir.chdir(rubydoc_dir.to_s) do
+        commit_time = `git log --format=format:%cd HEAD~1..HEAD`.chomp
+      end
+      Time.parse(commit_time)
     end
   end
 
