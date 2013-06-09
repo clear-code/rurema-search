@@ -411,6 +411,7 @@ module RuremaSearch
       page = dispatcher.dispatch
       page.extend(@view)
       page.process
+      page.close
     end
 
     def setup_view
@@ -539,6 +540,13 @@ module RuremaSearch
         prepare_built_in_objects(entries)
 
         @response.write(layout)
+      end
+
+      # Close all temporary tables
+      def close
+        if @versions and @versions.temporary?
+          @versions.close
+        end
       end
 
       private
@@ -768,39 +776,50 @@ module RuremaSearch
         end
       end
 
+      # Close all temporary tables
+      def close
+        if @result and @result.temporary?
+          @result.close
+        end
+        if @result_without_version_condition and
+            @result_without_version_condition.temporary?
+          @result_without_version_condition.close
+        end
+      end
+
       private
       def process_query
         start = Time.now.to_f
         _, *parameters = @request.path_info.split(/\//)
         parse_parameters(parameters)
         entries = @database.entries
-        result_without_version_condition = entries.select do |record|
+        @result_without_version_condition = entries.select do |record|
           create_conditions_without_version.collect do |condition|
             condition.call(record)
           end.flatten
         end
         if @version_condition
-          result = result_without_version_condition.select do |record|
+          @result = @result_without_version_condition.select do |record|
             @version_condition.call(record)
           end
-          result.each do |record|
+          @result.each do |record|
             record.score += record.key.score
           end
         else
-          result = result_without_version_condition
+          @result = @result_without_version_condition
         end
-        @expression = result.expression
-        @drilldown_items = drilldown_items(result)
-        @entries = result.paginate([["_score", :descending],
-                                    ["label", :ascending]],
-                                   :page => ensure_page(result.size),
-                                   :size => n_entries_per_page)
+        @expression = @result.expression
+        @drilldown_items = drilldown_items(@result)
+        @entries = @result.paginate([["_score", :descending],
+                                     ["label", :ascending]],
+                                    :page => ensure_page(@result.size),
+                                    :size => n_entries_per_page)
         @grouped_entries = group_entries(@entries)
         @leading_grouped_entries = @grouped_entries[0, 5]
-        @versions = result_without_version_condition.group("version")
+        @versions = @result_without_version_condition.group("version")
         @versions = @versions.sort(["_key"], :limit => -1)
         @version_names = [:all]
-        @version_n_entries = [result_without_version_condition.size]
+        @version_n_entries = [@result_without_version_condition.size]
         @versions.each do |version|
           @version_names << version["_key"]
           @version_n_entries << version.n_sub_records
@@ -1428,6 +1447,9 @@ module RuremaSearch
             @response["Content-Type"] = "application/json; charset=UTF-8"
             @response.write(JSON.generate(candidates))
           end
+
+          def close
+          end
         end
       end
     end
@@ -1443,6 +1465,10 @@ module RuremaSearch
       def process
         @response["Content-Type"] = open_search_description_mime_type
         @response.write(open_search_description)
+      end
+
+      # Do nothing because we don't use Groonga::Object
+      def close
       end
 
       private
