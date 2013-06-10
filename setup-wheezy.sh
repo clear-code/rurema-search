@@ -26,8 +26,8 @@ fi
 groonga_list=/etc/apt/sources.list.d/groonga.list
 if [ ! -f $groonga_list ]; then
     cat <<EOF > $groonga_list
-deb http://packages.groonga.org/debian/ squeeze main
-deb-src http://packages.groonga.org/debian/ squeeze main
+deb http://packages.groonga.org/debian/ wheezy main
+deb-src http://packages.groonga.org/debian/ wheezy main
 EOF
     run apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 1C837F31
 fi
