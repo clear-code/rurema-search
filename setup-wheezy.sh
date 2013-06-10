@@ -113,7 +113,7 @@ if [ -d rurema-search ]; then
     (cd rurema-search && run sudo -u rurema -H git pull --rebase)
 else
     run sudo -u rurema -H git clone \
-	https://github.com/kou/rurema-search.git rurema-search
+	https://github.com/clear-code/rurema-search.git rurema-search
 fi
 
 if [ -d bitclust ]; then
