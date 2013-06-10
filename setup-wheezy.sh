@@ -120,14 +120,14 @@ if [ -d bitclust ]; then
     (cd bitclust && run sudo -u rurema -H git pull --rebase)
 else
     run sudo -u rurema -H git clone \
-        https://github.com/rurema/bitclust.git bitclust
+	https://github.com/rurema/bitclust.git bitclust
 fi
 
 if [ -d doctree ]; then
     (cd doctree && run sudo -u rurema -H git pull --rebase)
 else
     run sudo -u rurema -H git clone \
-        https://github.com/rurema/doctree.git doctree
+	https://github.com/rurema/doctree.git doctree
 fi
 
 cd rurema-search
