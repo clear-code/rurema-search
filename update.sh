@@ -3,7 +3,7 @@
 base_dir=$(cd "$(dirname "$0")" && pwd)
 : ${RUBY:=ruby1.9.1}
 bitclust_dir=${base_dir}/../bitclust
-rubydoc_dir=${base_dir}/../rubydoc
+doctree_dir=${base_dir}/../doctree
 
 PATH=${base_dir}/local/bin:$PATH
 
@@ -49,13 +49,13 @@ update_rurema()
 	-I ${bitclust_dir}/lib \
 	${bitclust_dir}/bin/bitclust \
 	--database ${base_dir}/db-${version} \
-	update --stdlibtree ${rubydoc_dir}/refm/api/src
+	update --stdlibtree ${doctree_dir}/refm/api/src
     nice ${RUBY} \
 	-I ${bitclust_dir}/lib \
 	${bitclust_dir}/bin/bitclust \
 	--database ${base_dir}/db-${version} \
 	--capi \
-	update ${rubydoc_dir}/refm/capi/src/**/*.rd
+	update ${doctree_dir}/refm/capi/src/**/*.rd
     rm -rf ${base_dir}/public/${version}.{old,new}
     nice ${RUBY} \
 	-I ${base_dir}/lib \
@@ -73,7 +73,7 @@ update_rurema()
 }
 
 if [ "$update_rurema" = "yes" ]; then
-    (cd ${rubydoc_dir} && git pull --rebase)
+    (cd ${doctree_dir} && git pull --rebase)
 
     for version in 1.8.7 1.9.3 2.0.0; do
 	update_rurema $version

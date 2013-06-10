@@ -18,7 +18,7 @@ run ${RUBY19} -S gem install rack pkg-config
 
 run cd ${base_dir}/..
 run git clone https://github.com/rurema/bitclust.git bitclust
-run git clone https://github.com/rurema/doctree.git rubydoc
+run git clone https://github.com/rurema/doctree.git doctree
 
 run git clone https://github.com/groonga/groonga.git
 run cd groonga

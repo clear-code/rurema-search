@@ -123,11 +123,11 @@ else
         https://github.com/rurema/bitclust.git bitclust
 fi
 
-if [ -d rubydoc ]; then
-    (cd rubydoc && run sudo -u rurema -H git pull --rebase)
+if [ -d doctree ]; then
+    (cd doctree && run sudo -u rurema -H git pull --rebase)
 else
     run sudo -u rurema -H git clone \
-        https://github.com/rurema/doctree.git rubydoc
+        https://github.com/rurema/doctree.git doctree
 fi
 
 cd rurema-search
