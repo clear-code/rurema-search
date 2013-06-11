@@ -60,8 +60,8 @@ update_rurema()
     nice ${RUBY} \
 	-I ${base_dir}/lib \
 	-I ${bitclust_dir}/lib \
-	${base_dir}/bin/bitclust-generate-static-html \
-	${bitclust_dir}/tools/bc-tohtmlpackage.rb \
+	${base_dir}/bin/bitclust \
+	statichtml \
 	--quiet \
 	--fs-casesensitive \
 	--database ${base_dir}/db-${version} \
