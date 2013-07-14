@@ -108,7 +108,7 @@ module RuremaSearch
     end
 
     def normalize_suggest_entries(entries)
-      n_netries, headers, *values = entries
+      n_entries, headers, *values = entries
       values.collect do |key, score|
         {:key => key, :score => score}
       end
