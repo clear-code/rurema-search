@@ -120,7 +120,7 @@ module RuremaSearchTestUtils
       commit_time = nil
       rubydoc_dir = fixtures_dir + "rubydoc"
       Dir.chdir(rubydoc_dir.to_s) do
-        commit_time = `git log --format=format:%cd HEAD~1..HEAD`.chomp
+        commit_time = `git log --max-count=1 --format=format:%cd`.chomp
       end
       Time.parse(commit_time)
     end
