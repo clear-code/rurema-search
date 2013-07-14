@@ -543,13 +543,13 @@ module RuremaSearch
         close_temporary_tables
       end
 
+      private
       def close_temporary_tables
         if @versions and @versions.temporary?
           @versions.close
         end
       end
 
-      private
       def header
         ""
       end
@@ -777,16 +777,6 @@ module RuremaSearch
         close_temporary_tables
       end
 
-      def close_temporary_tables
-        if @result and @result.temporary?
-          @result.close
-        end
-        if @result_without_version_condition and
-            @result_without_version_condition.temporary?
-          @result_without_version_condition.close
-        end
-      end
-
       private
       def process_query
         start = Time.now.to_f
@@ -827,6 +817,16 @@ module RuremaSearch
         prepare_corrections
         prepare_suggestions
         @elapsed_time = Time.now.to_f - start
+      end
+
+      def close_temporary_tables
+        if @result and @result.temporary?
+          @result.close
+        end
+        if @result_without_version_condition and
+            @result_without_version_condition.temporary?
+          @result_without_version_condition.close
+        end
       end
 
       def write_html
