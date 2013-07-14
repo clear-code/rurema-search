@@ -8,7 +8,7 @@
 /test/groonga-database
 /test/suggest-database
 /test/.test-result
-/test/fixtures/rubydoc
+/test/fixtures/doctree
 /document.yaml
 /smtp.yaml
 /var/

@@ -80,9 +80,9 @@ module RuremaSearchTestUtils
     end
 
     def ensure_bitclust_database
-      ensure_rubydoc
-      rubydoc_dir = fixtures_dir + "rubydoc"
-      source_dir = rubydoc_dir + "refm/api/src"
+      ensure_doctree
+      doctree_dir = fixtures_dir + "doctree"
+      source_dir = doctree_dir + "refm/api/src"
       ["1.8.7", "1.9.1"].each do |version|
         bitclust_database_dir = test_dir + "db-#{version}"
         if !bitclust_database_dir.exist? or
@@ -97,14 +97,14 @@ module RuremaSearchTestUtils
       end
     end
 
-    def ensure_rubydoc
-      rubydoc_dir = fixtures_dir + "rubydoc"
-      if rubydoc_dir.exist?
+    def ensure_doctree
+      doctree_dir = fixtures_dir + "doctree"
+      if doctree_dir.exist?
         system("git", "pull", "--rebase",
-               :err => :out, :chdir => rubydoc_dir.to_s)
+               :err => :out, :chdir => doctree_dir.to_s)
       else
         system("git", "clone", "--depth", "10",
-               "git://github.com/rurema/doctree.git", rubydoc_dir.to_s,
+               "git://github.com/rurema/doctree.git", doctree_dir.to_s,
                :err => :out)
       end
     end
@@ -118,8 +118,8 @@ module RuremaSearchTestUtils
 
     def last_commit_time
       commit_time = nil
-      rubydoc_dir = fixtures_dir + "rubydoc"
-      Dir.chdir(rubydoc_dir.to_s) do
+      doctree_dir = fixtures_dir + "doctree"
+      last_commit_time = Dir.chdir(doctree_dir.to_s) do
         commit_time = `git log --max-count=1 --format=format:%cd`.chomp
       end
       Time.parse(commit_time)
