@@ -27,7 +27,7 @@ bitclust_lib_dir = File.join(bitclust_dir, "lib")
 lib_dir = File.join(base_dir, "lib")
 test_dir = File.join(base_dir, "test")
 
-require "test/unit"
+require "test-unit"
 require "test/unit/notify"
 
 ARGV.unshift("--priority-mode")
