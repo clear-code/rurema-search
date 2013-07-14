@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #
-# Copyright (C) 2010  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2010-2013  Kouhei Sutou <kou@clear-code.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,8 +27,8 @@ bitclust_lib_dir = File.join(bitclust_dir, "lib")
 lib_dir = File.join(base_dir, "lib")
 test_dir = File.join(base_dir, "test")
 
-require 'test/unit'
-require 'test/unit/notify'
+require "test/unit"
+require "test/unit/notify"
 
 ARGV.unshift("--priority-mode")
 ARGV.unshift(File.join(test_dir, "test-unit.yml"))
@@ -39,6 +39,6 @@ $LOAD_PATH.unshift(bitclust_lib_dir)
 $LOAD_PATH.unshift(lib_dir)
 
 $LOAD_PATH.unshift(test_dir)
-require 'rurema-search-test-utils'
+require "rurema-search-test-utils"
 
 exit Test::Unit::AutoRunner.run(true, test_dir)
