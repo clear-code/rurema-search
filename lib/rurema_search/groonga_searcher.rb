@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2010 Kouhei Sutou <kou@clear-code.com>
+# Copyright (c) 2010-2013 Kouhei Sutou <kou@clear-code.com>
 #
 # License: LGPLv3+
 
-require 'erb'
-require 'etc'
-require 'socket'
-require 'nkf'
-require 'shellwords'
-require 'rack'
+require "erb"
+require "etc"
+require "socket"
+require "nkf"
+require "shellwords"
+require "rack"
 
 module RuremaSearch
   class GroongaSearcher
