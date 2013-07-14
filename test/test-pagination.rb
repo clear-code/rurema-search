@@ -37,14 +37,16 @@ class PaginateTest < Test::Unit::TestCase
   end
 
   def test_border_hits
-    visit "/version:1.9.1/type:constant/?n_entries=10"
+    n_entries = 10
+    visit "/class:ARGF.class/?n_entries=#{n_entries}"
+    assert_equal(1, page.first("span.total").text.to_i % n_entries)
     assert_paginate([["paginate-text", nil, "<<"],
                      ["paginate-current", nil, "1"],
-                     ["paginate-link", "?page=2;n_entries=10", "2"],
-                     ["paginate-link", "?page=3;n_entries=10", "3"],
+                     ["paginate-link", "?page=2;n_entries=#{n_entries}", "2"],
+                     ["paginate-link", "?page=3;n_entries=#{n_entries}", "3"],
                      ["paginate-text", nil, "..."],
-                     ["paginate-link", "?page=2;n_entries=10", ">"],
-                     ["paginate-link", "?page=238;n_entries=10", ">>"]])
+                     ["paginate-link", "?page=2;n_entries=#{n_entries}", ">"],
+                     ["paginate-link", "?page=11;n_entries=#{n_entries}", ">>"]])
   end
 
   private
