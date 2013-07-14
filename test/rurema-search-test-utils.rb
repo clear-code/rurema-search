@@ -86,7 +86,7 @@ module RuremaSearchTestUtils
       ["1.8.7", "1.9.1"].each do |version|
         bitclust_database_dir = test_dir + "db-#{version}"
         if !bitclust_database_dir.exist? or
-            bitclust_database_dir.mtime < last_commit_time
+            bitclust_database_dir.mtime < last_commit_time(doctree_dir)
           system("bundle", "exec",
                  "bitclust", "--database", bitclust_database_dir.to_s,
                  "init", "encoding=utf-8", "version=#{version}")
@@ -116,10 +116,9 @@ module RuremaSearchTestUtils
       _database
     end
 
-    def last_commit_time
+    def last_commit_time(git_dir)
       commit_time = nil
-      doctree_dir = fixtures_dir + "doctree"
-      last_commit_time = Dir.chdir(doctree_dir.to_s) do
+      last_commit_time = Dir.chdir(git_dir.to_s) do
         commit_time = `git log --max-count=1 --format=format:%cd`.chomp
       end
       Time.parse(commit_time)
