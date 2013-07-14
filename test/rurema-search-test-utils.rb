@@ -54,7 +54,7 @@ module RuremaSearchTestUtils
       updated = ensure_bitclust_database
       database_dir = test_dir + "groonga-database"
       database_file = database_dir + "bitclust.db"
-      bitclust_database_dir = test_dir + "db-1.9.1"
+      bitclust_database_dir = test_dir + "db-2.0.0"
       if !database_file.exist? or
           database_file.mtime < bitclust_database_dir.mtime
         FileUtils.rm_rf(database_dir.to_s)
@@ -83,7 +83,8 @@ module RuremaSearchTestUtils
       ensure_doctree
       doctree_dir = fixtures_dir + "doctree"
       source_dir = doctree_dir + "refm/api/src"
-      ["1.8.7", "1.9.1"].each do |version|
+      servicing_versions = ["1.8.7", "1.9.3", "2.0.0"]
+      servicing_versions.each do |version|
         bitclust_database_dir = test_dir + "db-#{version}"
         if !bitclust_database_dir.exist? or
             bitclust_database_dir.mtime < last_commit_time(doctree_dir)
