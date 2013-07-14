@@ -20,8 +20,6 @@ $VERBOSE = true
 $KCODE = "u" if RUBY_VERSION < "1.9"
 
 base_dir = File.expand_path(File.join(File.dirname(__FILE__), ".."))
-test_unit_dir = File.join(base_dir, "test-unit")
-test_unit_lib_dir = File.join(test_unit_dir, "lib")
 bitclust_dir = File.expand_path(File.join(base_dir, "..", "bitclust"))
 bitclust_lib_dir = File.join(bitclust_dir, "lib")
 lib_dir = File.join(base_dir, "lib")
