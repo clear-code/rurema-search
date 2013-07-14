@@ -7,7 +7,6 @@
 require "erb"
 require "etc"
 require "socket"
-require "nkf"
 require "shellwords"
 require "rack"
 
