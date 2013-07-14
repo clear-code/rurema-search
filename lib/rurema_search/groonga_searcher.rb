@@ -409,7 +409,9 @@ module RuremaSearch
                                   request, response)
       page = dispatcher.dispatch
       page.extend(@view)
+      Groonga::Context.default.push_memory_pool do
       page.process
+      end
     end
 
     def setup_view
@@ -538,17 +540,9 @@ module RuremaSearch
         prepare_built_in_objects(entries)
 
         @response.write(layout)
-
-        close_temporary_tables
       end
 
       private
-      def close_temporary_tables
-        if @versions and @versions.temporary?
-          @versions.close
-        end
-      end
-
       def header
         ""
       end
@@ -773,7 +767,6 @@ module RuremaSearch
         else
           write_html
         end
-        close_temporary_tables
       end
 
       private
@@ -816,16 +809,6 @@ module RuremaSearch
         prepare_corrections
         prepare_suggestions
         @elapsed_time = Time.now.to_f - start
-      end
-
-      def close_temporary_tables
-        if @result and @result.temporary?
-          @result.close
-        end
-        if @result_without_version_condition and
-            @result_without_version_condition.temporary?
-          @result_without_version_condition.close
-        end
       end
 
       def write_html
