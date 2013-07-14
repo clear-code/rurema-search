@@ -98,15 +98,20 @@ module RuremaSearchTestUtils
     end
 
     def ensure_doctree
+      target_date = "2013-07-14T00:00:00+00:00"
       doctree_dir = fixtures_dir + "doctree"
       if doctree_dir.exist?
-        system("git", "pull", "--rebase",
-               :err => :out, :chdir => doctree_dir.to_s)
+        if last_commit_time(doctree_dir) < Time.parse(target_date)
+          system("git", "pull", "--rebase",
+                 :err => :out, :chdir => doctree_dir.to_s)
+        end
       else
-        system("git", "clone", "--depth", "10",
+        system("git", "clone",
                "git://github.com/rurema/doctree.git", doctree_dir.to_s,
                :err => :out)
       end
+      system("git", "checkout", "master@{#{target_date}}",
+             :chdir => doctree_dir.to_s)
     end
 
     def ensure_suggest_database
