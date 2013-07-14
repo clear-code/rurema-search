@@ -410,7 +410,7 @@ module RuremaSearch
       page = dispatcher.dispatch
       page.extend(@view)
       Groonga::Context.default.push_memory_pool do
-      page.process
+        page.process
       end
     end
 
