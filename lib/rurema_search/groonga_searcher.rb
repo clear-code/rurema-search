@@ -411,7 +411,6 @@ module RuremaSearch
       page = dispatcher.dispatch
       page.extend(@view)
       page.process
-      page.close
     end
 
     def setup_view
@@ -540,10 +539,11 @@ module RuremaSearch
         prepare_built_in_objects(entries)
 
         @response.write(layout)
+
+        close_temporary_tables
       end
 
-      # Close all temporary tables
-      def close
+      def close_temporary_tables
         if @versions and @versions.temporary?
           @versions.close
         end
@@ -774,10 +774,10 @@ module RuremaSearch
         else
           write_html
         end
+        close_temporary_tables
       end
 
-      # Close all temporary tables
-      def close
+      def close_temporary_tables
         if @result and @result.temporary?
           @result.close
         end
@@ -1447,9 +1447,6 @@ module RuremaSearch
             @response["Content-Type"] = "application/json; charset=UTF-8"
             @response.write(JSON.generate(candidates))
           end
-
-          def close
-          end
         end
       end
     end
@@ -1465,10 +1462,6 @@ module RuremaSearch
       def process
         @response["Content-Type"] = open_search_description_mime_type
         @response.write(open_search_description)
-      end
-
-      # Do nothing because we don't use Groonga::Object
-      def close
       end
 
       private
