@@ -411,7 +411,7 @@ module RuremaSearch
       page.extend(@view)
       @database.push_memory_pool do
         @suggest_database.push_memory_pool do
-        page.process
+          page.process
         end
       end
     end
