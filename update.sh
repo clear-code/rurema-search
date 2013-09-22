@@ -41,18 +41,21 @@ update_rurema()
     local version=$1
 
     nice ${RUBY} \
+	-I ${base_dir}/lib \
 	-I ${bitclust_dir}/lib \
-	${bitclust_dir}/bin/bitclust \
+	${base_dir}/bin/rurema-search-bitclust \
 	--database ${base_dir}/db-${version} \
 	init encoding=utf-8 version=${version}
     nice ${RUBY} \
+	-I ${base_dir}/lib \
 	-I ${bitclust_dir}/lib \
-	${bitclust_dir}/bin/bitclust \
+	${base_dir}/bin/rurema-search-bitclust \
 	--database ${base_dir}/db-${version} \
 	update --stdlibtree ${doctree_dir}/refm/api/src
     nice ${RUBY} \
+	-I ${base_dir}/lib \
 	-I ${bitclust_dir}/lib \
-	${bitclust_dir}/bin/bitclust \
+	${base_dir}/bin/rurema-search-bitclust \
 	--database ${base_dir}/db-${version} \
 	--capi \
 	update ${doctree_dir}/refm/capi/src/**/*.rd
@@ -60,11 +63,11 @@ update_rurema()
     nice ${RUBY} \
 	-I ${base_dir}/lib \
 	-I ${bitclust_dir}/lib \
-	${base_dir}/bin/bitclust-generate-static-html \
-	${bitclust_dir}/tools/bc-tohtmlpackage.rb \
+	${base_dir}/bin/rurema-search-bitclust \
+	--database ${base_dir}/db-${version} \
+	statichtml \
 	--quiet \
 	--fs-casesensitive \
-	--database ${base_dir}/db-${version} \
 	--outputdir ${base_dir}/public/${version}.new \
 	--catalog ${bitclust_dir}/data/bitclust/catalog
     mv ${base_dir}/public/${version}{,.old}
