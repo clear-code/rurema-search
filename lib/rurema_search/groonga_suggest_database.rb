@@ -95,6 +95,10 @@ module RuremaSearch
       @database.nil? or @database.closed?
     end
 
+    def push_memory_pool(&block)
+      @context.push_memory_pool(&block)
+    end
+
     private
     def populate(path)
       escaped_path = Shellwords.escape(path)

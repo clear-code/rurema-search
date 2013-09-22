@@ -116,6 +116,10 @@ module RuremaSearch
       end
     end
 
+    def push_memory_pool(&block)
+      Groonga::Context.default.push_memory_pool(&block)
+    end
+
     private
     def check_availability
       begin
