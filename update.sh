@@ -2,7 +2,7 @@
 
 base_dir=$(cd "$(dirname "$0")" && pwd)
 : ${RUBY:=ruby1.9.1}
-bitclust_dir=${base_dir}/../bitclust
+bitclust_dir=$($RUBY -rubygems -e 'print Gem::Specification.find_by_name("bitclust-core").gem_dir')
 doctree_dir=${base_dir}/../doctree
 
 PATH=${base_dir}/local/bin:$PATH
