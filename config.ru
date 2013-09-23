@@ -49,6 +49,15 @@ database.open((base_dir + "groonga-database").to_s, "utf-8")
 suggest_database = RuremaSearch::GroongaSuggestDatabase.new
 suggest_database.open((base_dir + "var" + "lib" + "suggest").to_s)
 
+if defined?(PhusionPassenger)
+  PhusionPassenger.on_event(:starting_worker_process) do |forked|
+    if forked
+      database.reopen
+      suggest_database.reopen
+    end
+  end
+end
+
 environment = ENV["RACK_ENV"] || "development"
 
 searcher_options = {}
