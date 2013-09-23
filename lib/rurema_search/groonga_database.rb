@@ -34,6 +34,13 @@ module RuremaSearch
       end
     end
 
+    def reopen
+      base_path = File.dirname(@database.path)
+      encoding = @database.encoding
+      close
+      open(base_path, encoding)
+    end
+
     def purge
       path = @database.path
       encoding = @database.encoding
