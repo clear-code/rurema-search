@@ -80,7 +80,7 @@ TODO
 
 質問、要望、バグ報告などはるりまのMLにお願いします。
 
-http://redmine.ruby-lang.org/wiki/rurema/MailingList
+https://bugs.ruby-lang.org/projects/rurema/wiki/MailingList
 
 == 感謝
 
