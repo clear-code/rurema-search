@@ -1274,7 +1274,7 @@ module RuremaSearch
         end
 
         if @parameters[type]
-          base_href = "/"
+          base_href = "#{base_path}"
           @ordered_parameters.each do |_key, _value|
             next if _key == type
             base_href << parameter_link_href(_key, _value)
