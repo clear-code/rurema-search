@@ -16,25 +16,9 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Encoding.default_external = "utf-8"
-
 require 'pathname'
-
 base_dir = Pathname.new(__FILE__).dirname.cleanpath.realpath
 lib_dir = base_dir + "lib"
-home_dir = Pathname.new('/home/okkez')
-
-bitclust_dir = home_dir + 'ruby' + "bitclust"
-bitclust_lib_dir = bitclust_dir + "lib"
-# rroonga_dir = home_dir + 'ruby' + "rroonga"
-# rroonga_lib_dir = rroonga_dir + "lib"
-# rroonga_ext_dir = rroonga_dir + "ext" + "groonga"
-# racknga_dir = home_dir + 'ruby' + 'racknga'
-# racknga_lib_dir = racknga_dir + 'lib'
-
-$LOAD_PATH.unshift(bitclust_lib_dir.to_s)
-# $LOAD_PATH.unshift(rroonga_ext_dir.to_s)
-# $LOAD_PATH.unshift(rroonga_lib_dir.to_s)
-# $LOAD_PATH.unshift(racknga_lib_dir.to_s)
 $LOAD_PATH.unshift(lib_dir.to_s)
 
 require 'racknga'
