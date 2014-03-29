@@ -23,6 +23,7 @@ gem "bitclust-core"
 gem "bitclust-dev"
 
 group :development, :test do
+  gem 'capistrano'
   gem "test-unit"
   gem "test-unit-notify"
   gem "test-unit-capybara"
