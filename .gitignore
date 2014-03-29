@@ -10,6 +10,7 @@
 /test/suggest-database
 /test/.test-result
 /test/fixtures/doctree
+/document.yaml
 /smtp.yaml
 /var/
 /Gemfile.lock
