@@ -8,6 +8,7 @@ set :deploy_to, '/var/rubydoc/rurema-search'
 set :linked_files, %w{document.yaml production.yaml}
 set :linked_dirs, %w{groonga-database var/lib/suggest}
 
+set :rbenv_type, :user
 set :rbenv_ruby, '2.1.1'
 
 namespace :deploy do
