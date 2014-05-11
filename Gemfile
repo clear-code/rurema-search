@@ -25,6 +25,7 @@ gem "bitclust-dev"
 group :development, :test do
   gem 'capistrano'
   gem 'capistrano-rbenv'
+  gem 'capistrano-bundler'
   gem "test-unit"
   gem "test-unit-notify"
   gem "test-unit-capybara"
