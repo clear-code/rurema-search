@@ -1,2 +1,5 @@
+User-agent: bingbot
+Disallow: /
+
 User-agent: *
 Clawl-Delay: 5
