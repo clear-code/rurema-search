@@ -60,7 +60,7 @@ license/lgpl-3.0.txtを見てください。
 
 インストーラをダウンロードします。
 
-  % wget https://raw.github.com/clear-code/rurema-search/master/setup-wheezy.sh
+  % wget https://raw.githubusercontent.com/clear-code/rurema-search/master/setup-wheezy.sh
 
 以下のようにroot権限でインストーラを実行します。（実行前に中身を確認して実行しても問題ないことを確認すること。）
 
