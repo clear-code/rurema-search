@@ -56,19 +56,19 @@ license/lgpl-3.0.txtを見てください。
 
 === サーバ利用の場合
 
-==== Debian GNU/Linux squeeze
+==== Debian GNU/Linux wheezy
 
 インストーラをダウンロードします。
 
-  % wget https://raw.github.com/clear-code/rurema-search/master/setup-squeeze.sh
+  % wget https://raw.github.com/clear-code/rurema-search/master/setup-wheezy.sh
 
 以下のようにroot権限でインストーラを実行します。（実行前に中身を確認して実行しても問題ないことを確認すること。）
 
-  % sudo sh setup-squeeze.sh ホスト名
+  % sudo sh setup-wheezy.sh ホスト名
 
 「ホスト名」にはサーバのホスト名を指定します。例えば、http://rurema.example.org/でアクセスしたい場合は以下のようにします。
 
-  % sudo sh setup-squeeze.sh rurema.example.org
+  % sudo sh setup-wheezy.sh rurema.example.org
 
 これで「rurema」ユーザが作られ、「~rurema/rurema-search/」以下にるりまサーチがセットアップされます。cronも設定するので毎日定期的に最新版にアップデートされます。
 
