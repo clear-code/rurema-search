@@ -23,7 +23,10 @@ run git clone https://github.com/rurema/doctree.git doctree
 run git clone https://github.com/groonga/groonga.git
 run cd groonga
 run ./autogen.sh
-run ./configure --prefix=${base_dir}/local --disable-document
+run ./configure \
+    --prefix=${base_dir}/local \
+    --disable-document \
+    --disable-groonga-httpd
 run make
 run make install
 run cd -
