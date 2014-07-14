@@ -42,17 +42,17 @@ license/lgpl-3.0.txtを見てください。
   % ruby1.9.1 rackup
   % www-browser http://localhost:9292/
 
-==== Mac OS X + rvm
+==== Mac OS X + rbenv
 
-  % rvm use 1.9.2
-  % gem install rack pkg-config
   % mkdir rurema
   % cd rurema
   % git clone git://github.com/clear-code/rurema-search.git
   % cd rurema-search
-  % RUBY18=$rvm_path/bin/ruby-1.8.7-p352 RUBY19=$rvm_path/bin/ruby-1.9.2-p290 ./setup.sh
-  % rackup
-  % open -a /Applications/Firefox.app http://localhost:9292/
+  % rbenv local 2.1.2
+  % bundle
+  % RUBY19=`which ruby` ./setup.sh
+  % rackup > /dev/null 2>&1 &
+  % open http://localhost:9292/
 
 === サーバ利用の場合
 
