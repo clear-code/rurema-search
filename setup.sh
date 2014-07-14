@@ -1,7 +1,7 @@
 #!/bin/sh
 
 base_dir=$(cd "$(dirname "$0")" && pwd)
-: ${RUBY19:=ruby1.9.1}
+: ${RUBY:=ruby}
 
 run()
 {
@@ -14,7 +14,7 @@ run()
 
 set -x
 
-run ${RUBY19} -S gem install rack pkg-config
+run ${RUBY} -S gem install rack pkg-config
 
 run cd ${base_dir}/..
 run git clone https://github.com/rurema/bitclust.git bitclust
@@ -31,7 +31,7 @@ run cd -
 run git clone https://github.com/ranguba/rroonga.git
 run cd rroonga
 run export PKG_CONFIG_PATH=${base_dir}/local/lib/pkgconfig
-run ${RUBY19} extconf.rb
+run ${RUBY} extconf.rb
 run make
 run cd -
 
