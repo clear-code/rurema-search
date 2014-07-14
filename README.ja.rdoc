@@ -36,7 +36,7 @@ license/lgpl-3.0.txtを見てください。
 
   % mkdir rurema
   % cd rurema
-  % git clone git://github.com/kou/rurema-search.git
+  % git clone git://github.com/clear-code/rurema-search.git
   % cd rurema-search
   % ./setup.sh
   % ruby1.9.1 rackup
@@ -48,7 +48,7 @@ license/lgpl-3.0.txtを見てください。
   % gem install rack pkg-config
   % mkdir rurema
   % cd rurema
-  % git clone git://github.com/kou/rurema-search.git
+  % git clone git://github.com/clear-code/rurema-search.git
   % cd rurema-search
   % RUBY18=$rvm_path/bin/ruby-1.8.7-p352 RUBY19=$rvm_path/bin/ruby-1.9.2-p290 ./setup.sh
   % rackup
@@ -60,7 +60,7 @@ license/lgpl-3.0.txtを見てください。
 
 インストーラをダウンロードします。
 
-  % wget https://raw.github.com/kou/rurema-search/master/setup-squeeze.sh
+  % wget https://raw.github.com/clear-code/rurema-search/master/setup-squeeze.sh
 
 以下のようにroot権限でインストーラを実行します。（実行前に中身を確認して実行しても問題ないことを確認すること。）
 
