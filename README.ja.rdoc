@@ -36,39 +36,39 @@ license/lgpl-3.0.txtを見てください。
 
   % mkdir rurema
   % cd rurema
-  % git clone git://github.com/kou/rurema-search.git
+  % git clone git://github.com/clear-code/rurema-search.git
   % cd rurema-search
   % ./setup.sh
   % ruby1.9.1 rackup
   % www-browser http://localhost:9292/
 
-==== Mac OS X + rvm
+==== Mac OS X + rbenv
 
-  % rvm use 1.9.2
-  % gem install rack pkg-config
   % mkdir rurema
   % cd rurema
-  % git clone git://github.com/kou/rurema-search.git
+  % git clone git://github.com/clear-code/rurema-search.git
   % cd rurema-search
-  % RUBY18=$rvm_path/bin/ruby-1.8.7-p352 RUBY19=$rvm_path/bin/ruby-1.9.2-p290 ./setup.sh
-  % rackup
-  % open -a /Applications/Firefox.app http://localhost:9292/
+  % rbenv local 2.1.2
+  % bundle
+  % RUBY19=`which ruby` ./setup.sh
+  % rackup > /dev/null 2>&1 &
+  % open http://localhost:9292/
 
 === サーバ利用の場合
 
-==== Debian GNU/Linux squeeze
+==== Debian GNU/Linux wheezy
 
 インストーラをダウンロードします。
 
-  % wget https://raw.github.com/kou/rurema-search/master/setup-squeeze.sh
+  % wget https://raw.githubusercontent.com/clear-code/rurema-search/master/setup-wheezy.sh
 
 以下のようにroot権限でインストーラを実行します。（実行前に中身を確認して実行しても問題ないことを確認すること。）
 
-  % sudo sh setup-squeeze.sh ホスト名
+  % sudo sh setup-wheezy.sh ホスト名
 
 「ホスト名」にはサーバのホスト名を指定します。例えば、http://rurema.example.org/でアクセスしたい場合は以下のようにします。
 
-  % sudo sh setup-squeeze.sh rurema.example.org
+  % sudo sh setup-wheezy.sh rurema.example.org
 
 これで「rurema」ユーザが作られ、「~rurema/rurema-search/」以下にるりまサーチがセットアップされます。cronも設定するので毎日定期的に最新版にアップデートされます。
 
