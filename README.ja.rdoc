@@ -50,7 +50,7 @@ license/lgpl-3.0.txtを見てください。
   % cd rurema-search
   % rbenv local 2.1.2
   % bundle
-  % RUBY19=`which ruby` ./setup.sh
+  % RUBY=`which ruby` ./setup.sh
   % rackup > /dev/null 2>&1 &
   % open http://localhost:9292/
 
