@@ -7,6 +7,7 @@ require 'groonga'
 module RuremaSearch
   class GroongaDatabase
     def initialize
+      @context = nil
       @database = nil
       check_availability
     end
@@ -19,7 +20,7 @@ module RuremaSearch
       reset_context(encoding)
       path = File.join(base_path, "bitclust.db")
       if File.exist?(path)
-        @database = Groonga::Database.open(path)
+        @database = @context.open_database(path)
         populate_schema
       else
         FileUtils.mkdir_p(base_path)
@@ -55,6 +56,8 @@ module RuremaSearch
     def close
       @database.close
       @database = nil
+      @context.close
+      @context = nil
     end
 
     def closed?
@@ -62,55 +65,55 @@ module RuremaSearch
     end
 
     def names
-      @names ||= Groonga["Names"]
+      @context["Names"]
     end
 
     def entries
-      @entries ||= Groonga["Entries"]
+      @context["Entries"]
     end
 
     def specs
-      @specs ||= Groonga["Specs"]
+      @context["Specs"]
     end
 
     def classes
-      @classes ||= Groonga["Classes"]
+      @context["Classes"]
     end
 
     def modules
-      @modules ||= Groonga["Modules"]
+      @context["Modules"]
     end
 
     def objects
-      @objects ||= Groonga["Objects"]
+      @context["Objects"]
     end
 
     def libraries
-      @libraries ||= Groonga["Libraries"]
+      @context["Libraries"]
     end
 
     def singleton_methods
-      @singleton_methods ||= Groonga["SingletonMethods"]
+      @context["SingletonMethods"]
     end
 
     def instance_methods
-      @instance_methods ||= Groonga["InstanceMethods"]
+      @context["InstanceMethods"]
     end
 
     def module_functions
-      @module_functions ||= Groonga["ModuleFunctions"]
+      @context["ModuleFunctions"]
     end
 
     def constants
-      @constants ||= Groonga["Constants"]
+      @context["Constants"]
     end
 
     def special_variables
-      @special_variables ||= Groonga["SpecialVariables"]
+      @context["SpecialVariables"]
     end
 
     def versions
-      @versions ||= Groonga["Versions"]
+      @context["Versions"]
     end
 
     def purge_old_records(base_time)
@@ -124,7 +127,7 @@ module RuremaSearch
     end
 
     def push_memory_pool(&block)
-      Groonga::Context.default.push_memory_pool(&block)
+      @context.push_memory_pool(&block)
     end
 
     private
@@ -138,17 +141,17 @@ module RuremaSearch
     end
 
     def reset_context(encoding)
-      Groonga::Context.default_options = {:encoding => encoding}
-      Groonga::Context.default = nil
+      @context.close if @context
+      @context = Groonga::Context.new(:encoding => encoding)
     end
 
     def populate(path)
-      @database = Groonga::Database.create(:path => path)
+      @database = @context.create_database(path)
       populate_schema
     end
 
     def populate_schema
-      Groonga::Schema.define do |schema|
+      Groonga::Schema.define(:context => @context) do |schema|
         schema.create_table("Names",
                             :type => :patricia_trie,
                             :key_type => "ShortText") do |table|
