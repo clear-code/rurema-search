@@ -10,6 +10,7 @@ module RuremaSearch
       @method_database = method_database
       @function_database = function_database
       @base_time = nil
+      @n_added_entries = 0
     end
 
     def index
@@ -172,6 +173,11 @@ module RuremaSearch
       attributes[:normalized_module] ||= attributes[:module]
       attributes[:normalized_object] ||= attributes[:object]
       @database.entries.add(key, attributes)
+      @n_added_entries += 1
+      if (@n_added_entries % 1000).zero?
+        @database.reopen
+        GC.start
+      end
     end
 
     def normalize_type_label(label)
