@@ -1,13 +1,3 @@
-GIT
-  remote: git://github.com/ranguba/rroonga.git
-  revision: a7447ea13e90ba88c999fc0dcf23ed776c641207
-  specs:
-    rroonga (4.0.4)
-      archive-zip
-      groonga-client (>= 0.0.3)
-      json
-      pkg-config
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -61,6 +51,11 @@ GEM
       rack
       rroonga
     rake (10.3.2)
+    rroonga (4.0.3)
+      archive-zip
+      groonga-client (>= 0.0.3)
+      json
+      pkg-config
     sshkit (1.5.1)
       colorize
       net-scp (>= 1.1.2)
@@ -87,7 +82,7 @@ DEPENDENCIES
   capistrano-rbenv
   racknga
   rake
-  rroonga!
+  rroonga
   test-unit
   test-unit-capybara
   test-unit-notify

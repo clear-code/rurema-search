@@ -17,7 +17,7 @@
 
 source "https://rubygems.org/"
 
-gem "rroonga", :github => "ranguba/rroonga" # Until Rroonga 4.0.4 is released.
+gem "rroonga"
 gem "racknga"
 gem "bitclust-core"
 gem "bitclust-dev"
