@@ -36,7 +36,6 @@ module RuremaSearch
     def reopen
       base_path = File.dirname(@database.path)
       close
-      @context.close
       open(base_path)
     end
 
@@ -94,8 +93,11 @@ module RuremaSearch
     end
 
     def close
+      truncate_temporary_records
       @database.close
       @database = nil
+      @context.close
+      @context = nil
     end
 
     def closed?
@@ -116,6 +118,18 @@ module RuremaSearch
       end
 
       @database = @context.open_database(path)
+    end
+
+    def truncate_temporary_records
+      temporary_table_names = [
+        table_name("event"),
+        table_name("sequence"),
+        table_name("pair"),
+      ]
+      temporary_table_names.each do |name|
+        table = @context[name]
+        table.truncate
+      end
     end
 
     def normalize_suggest_entries(entries)
