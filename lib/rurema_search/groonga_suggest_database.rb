@@ -78,13 +78,6 @@ module RuremaSearch
       @context.send("load --table #{table_name('item')}")
       @context.send(JSON.generate(item_values))
       @context.receive
-
-      @n_registered_keywords ||= 0
-      @n_registered_keywords += 1
-      if (@n_registered_keywords % 1000).zero?
-        reopen
-        GC.start
-      end
     end
 
     def corrections(query, options={})
