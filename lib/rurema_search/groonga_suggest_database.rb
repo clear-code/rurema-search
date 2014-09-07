@@ -36,7 +36,6 @@ module RuremaSearch
     def reopen
       base_path = File.dirname(@database.path)
       close
-      @context.close
       open(base_path)
     end
 
@@ -103,6 +102,8 @@ module RuremaSearch
     def close
       @database.close
       @database = nil
+      @context.close
+      @context = nil
     end
 
     def closed?
