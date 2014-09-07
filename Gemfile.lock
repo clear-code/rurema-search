@@ -1,8 +1,8 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    archive-zip (0.6.0)
-      io-like (>= 0.3.0)
+    archive-zip (0.7.0)
+      io-like (~> 0.3.0)
     bitclust-core (0.8.0)
       progressbar
       rack
@@ -51,7 +51,7 @@ GEM
       rack
       rroonga
     rake (10.3.2)
-    rroonga (4.0.3)
+    rroonga (4.0.4)
       archive-zip
       groonga-client (>= 0.0.3)
       json
