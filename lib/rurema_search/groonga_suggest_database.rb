@@ -100,6 +100,8 @@ module RuremaSearch
     end
 
     def close
+      event_table = @context[table_name('event')]
+      event_table.truncate
       @database.close
       @database = nil
       @context.close
