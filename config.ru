@@ -101,7 +101,16 @@ end
 use Rack::Runtime
 use Rack::ContentLength
 
-urls = ["/favicon.", "/css/", "/images/", "/javascripts/", "/1.8.", "/1.9."]
+urls = [
+  "/favicon.",
+  "/css/",
+  "/images/",
+  "/javascripts/",
+  "/1.8.",
+  "/1.9.",
+  "/2.0.",
+  "/2.1.",
+  "/2.2.",
 
 case environment
 when "development"
