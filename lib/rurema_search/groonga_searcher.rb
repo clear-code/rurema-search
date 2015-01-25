@@ -513,9 +513,18 @@ module RuremaSearch
             version = $1
             IndexPage.new(@database, version, @request, @response)
           else
-            SearchPage.new(@database, @suggest_database, @request, @response)
+            if aggressive_bot?
+              AggressiveBotPage.new(@request, @response)
+            else
+              SearchPage.new(@database, @suggest_database, @request, @response)
+            end
           end
         end
+      end
+
+      private
+      def aggressive_bot?
+        /bingbot/ === @request.user_agent
       end
     end
 
@@ -620,6 +629,19 @@ module RuremaSearch
              :objects => sorted_modules,
            },
           ]
+      end
+    end
+
+    class AggressiveBotPage
+      include PageUtils
+
+      def initialize(request, response)
+        @request = request
+        @response = response
+      end
+
+      def process
+        @response.redirect(base_path)
       end
     end
 
