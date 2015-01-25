@@ -111,6 +111,7 @@ urls = [
   "/2.0.",
   "/2.1.",
   "/2.2.",
+]
 
 case environment
 when "development"
