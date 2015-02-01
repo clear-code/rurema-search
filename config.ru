@@ -144,9 +144,6 @@ if configuration["use_cache"]
   use Racknga::Middleware::Cache, :database_path => cache_database_path.to_s
 end
 
-require 'rack/protection'
-use Rack::Protection
-
 use Rack::Lint
 use Rack::Head
 map "/ja/search" do
