@@ -22,6 +22,8 @@ gem "racknga"
 gem "bitclust-core"
 gem "bitclust-dev"
 
+gem 'rack-protection'
+
 group :development, :test do
   gem 'capistrano'
   gem 'capistrano-rbenv'
