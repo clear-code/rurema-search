@@ -145,7 +145,7 @@ if configuration["use_cache"]
 end
 
 require 'rack/protection'
-use Rack::Protection
+use Rack::Protection::FrameOptions
 
 use Rack::Lint
 use Rack::Head
