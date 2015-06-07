@@ -136,18 +136,6 @@ urls = [
   "/2.2.",
 ]
 
-case environment
-when "development"
-  # For Rack 1.4.0. 1.4.1 will fix it.
-  class NoImplicitIndexStatic < Rack::Static
-    def initialize(*args, &block)
-      super
-      @index = nil
-    end
-  end
-  use NoImplicitIndexStatic, :urls => urls, :root => (base_dir + "public").to_s
-end
-
 use Racknga::Middleware::Deflater
 use Rack::Lint
 use Rack::Head
