@@ -1,6 +1,6 @@
 # -*- ruby -*-
 #
-# Copyright (C) 2010  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2010-2015  Kouhei Sutou <kou@clear-code.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 Encoding.default_external = "utf-8"
 
-require 'pathname'
+require "pathname"
 
 base_dir = Pathname.new(__FILE__).dirname.cleanpath.realpath
 lib_dir = base_dir + "lib"
@@ -36,12 +36,12 @@ $LOAD_PATH.unshift(rroonga_lib_dir.to_s)
 $LOAD_PATH.unshift(racknga_lib_dir.to_s)
 $LOAD_PATH.unshift(lib_dir.to_s)
 
-require 'racknga'
-require 'racknga/middleware/log'
-require 'racknga/middleware/cache'
+require "racknga"
+require "racknga/middleware/log"
+require "racknga/middleware/cache"
 
-require 'rurema_search'
-require 'rurema_search/groonga_searcher'
+require "rurema_search"
+require "rurema_search/groonga_searcher"
 
 database = RuremaSearch::GroongaDatabase.new
 database.open((base_dir + "groonga-database").to_s, "utf-8")
@@ -65,7 +65,7 @@ searcher_options = {}
 load_yaml = Proc.new do |file_name|
   configuration_file = base_dir + file_name
   if configuration_file.exist?
-    require 'yaml'
+    require "yaml"
     YAML.load(configuration_file.read)
   else
     nil
@@ -75,7 +75,7 @@ end
 load_searcher_option = Proc.new do |key, file_name|
   configuration = load_yaml.call(file_name)
   if configuration
-    require 'yaml'
+    require "yaml"
     searcher_options[key] = configuration
   end
 end
