@@ -17,7 +17,7 @@
 
 source "https://rubygems.org/"
 
-gem "rroonga"#, :git => "https://github.com/ranguba/rroonga.git"
+gem "rroonga"
 gem "racknga"
 gem "bitclust-core"
 gem "bitclust-dev"
