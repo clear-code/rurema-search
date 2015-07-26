@@ -39,7 +39,7 @@ $LOAD_PATH.unshift(lib_dir.to_s)
 require "rroonga"
 
 keep_n_latest_logs = 10
-log_dir = base_dir + "tmp" + "log"
+log_dir = base_dir + "var" + "log"
 logs = Pathname.glob(log_dir + "groonga.log.*")
 logs.sort[0..(-keep_n_latest_logs + -1)].each do |old_log|
   old_log.remove
