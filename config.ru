@@ -36,7 +36,7 @@ $LOAD_PATH.unshift(rroonga_lib_dir.to_s)
 $LOAD_PATH.unshift(racknga_lib_dir.to_s)
 $LOAD_PATH.unshift(lib_dir.to_s)
 
-require "rroonga"
+require "groonga"
 
 keep_n_latest_logs = 10
 log_dir = base_dir + "var" + "log"
