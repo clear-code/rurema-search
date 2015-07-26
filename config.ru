@@ -45,7 +45,7 @@ logs = Pathname.glob(log_dir + "groonga.log.*")
 logs.sort[0..(-keep_n_latest_logs + -1)].each do |old_log|
   old_log.remove
 end
-Groonga::Logger.path = log_dir + "groonga.log"
+Groonga::Logger.path = (log_dir + "groonga.log").to_s
 Groonga::Logger.rotate_threshold_size = 1 * 1024 * 1024
 
 require "racknga"
