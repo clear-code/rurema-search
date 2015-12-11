@@ -36,6 +36,18 @@ $LOAD_PATH.unshift(rroonga_lib_dir.to_s)
 $LOAD_PATH.unshift(racknga_lib_dir.to_s)
 $LOAD_PATH.unshift(lib_dir.to_s)
 
+require "groonga"
+
+keep_n_latest_logs = 10
+log_dir = base_dir + "var" + "log"
+log_dir.mkpath
+logs = Pathname.glob(log_dir + "groonga.log.*")
+logs.sort[0..(-keep_n_latest_logs + -1)].each do |old_log|
+  old_log.remove
+end
+Groonga::Logger.path = (log_dir + "groonga.log").to_s
+Groonga::Logger.rotate_threshold_size = 1 * 1024 * 1024
+
 require "racknga"
 require "racknga/middleware/log"
 require "racknga/middleware/cache"
