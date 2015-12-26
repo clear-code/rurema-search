@@ -21,6 +21,19 @@ require "pathname"
 
 base_dir = Pathname.new(__FILE__).dirname.cleanpath.realpath
 lib_dir = base_dir + "lib"
+
+bitclust_dir = base_dir.parent + "bitclust"
+bitclust_lib_dir = bitclust_dir + "lib"
+rroonga_dir = base_dir.parent + "rroonga"
+rroonga_lib_dir = rroonga_dir + "lib"
+rroonga_ext_dir = rroonga_dir + "ext" + "groonga"
+racknga_dir = base_dir.parent + "racknga"
+racknga_lib_dir = racknga_dir + "lib"
+
+$LOAD_PATH.unshift(bitclust_lib_dir.to_s)
+$LOAD_PATH.unshift(rroonga_ext_dir.to_s)
+$LOAD_PATH.unshift(rroonga_lib_dir.to_s)
+$LOAD_PATH.unshift(racknga_lib_dir.to_s)
 $LOAD_PATH.unshift(lib_dir.to_s)
 
 require "groonga"
@@ -47,6 +60,15 @@ database.open((base_dir + "groonga-database").to_s, "utf-8")
 
 suggest_database = RuremaSearch::GroongaSuggestDatabase.new
 suggest_database.open((base_dir + "var" + "lib" + "suggest").to_s)
+
+if defined?(PhusionPassenger)
+  PhusionPassenger.on_event(:starting_worker_process) do |forked|
+    if forked
+      database.reopen
+      suggest_database.reopen
+    end
+  end
+end
 
 environment = ENV["RACK_ENV"] || "development"
 
@@ -78,20 +100,18 @@ searcher = RuremaSearch::GroongaSearcher.new(database,
                                              suggest_database,
                                              base_dir.to_s,
                                              searcher_options)
-
 case environment
-when "development"
-  use Rack::ShowExceptions
 when "production"
   show_error_page = Class.new do
     def initialize(app, options={})
       @app = app
       @searcher = options[:searcher]
+      @target_exception = options[:target_exception] || Exception
     end
 
     def call(env)
       @app.call(env)
-    rescue Exception => exception
+    rescue @target_exception => exception
       @searcher.error_page(env, exception)
     end
   end
@@ -100,16 +120,17 @@ when "production"
   load_searcher_option.call(:smtp, "smtp.yaml")
   notifiers = [Racknga::ExceptionMailNotifier.new(searcher_options[:smtp])]
   use Racknga::Middleware::ExceptionNotifier, :notifiers => notifiers
+
+  options = {
+    :searcher => searcher,
+    :target_exception => RuremaSearch::GroongaSearcher::ClientError,
+  }
+  use show_error_page, options
 end
 
 if configuration["use_log"]
   log_database_path = base_dir + "var" + "log" + "db"
   use Racknga::Middleware::Log, :database_path => log_database_path.to_s
-end
-
-case environment
-when "development"
-  use Rack::CommonLogger
 end
 
 use Rack::Runtime
@@ -128,6 +149,8 @@ urls = [
 ]
 
 use Racknga::Middleware::Deflater
+use Rack::Lint
+use Rack::Head
 use Rack::ConditionalGet
 
 use Racknga::Middleware::JSONP
@@ -137,23 +160,19 @@ if configuration["use_cache"]
   use Racknga::Middleware::Cache, :database_path => cache_database_path.to_s
 end
 
+use Racknga::Middleware::InstanceName, :application_name => "Rurema Search"
+
+case environment
+when "development"
+  use Rack::CommonLogger
+end
+
 require 'rack/protection'
 use Rack::Protection::FrameOptions
 
-use Rack::Lint
-use Rack::Head
 map "/ja/search" do
   use Rack::Chunked
   # This is workaround!
   use Rack::Static, :urls => ["/favicon.ico", "/css", "/javascripts", "/images", "apple-touch-icon.png", "apple-touch-icon.svg", "favicon.png", "favicon.svg", "robots.txt"], :root => "public"
   run searcher
-end
-
-if defined?(PhusionPassenger)
-  PhusionPassenger.on_event(:starting_worker_process) do |forked|
-    if forked
-      database.reopen
-      suggest_database.reopen
-    end
-  end
 end
