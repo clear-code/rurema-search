@@ -35,6 +35,6 @@ class OpenSearchTest < Test::Unit::TestCase
                  content_type)
     xml = Nokogiri::XML(page.source)
     url = xml.xpath("//node()[name()='Url']")[0]
-    assert_equal(expected_template, url["template"])
+    assert_equal("#{expected_template}?query={searchTerms}", url["template"])
   end
 end
