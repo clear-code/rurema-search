@@ -77,7 +77,11 @@ update_rurema()
 }
 
 if [ "$update_rurema" = "yes" ]; then
-    (cd ${doctree_dir} && git pull --rebase)
+    if [ -d ${doctree_dir} ]; then
+	(cd ${doctree_dir} && git pull --rebase)
+    else
+	git clone https://github.com/rurema/doctree.git ${doctree_dir}
+    fi
 
     for version in 1.9.3 2.0.0 2.1.0 2.2.0 2.3.0; do
 	update_rurema $version
