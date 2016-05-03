@@ -1,6 +1,6 @@
 # -*- ruby -*-
 #
-# Copyright (C) 2010-2015  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2010-2016  Kouhei Sutou <kou@clear-code.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ log_dir = base_dir + "var" + "log"
 log_dir.mkpath
 logs = Pathname.glob(log_dir + "groonga.log.*")
 logs.sort[0..(-keep_n_latest_logs + -1)].each do |old_log|
-  old_log.remove
+  old_log.delete
 end
 Groonga::Logger.path = (log_dir + "groonga.log").to_s
 Groonga::Logger.rotate_threshold_size = 1 * 1024 * 1024
