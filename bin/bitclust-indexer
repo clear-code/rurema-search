@@ -68,6 +68,7 @@ def load_suggest_data(database, suggest_database)
     end
     suggest_database.register_keyword(local_name.key, related_names)
   end
+  suggest_database.truncate_temporary_records
 end
 
 def update_suggest_database(database, suggest_database_path, reset, load_data)

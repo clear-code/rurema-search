@@ -5,8 +5,6 @@
   <Description><%= h(site_description) %></Description>
   <Image height="16" width="16" type="image/png"><%= h(base_url + "favicon.png") %></Image>
   <InputEncoding>UTF-8</InputEncoding>
-  <Url type="text/html" method="get" template="<%= h(version_url) %>">
-    <Param name="query" value="{searchTerms}" />
-  </Url>
+  <Url type="text/html" method="get" template="<%= h(version_url) %>?query={searchTerms}" />
   <moz:SearchForm><%= h(version_url) %></moz:SearchForm>
 </OpenSearchDescription>
