@@ -19,7 +19,7 @@ source "https://rubygems.org/"
 
 gem "rroonga"
 gem "racknga"
-gem "bitclust-core"
+gem "bitclust-core", :github => "rurema/bitclust"
 gem "bitclust-dev"
 
 group :development, :test do
