@@ -14,4 +14,6 @@
 /smtp.yaml
 /var/
 /.bundle/config
+
 .capistrano
+/log
