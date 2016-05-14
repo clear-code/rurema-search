@@ -1,6 +1,7 @@
 GIT
-  remote: git://github.com/rurema/bitclust.git
-  revision: 6db8204b56cb100aa3deb12a73f5258c1287ba65
+  remote: git://github.com/ruby/bitclust.git
+  revision: 2259dfe225442a003e2ccdbff1355e0bce59de34
+  branch: fix-rake-depend
   specs:
     bitclust-core (0.9.1)
       progressbar

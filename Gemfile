@@ -19,7 +19,7 @@ source "https://rubygems.org/"
 
 gem "rroonga"
 gem "racknga"
-gem "bitclust-core", :github => "rurema/bitclust"
+gem "bitclust-core", :github => "ruby/bitclust", :branch => "fix-rake-depend"
 gem "bitclust-dev"
 
 gem 'rack-protection'
