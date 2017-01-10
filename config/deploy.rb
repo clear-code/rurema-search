@@ -8,7 +8,7 @@ set :linked_dirs, %w{groonga-database var/lib/suggest}
 
 set :rbenv_type, :user
 set :rbenv_path, '/home/rurema/.rbenv'
-set :rbenv_ruby, '2.3.1'
+set :rbenv_ruby, '2.3.3'
 
 namespace :deploy do
   desc 'Restart application'
