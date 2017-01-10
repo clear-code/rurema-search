@@ -28,6 +28,9 @@ group :development, :test do
   gem 'capistrano'
   gem 'capistrano-rbenv'
   gem 'capistrano-bundler'
+  gem 'rbnacl'
+  gem 'rbnacl-libsodium'
+  gem 'bcrypt_pbkdf'
   gem "test-unit"
   gem "test-unit-notify"
   gem "test-unit-capybara"

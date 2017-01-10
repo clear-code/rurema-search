@@ -7,6 +7,7 @@ GEM
       sshkit (>= 1.6.1, != 1.7.0)
     archive-zip (0.9.0)
       io-like (~> 0.3.0)
+    bcrypt_pbkdf (1.0.0)
     bitclust-core (0.9.4)
       progressbar
       rack
@@ -32,6 +33,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    ffi (1.9.14)
     gqtp (1.0.6)
     groonga-client (0.3.9)
       gqtp (>= 1.0.4)
@@ -70,6 +72,10 @@ GEM
       rack
       rroonga
     rake (12.0.0)
+    rbnacl (4.0.1)
+      ffi
+    rbnacl-libsodium (1.0.11)
+      rbnacl (>= 3.0.1)
     rroonga (6.1.0)
       archive-zip
       groonga-client (>= 0.0.3)
@@ -93,6 +99,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt_pbkdf
   bitclust-core
   bitclust-dev
   capistrano
@@ -101,6 +108,8 @@ DEPENDENCIES
   rack-protection
   racknga
   rake
+  rbnacl
+  rbnacl-libsodium
   rroonga
   test-unit
   test-unit-capybara
