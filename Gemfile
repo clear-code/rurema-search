@@ -1,6 +1,6 @@
 # -*- mode: ruby; coding: utf-8 -*-
 #
-# Copyright (C) 2011-2013  Kouhei Sutou <kou@clear-code.com>
+# Copyright (C) 2011-2016  Kouhei Sutou <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -19,7 +19,7 @@ source "https://rubygems.org/"
 
 gem "rroonga"
 gem "racknga"
-gem "bitclust-core", :github => "rurema/bitclust"
+gem "bitclust-core"
 gem "bitclust-dev"
 
 group :development, :test do
