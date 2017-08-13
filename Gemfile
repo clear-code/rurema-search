@@ -26,7 +26,6 @@ gem 'rack-protection'
 
 group :development, :test do
   gem 'capistrano'
-  gem 'capistrano-rbenv'
   gem 'capistrano-bundler'
   gem 'rbnacl'
   gem 'rbnacl-libsodium'

@@ -6,10 +6,6 @@ set :deploy_to, '/var/rubydoc/rurema-search'
 set :linked_files, %w{document.yaml production.yaml}
 set :linked_dirs, %w{groonga-database var/lib/suggest}
 
-set :rbenv_type, :user
-set :rbenv_path, '/home/rurema/.rbenv'
-set :rbenv_ruby, '2.4.0'
-
 namespace :deploy do
   desc 'Restart application'
   task :restart do
