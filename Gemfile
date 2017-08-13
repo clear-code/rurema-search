@@ -27,7 +27,7 @@ gem 'rack-protection'
 group :development, :test do
   gem 'capistrano'
   gem 'capistrano-bundler'
-  gem 'rbnacl'
+  gem 'rbnacl', '< 5.0.0'
   gem 'rbnacl-libsodium'
   gem 'bcrypt_pbkdf'
   gem "test-unit"

@@ -65,7 +65,7 @@ GEM
       rack
       rroonga
     rake (12.0.0)
-    rbnacl (5.0.0)
+    rbnacl (4.0.2)
       ffi
     rbnacl-libsodium (1.0.11)
       rbnacl (>= 3.0.1)
@@ -100,7 +100,7 @@ DEPENDENCIES
   rack-protection
   racknga
   rake
-  rbnacl
+  rbnacl (< 5.0.0)
   rbnacl-libsodium
   rroonga
   test-unit
