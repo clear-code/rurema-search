@@ -1,5 +1,5 @@
 set :application, 'rurema-search'
-set :repo_url, 'git@github.com:ruby/rurema-search.git'
+set :repo_url, 'https://github.com/ruby/rurema-search'
 set :branch, 'ro'
 set :deploy_to, '/var/rubydoc/rurema-search'
 
