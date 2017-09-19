@@ -2,3 +2,5 @@ base_url:
   /static/
 remove_dot_from_version:
   true
+tracking_id:
+  UA-xxxx-1
