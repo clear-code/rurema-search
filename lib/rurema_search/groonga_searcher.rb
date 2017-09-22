@@ -353,6 +353,22 @@ module RuremaSearch
         end
         h(current_query)
       end
+
+      def google_tag_manager
+        tracking_id = document_options["tracking_id"]
+        return "" unless tracking_id
+        <<-HTML.chomp
+<!-- Global Site Tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=#{tracking_id}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments)};
+  gtag('js', new Date());
+
+  gtag('config', '#{tracking_id}');
+</script>
+        HTML
+      end
     end
 
     include Rack::Utils
