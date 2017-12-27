@@ -8,12 +8,12 @@ GEM
     archive-zip (0.10.0)
       io-like (~> 0.3.0)
     bcrypt_pbkdf (1.0.0)
-    bitclust-core (0.9.6)
+    bitclust-core (1.1.0)
       progressbar (= 0.21.0)
       rack
-    bitclust-dev (0.9.6)
-      bitclust-core (= 0.9.6)
-    capistrano (3.9.1)
+    bitclust-dev (1.1.0)
+      bitclust-core (= 1.1.0)
+    capistrano (3.10.1)
       airbrussh (>= 1.0.0)
       i18n
       rake (>= 10.0.0)
@@ -21,63 +21,65 @@ GEM
     capistrano-bundler (1.3.0)
       capistrano (~> 3.1)
       sshkit (~> 1.2)
-    capybara (2.15.1)
+    capybara (2.16.1)
       addressable
       mini_mime (>= 0.1.3)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    concurrent-ruby (1.0.5)
     ffi (1.9.18)
     gqtp (1.0.6)
-    groonga-client (0.5.1)
+    groonga-client (0.5.8)
       gqtp (>= 1.0.4)
       groonga-command (>= 1.2.8)
-      groonga-command-parser (>= 1.0.7)
+      groonga-command-parser (>= 1.1.0)
       hashie
     groonga-command (1.3.4)
       json
-    groonga-command-parser (1.0.9)
+    groonga-command-parser (1.1.2)
       groonga-command (>= 1.3.2)
       json-stream
-    hashie (3.5.6)
-    i18n (0.8.6)
+    hashie (3.5.7)
+    i18n (0.9.1)
+      concurrent-ruby (~> 1.0)
     io-like (0.3.0)
     json (2.1.0)
     json-stream (0.2.1)
-    mini_mime (0.1.4)
+    mini_mime (1.0.0)
     mini_portile2 (2.3.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (4.2.0)
     nokogiri (1.8.1)
       mini_portile2 (~> 2.3.0)
-    pkg-config (1.2.7)
-    power_assert (1.1.0)
+    pkg-config (1.2.8)
+    power_assert (1.1.1)
     progressbar (0.21.0)
-    public_suffix (3.0.0)
+    public_suffix (3.0.1)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
-    rack-test (0.7.0)
+    rack-test (0.8.2)
       rack (>= 1.0, < 3)
     racknga (0.9.3)
       rack
       rroonga
-    rake (12.1.0)
+    rake (12.3.0)
     rbnacl (4.0.2)
       ffi
-    rbnacl-libsodium (1.0.13)
+    rbnacl-libsodium (1.0.16)
       rbnacl (>= 3.0.1)
     rroonga (7.0.2)
       archive-zip
       groonga-client (>= 0.0.3)
       json
       pkg-config
-    sshkit (1.14.0)
+    sshkit (1.15.1)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    test-unit (3.2.6)
+    test-unit (3.2.7)
       power_assert
     test-unit-capybara (1.0.5)
       capybara (>= 2.1.0)
@@ -108,4 +110,4 @@ DEPENDENCIES
   test-unit-notify
 
 BUNDLED WITH
-   1.15.4
+   1.16.1
