@@ -5,7 +5,7 @@
 <head>
   <%= google_tag_manager %>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-  <title><%= title %></title>
+  <title><%= h(title) %></title>
 <% @version_names.each do |version_name| %>
   <link rel="search"
         type="<%= h(open_search_description_mime_type) %>"
