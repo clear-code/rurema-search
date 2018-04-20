@@ -83,7 +83,7 @@ if [ "$update_rurema" = "yes" ]; then
 	git clone https://github.com/rurema/doctree.git ${doctree_dir}
     fi
 
-    for version in 1.9.3 2.0.0 2.1.0 2.2.0 2.3.0 2.4.0 2.5.0; do
+    for version in 2.1.0 2.2.0 2.3.0 2.4.0 2.5.0; do
 	update_rurema $version
     done
     wait
