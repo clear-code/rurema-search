@@ -22,7 +22,7 @@
   <form method="POST" action="./">
     <p class="input-form">
       <input id="query-input" type="text" class="query ui-autocomplete-input"
-             name="query" autocomplete="off"
+             name="query" autocomplete="off" autofocus
              value="<%= default_query_form_value %>" />
     </p>
     <p class="button">
@@ -30,7 +30,6 @@
     </p>
   </form>
   <script type="text/javascript">
-    $("#query-input").focus();
     $("#query-input").autocomplete({
       source: <%= auto_complete_api_path.to_json %>
     });
