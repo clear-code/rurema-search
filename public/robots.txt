@@ -1,5 +1,8 @@
 User-agent: bingbot
 Disallow: /
 
+User-agent: cotoba_bot
+Disallow: /
+
 User-agent: *
 Clawl-Delay: 5
