@@ -108,6 +108,3 @@ DEPENDENCIES
   test-unit
   test-unit-capybara
   test-unit-notify
-
-BUNDLED WITH
-   1.16.1
