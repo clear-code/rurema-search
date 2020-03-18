@@ -71,9 +71,11 @@ update_rurema()
 	--outputdir ${base_dir}/public/${version}.new \
 	--catalog ${bitclust_dir}/data/bitclust/catalog \
 	--template ${bitclust_dir}/data/bitclust/template
-    mv ${base_dir}/public/${version}{,.old}
-    mv ${base_dir}/public/${version}{.new,}
-    rm -rf ${base_dir}/public/${version}.old
+    if [ $? -eq 0 ]; then
+	mv ${base_dir}/public/${version}{,.old}
+	mv ${base_dir}/public/${version}{.new,}
+	rm -rf ${base_dir}/public/${version}.old
+    fi
 }
 
 if [ "$update_rurema" = "yes" ]; then
