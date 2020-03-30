@@ -67,6 +67,7 @@ update_rurema()
 	--database ${base_dir}/db-${version} \
 	statichtml \
 	--quiet \
+	--no-stop-on-syntax-error \
 	--fs-casesensitive \
 	--outputdir ${base_dir}/public/${version}.new \
 	--catalog ${bitclust_dir}/data/bitclust/catalog \
