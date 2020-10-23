@@ -210,7 +210,8 @@ module RuremaSearch
 
     class RDAttributesExtractor < BitClust::RDCompiler
       def initialize
-        super(nil)
+        opt = {:stop_on_syntax_error => false}
+        super(nil, 1, opt)
       end
 
       def extract(src)
