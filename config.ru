@@ -162,4 +162,21 @@ end
 
 use Racknga::Middleware::InstanceName, :application_name => "Rurema Search"
 
+# URL mapping to the version directory.
+versions = database.entries.group("version").sort(["_key"], :limit => -1)
+versions.each do |version|
+  version_dir = version["_key"].to_s
+  map "/#{version_dir}" do
+    run Rack::Directory.new("#{base_dir}/public/#{version_dir}")
+  end
+end
+
+# URL mapping to the css, images and javascripts directory.
+directories = ["css", "images", "javascripts"]
+directories.each do |directory|
+  map "/#{directory}" do
+    run Rack::Directory.new("#{base_dir}/public/#{directory}")
+  end
+end
+
 run searcher
