@@ -59,7 +59,7 @@ license/lgpl-3.0.txtを見てください。
 First, install Groonga in advance.
 Groonga installation is easy and convenient to {install from Ubuntu PPA}[https://groonga.org/ja/docs/install/ubuntu.html#ubuntu].
 
-Enter in the terminal of WSL
+Enter the following command lines in the terminal of WSL:
 
   $ mkdir rurema
   $ cd rurema
