@@ -54,6 +54,29 @@ license/lgpl-3.0.txtを見てください。
   % rackup > /dev/null 2>&1 &
   % open http://localhost:9292/
 
+==== WSL Ubuntu-20.04(Windows) + rbenv
+
+First, install Groonga in advance.
+Groonga installation is easy and convenient to {install from Ubuntu PPA}[https://groonga.org/ja/docs/install/ubuntu.html#ubuntu].
+
+Enter the following command lines in the terminal of WSL:
+
+  $ mkdir rurema
+  $ cd rurema
+  $ git clone https://github.com/rurema/doctree.git
+  $ git clone https://github.com/rurema/bitclust.git
+  $ git clone https://github.com/ranguba/racknga.git
+  $ git clone https://github.com/clear-code/rurema-search.git
+  $ rbenv local 2.6.6
+  $ cd rurema-search
+  $ gem install groonga
+  $ bundle install
+  $ ./update.sh
+  $ rackup
+
+Finally, open http://localhost:9292/ by your Web browser.
+
+
 === サーバ利用の場合
 
 ==== Debian GNU/Linux wheezy
