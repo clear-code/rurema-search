@@ -74,7 +74,7 @@ Enter the following command lines in the terminal of WSL:
   $ ./update.sh
   $ rackup
 
-Finally, open a browser http://localhost:9292/
+Finally, open http://localhost:9292/ by your Web browser.
 
 
 === サーバ利用の場合
