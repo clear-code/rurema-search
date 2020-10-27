@@ -57,7 +57,7 @@ license/lgpl-3.0.txtを見てください。
 ==== WSL Ubuntu-20.04(Windows) + rbenv
 
 First, install Groonga in advance.
-groonga installation is easy and convenient to {install from Ubuntu PPA.}[https://groonga.org/ja/docs/install/ubuntu.html#ubuntu]
+Groonga installation is easy and convenient to {install from Ubuntu PPA}[https://groonga.org/ja/docs/install/ubuntu.html#ubuntu].
 
 Enter in the terminal of WSL
 
