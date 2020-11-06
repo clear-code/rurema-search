@@ -59,6 +59,10 @@ license/lgpl-3.0.txtを見てください。
 First, install Groonga in advance.
 Groonga installation is easy and convenient to {install from Ubuntu PPA}[https://groonga.org/ja/docs/install/ubuntu.html#ubuntu].
 
+Depending on your environment, you may need to install additional `zsh` package.
+
+  $ sudo apt install zsh
+
 Enter the following command lines in the terminal of WSL:
 
   $ mkdir rurema
@@ -70,6 +74,7 @@ Enter the following command lines in the terminal of WSL:
   $ rbenv local 2.6.6
   $ cd rurema-search
   $ gem install groonga
+  $ gem install bitclust-core bitclust-dev refe2
   $ bundle install
   $ ./update.sh
   $ rackup
