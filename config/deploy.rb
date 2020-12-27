@@ -5,6 +5,7 @@ set :deploy_to, '/var/rubydoc/rurema-search'
 
 set :default_env, {
   'PATH' => '/snap/bin:$PATH',
+  'DEBIAN_DISABLE_RUBYGEMS_INTEGRATION' => 'true',
 }
 
 set :linked_files, %w{document.yaml production.yaml}
