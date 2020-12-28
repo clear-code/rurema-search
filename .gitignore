@@ -2,6 +2,7 @@
 /groonga-database
 /public/1.*
 /public/2.*
+/public/3.*
 /test-unit
 /webrat.log
 /test/db-*

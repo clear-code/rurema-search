@@ -71,9 +71,9 @@ module RuremaSearch
       @context.receive
 
       item_values = []
-      item_values << {"_key" => keyword, "kana" => keyword}
+      item_values << {"_key" => keyword, "kana" => [keyword]}
       related_keywords.each do |related_keyword|
-        item_values << {"_key" => related_keyword, "kana" => related_keyword}
+        item_values << {"_key" => related_keyword, "kana" => [related_keyword]}
       end
       @context.send("load --table #{table_name('item')}")
       @context.send(JSON.generate(item_values))

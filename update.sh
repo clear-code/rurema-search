@@ -2,7 +2,7 @@
 
 base_dir=$(cd "$(dirname "$0")" && pwd)
 : ${RUBY:=ruby}
-bitclust_dir=$($RUBY -rubygems -e 'print Gem::Specification.find_by_name("bitclust-core").gem_dir')
+bitclust_dir=$($RUBY -rrubygems -e 'print Gem::Specification.find_by_name("bitclust-core").gem_dir')
 doctree_dir=${base_dir}/../doctree
 
 PATH=${base_dir}/local/bin:$PATH
@@ -67,13 +67,16 @@ update_rurema()
 	--database ${base_dir}/db-${version} \
 	statichtml \
 	--quiet \
+	--no-stop-on-syntax-error \
 	--fs-casesensitive \
 	--outputdir ${base_dir}/public/${version}.new \
 	--catalog ${bitclust_dir}/data/bitclust/catalog \
 	--template ${bitclust_dir}/data/bitclust/template
-    mv ${base_dir}/public/${version}{,.old}
-    mv ${base_dir}/public/${version}{.new,}
-    rm -rf ${base_dir}/public/${version}.old
+    if [ $? -eq 0 ]; then
+	mv ${base_dir}/public/${version}{,.old}
+	mv ${base_dir}/public/${version}{.new,}
+	rm -rf ${base_dir}/public/${version}.old
+    fi
 }
 
 if [ "$update_rurema" = "yes" ]; then
@@ -83,7 +86,7 @@ if [ "$update_rurema" = "yes" ]; then
 	git clone https://github.com/rurema/doctree.git ${doctree_dir}
     fi
 
-    for version in 2.1.0 2.2.0 2.3.0 2.4.0 2.5.0; do
+    for version in 2.1.0 2.2.0 2.3.0 2.4.0 2.5.0 2.6.0 2.7.0 3.0.0; do
 	update_rurema $version
     done
     wait

@@ -210,7 +210,8 @@ module RuremaSearch
 
     class RDAttributesExtractor < BitClust::RDCompiler
       def initialize
-        super(nil)
+        opt = {:stop_on_syntax_error => false}
+        super(nil, 1, opt)
       end
 
       def extract(src)
@@ -218,29 +219,35 @@ module RuremaSearch
         compile(src)
         {
           :summary => src.split(/\n\n/, 2).first,
-          :related_names => @related_names.compact.uniq,
+          :related_names => @related_names.uniq,
         }
       end
 
       private
-      def library_link(name, label=nil, fragment=nil)
+      def add_related_name(name)
+        return if name.nil?
+        return if name.empty?
         @related_names << name
+      end
+
+      def library_link(name, label=nil, fragment=nil)
+        add_related_name(name)
       end
 
       def class_link(name, label=nil, fragment=nil)
-        @related_names << name
+        add_related_name(name)
       end
 
       def method_link(spec, label=nil, fragment=nil)
-        @related_names << spec
+        add_related_name(name)
       end
 
       def function_link(name, label=nil, fragment=nil)
-        @related_names << name
+        add_related_name(name)
       end
 
       def document_link(name, label=nil, fragment=nil)
-        @related_names << name
+        add_related_name(name)
       end
     end
   end

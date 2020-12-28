@@ -141,12 +141,18 @@ urls = [
   "/css/",
   "/images/",
   "/javascripts/",
-  "/1.8.",
-  "/1.9.",
-  "/2.0.",
-  "/2.1.",
-  "/2.2.",
+  "/1.",
+  "/2.",
+  "/3.",
 ]
+
+case environment
+when "development"
+  use Rack::Static,
+      :urls => urls,
+      :root => (base_dir + "public").to_s,
+      :index => "index.html"
+end
 
 use Racknga::Middleware::Deflater
 use Rack::Lint
