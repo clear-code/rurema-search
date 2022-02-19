@@ -4,5 +4,8 @@ Disallow: /
 User-agent: cotoba_bot
 Disallow: /
 
+User-agent: ICC-Crawler
+Disallow: /
+
 User-agent: *
 Clawl-Delay: 5
