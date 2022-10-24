@@ -167,7 +167,6 @@ module RuremaSearch
       end
       values << {
         "item" => keyword,
-        "kana" => keyword,
         "sequence" => id,
         "time" => time_stamp.to_f,
         "type" => "submit"
