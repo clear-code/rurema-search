@@ -10,5 +10,8 @@ Disallow: /
 User-agent: ICC-Crawler
 Disallow: /
 
+User-agent: ImageshiftBot
+Disallow: /
+
 User-agent: *
 Clawl-Delay: 5
