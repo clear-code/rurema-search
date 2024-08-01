@@ -451,7 +451,7 @@ module RuremaSearch
       extension ||= "html"
       template_file = File.join(@base_dir, "views", "#{name}.#{extension}.erb")
       return nil unless File.exist?(template_file)
-      erb = ERB.new(File.read(template_file), 0, "%<>")
+      erb = ERB.new(File.read(template_file), trim_mode: "%<>")
       erb.filename = template_file
       erb
     end
