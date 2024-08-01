@@ -391,14 +391,14 @@ module RuremaSearch
       response["Content-Type"] = "text/html; charset=UTF-8"
       # response["Connection"] = "close"
 
-      query = request['query']
+      query = request.params['query']
       query ||= referrer_query(request) unless /\/query:/ =~ request.path_info
       query ||= ''
       if query.empty?
         dispatch(request, response)
       else
         path_info = request.path_info.gsub(/\/query:[^\/]+/, '')
-        encoding = request['encoding']
+        encoding = request.params['encoding']
         if encoding
           query.force_encoding(encoding)
           query = query.encode("utf-8")
@@ -918,7 +918,7 @@ module RuremaSearch
       def compute_n_entries_per_page
         default_n_entries = default_page_size
         max_n_entries = 100
-        n_entries = @request["n_entries"] || default_n_entries
+        n_entries = @request.params["n_entries"] || default_n_entries
         if n_entries
           begin
             n_entries = Integer(n_entries)
@@ -1076,7 +1076,7 @@ module RuremaSearch
       end
 
       def ensure_page(n_entries)
-        page = @request["page"]
+        page = @request.params["page"]
         return 1 if page.nil? or page.empty?
 
         begin
@@ -1455,7 +1455,7 @@ module RuremaSearch
           end
 
           def process
-            term = (@request["term"] || "").lstrip
+            term = (@request.params["term"] || "").lstrip
             completions = @suggest_database.completions(term)
             if completions.empty? and / / !~ term
               corrections = @suggest_database.corrections(term)
