@@ -13,5 +13,8 @@ Disallow: /
 User-agent: ImageshiftBot
 Disallow: /
 
+User-agent: Applebot
+Disallow: /
+
 User-agent: *
 Clawl-Delay: 5
