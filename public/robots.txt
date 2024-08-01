@@ -16,5 +16,8 @@ Disallow: /
 User-agent: Applebot
 Disallow: /
 
+User-agent: meta-externalagent
+Disallow: /
+
 User-agent: *
 Clawl-Delay: 5
