@@ -1,6 +1,6 @@
 # -*- ruby -*-
 #
-# Copyright (C) 2011-2020  Sutou Kouhei <kou@clear-code.com>
+# Copyright (C) 2011-2025  Sutou Kouhei <kou@clear-code.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -16,6 +16,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 source "https://rubygems.org/"
+
+plugin "rubygems-requirements-system"
 
 gem "rroonga"
 gem "racknga"
