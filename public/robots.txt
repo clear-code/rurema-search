@@ -19,6 +19,9 @@ Disallow: /
 User-agent: Applebot
 Disallow: /
 
+User-agent: SemrushBot
+Disallow: /
+
 User-agent: meta-externalagent
 Disallow: /
 
