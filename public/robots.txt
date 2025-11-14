@@ -35,4 +35,4 @@ User-agent: PetalBot
 Disallow: /
 
 User-agent: *
-Clawl-Delay: 5
+Crawl-delay: 5
