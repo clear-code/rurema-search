@@ -43,5 +43,8 @@ Disallow: /
 User-agent: AwarioSmartBot
 Disallow: /
 
+User-agent: ClaudeBot
+Disallow: /
+
 User-agent: *
 Crawl-delay: 10
