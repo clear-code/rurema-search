@@ -46,5 +46,8 @@ Disallow: /
 User-agent: ClaudeBot
 Disallow: /
 
+User-agent: GPTBot
+Disallow: /
+
 User-agent: *
-Crawl-delay: 10
+Crawl-delay: 60
