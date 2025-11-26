@@ -55,5 +55,8 @@ Disallow: /
 User-agent: MJ12bot
 Disallow: /
 
+User-agent: Bytespider
+Disallow: /
+
 User-agent: *
 Crawl-delay: 600
