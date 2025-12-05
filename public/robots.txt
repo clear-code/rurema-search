@@ -58,5 +58,11 @@ Disallow: /
 User-agent: Bytespider
 Disallow: /
 
+User-agent: Googlebot
+Disallow: /
+
+User-agent: GoogleOther
+Disallow: /
+
 User-agent: *
 Crawl-delay: 600
