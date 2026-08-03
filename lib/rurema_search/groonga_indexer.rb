@@ -2,6 +2,9 @@
 #
 # License: LGPLv3+
 
+require "bitclust/mdcompiler"
+require "bitclust/mdparser"
+
 module RuremaSearch
   class GroongaIndexer
     attr_accessor :base_time
@@ -187,10 +190,14 @@ module RuremaSearch
     def foreach_method_chunk(source, &block)
       input = LineInput.for_string(source)
       while input.next?
-        signatures = input.span(/\A---/).collect do |line|
-          BitClust::MethodSignature.parse(line.rstrip)
+        signatures = []
+        input.span(/\A### /).collect do |line|
+          case line.rstrip
+          when BitClust::MDParser::SIG_RE
+            signatures << BitClust::MethodSignature.parse("--- #{$POSTMATCH}")
+          end
         end
-        body = input.break(/\A---/).join
+        body = input.break(/\A### /).join
         yield signatures, body
       end
     end
@@ -204,11 +211,11 @@ module RuremaSearch
     end
 
     def extract_attributes(source)
-      extractor = RDAttributesExtractor.new
+      extractor = MDAttributesExtractor.new
       extractor.extract(source)
     end
 
-    class RDAttributesExtractor < BitClust::RDCompiler
+    class MDAttributesExtractor < BitClust::MDCompiler
       def initialize
         opt = {:stop_on_syntax_error => false}
         super(nil, 1, opt)
