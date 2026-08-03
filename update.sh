@@ -51,14 +51,14 @@ update_rurema()
 	-I ${bitclust_dir}/lib \
 	${base_dir}/bin/rurema-search-bitclust \
 	--database ${base_dir}/db-${version} \
-	update --stdlibtree ${doctree_dir}/refm/api/src
+	update --markdowntree ${doctree_dir}/manual/api
     nice ${RUBY} \
 	-I ${base_dir}/lib \
 	-I ${bitclust_dir}/lib \
 	${base_dir}/bin/rurema-search-bitclust \
 	--database ${base_dir}/db-${version} \
 	--capi \
-	update ${doctree_dir}/refm/capi/src/**/*.rd
+	update ${doctree_dir}/manual/capi/**/*.md
     rm -rf ${base_dir}/public/${version}.{old,new}
     nice ${RUBY} \
 	-I ${base_dir}/lib \
