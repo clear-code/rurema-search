@@ -60,6 +60,9 @@ update_rurema()
 	--capi \
 	update ${doctree_dir}/manual/capi/**/*.md
     rm -rf ${base_dir}/public/${version}.{old,new}
+    # Workaround for "statichtml". It doesn't create function/ when
+    # it writes function/index.html.
+    mkdir -p ${base_dir}/public/${version}.new/function
     nice ${RUBY} \
 	-I ${base_dir}/lib \
 	-I ${bitclust_dir}/lib \
